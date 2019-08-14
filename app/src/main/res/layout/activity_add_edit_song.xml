@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp">
+
+    <EditText
+            android:id="@+id/titleField"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/add_edit_song_activity_hint_title"
+            android:inputType="text"/>
+
+    <EditText
+            android:id="@+id/authorField"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/add_edit_song_activity_hint_author"
+            android:inputType="textMultiLine"/>
+
+    <EditText
+            android:id="@+id/tabField"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/add_edit_song_activity_hint_tab"
+            android:inputType="textMultiLine"/>
+
+</LinearLayout>
