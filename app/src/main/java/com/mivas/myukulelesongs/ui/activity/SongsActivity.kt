@@ -12,19 +12,15 @@ import com.mivas.myukulelesongs.R
 import com.mivas.myukulelesongs.database.model.Song
 import com.mivas.myukulelesongs.listeners.SongsActivityListener
 import com.mivas.myukulelesongs.ui.adapter.SongsAdapter
+import com.mivas.myukulelesongs.util.Constants.EXTRA_ID
 import com.mivas.myukulelesongs.viewmodel.SongsViewModel
 import kotlinx.android.synthetic.main.activity_songs.*
-import org.jetbrains.anko.toast
+import org.jetbrains.anko.alert
 
 class SongsActivity : AppCompatActivity(), SongsActivityListener {
 
     private lateinit var viewModel: SongsViewModel
     private lateinit var songsAdapter: SongsAdapter
-
-    companion object {
-        const val ADD_SONG_REQUEST = 1
-        const val EDIT_SONG_REQUEST = 2
-    }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_songs_activity, menu)
@@ -79,17 +75,23 @@ class SongsActivity : AppCompatActivity(), SongsActivityListener {
     }
 
     override fun onSongClicked(song: Song) {
-        toast("click")
+        startActivity(Intent(this, TabActivity::class.java).apply {
+            putExtra(EXTRA_ID, song.id)
+        })
     }
 
     override fun onSongEditClicked(song: Song) {
-        val intent = Intent(this, AddEditSongActivity::class.java).apply {
-            putExtra(AddEditSongActivity.EXTRA_ID, song.id)
-        }
-        startActivity(intent)
+        startActivity(Intent(this, AddEditSongActivity::class.java).apply {
+            putExtra(EXTRA_ID, song.id)
+        })
     }
 
     override fun onSongDeleteClicked(song: Song) {
-        toast("delete")
+        alert(R.string.add_edit_song_activity_dialog_delete_song_description, R.string.add_edit_song_activity_dialog_delete_song_title) {
+            negativeButton(R.string.generic_cancel) {}
+            positiveButton(R.string.generic_delete) {
+                viewModel.deleteSong(song)
+            }
+        }.show()
     }
 }

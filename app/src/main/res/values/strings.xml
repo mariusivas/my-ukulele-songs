@@ -2,6 +2,8 @@
     <string name="app_name">My Ukulele Songs</string>
 
     <string name="generic_ok">OK</string>
+    <string name="generic_delete">Delete</string>
+    <string name="generic_cancel">Cancel</string>
 
     <string name="songs_activity_menu_search">Search</string>
     <string name="songs_activity_menu_add">Add Song</string>
@@ -17,6 +19,10 @@
     <string name="add_edit_song_activity_menu_edit">Edit</string>
     <string name="add_edit_song_activity_menu_delete">Delete</string>
     <string name="add_edit_song_activity_toast_empty_title">Please type in a song title</string>
+    <string name="add_edit_song_activity_dialog_delete_song_title">Delete song</string>
+    <string name="add_edit_song_activity_dialog_delete_song_description">Are you sure you want to delete this song?</string>
+
+    <string name="tab_activity_menu_edit">Edit</string>
 
 
 </resources>

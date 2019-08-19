@@ -8,18 +8,15 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.mivas.myukulelesongs.R
 import com.mivas.myukulelesongs.database.model.Song
+import com.mivas.myukulelesongs.util.Constants.EXTRA_ID
 import com.mivas.myukulelesongs.viewmodel.AddEditSongViewModel
 import com.mivas.myukulelesongs.viewmodel.AddEditSongViewModelFactory
 import kotlinx.android.synthetic.main.activity_add_edit_song.*
-import org.jetbrains.anko.toast
+import org.jetbrains.anko.*
 
 class AddEditSongActivity : AppCompatActivity() {
 
     private lateinit var viewModel: AddEditSongViewModel
-
-    companion object {
-        const val EXTRA_ID = "com.mivas.myukulelesongs.EXTRA_ID"
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,12 +25,12 @@ class AddEditSongActivity : AppCompatActivity() {
         supportActionBar?.setHomeAsUpIndicator(R.drawable.icon_plus)
 
         if (intent.hasExtra(EXTRA_ID)) {
-            val viewModelFactory = AddEditSongViewModelFactory(application, intent.getLongExtra(EXTRA_ID, 0))
+            val viewModelFactory = AddEditSongViewModelFactory(application, intent.getLongExtra(EXTRA_ID, -1))
             viewModel = ViewModelProviders.of(this, viewModelFactory).get(AddEditSongViewModel::class.java)
 
             title = getString(R.string.add_edit_song_activity_text_edit_song)
         } else {
-            val viewModelFactory = AddEditSongViewModelFactory(application, 0)
+            val viewModelFactory = AddEditSongViewModelFactory(application, -1)
             viewModel = ViewModelProviders.of(this, viewModelFactory).get(AddEditSongViewModel::class.java)
 
             title = getString(R.string.add_edit_song_activity_text_add_song)
@@ -45,11 +42,23 @@ class AddEditSongActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_add_edit_song, menu)
+        val deleteButton = menu!!.findItem(R.id.action_delete_song)
+        deleteButton.isVisible = intent.hasExtra(EXTRA_ID)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
+            R.id.action_delete_song -> {
+                alert(R.string.add_edit_song_activity_dialog_delete_song_description, R.string.add_edit_song_activity_dialog_delete_song_title) {
+                    negativeButton(R.string.generic_cancel) {}
+                    positiveButton(R.string.generic_delete) {
+                        viewModel.deleteSong(viewModel.getSong().value!!)
+                        finish()
+                    }
+                }.show()
+                true
+            }
             R.id.action_save_song -> {
                 saveSong()
                 true
@@ -60,9 +69,11 @@ class AddEditSongActivity : AppCompatActivity() {
 
     private fun initObservers() {
         viewModel.getSong().observe(this, Observer<Song> {
-            titleField.setText(it.title)
-            authorField.setText(it.author)
-            tabField.setText(it.tab)
+            it?.run {
+                titleField.setText(title)
+                authorField.setText(author)
+                tabField.setText(tab)
+            }
         })
     }
 
