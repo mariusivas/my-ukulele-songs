@@ -1,30 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="vertical"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_mapple"
+    android:padding="8dp">
+
+    <EditText
+        android:id="@+id/titleField"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="16dp">
+        android:layout_height="40dp"
+        android:background="@drawable/shape_field_generic"
+        android:hint="@string/add_edit_song_activity_hint_title"
+        android:inputType="textFilter|textCapWords"
+        android:maxLines="1"
+        android:paddingStart="8dp"
+        android:textSize="18sp"
+        android:paddingEnd="8dp"
+        android:textColor="@color/colorPrimaryDark"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-            android:id="@+id/titleField"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/add_edit_song_activity_hint_title"
-            android:inputType="text"/>
+        android:id="@+id/authorField"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:textSize="18sp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/shape_field_generic"
+        android:hint="@string/add_edit_song_activity_hint_author"
+        android:inputType="textFilter|textCapWords"
+        android:maxLines="1"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:textColor="@color/colorPrimaryDark"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/titleField" />
 
     <EditText
-            android:id="@+id/authorField"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/add_edit_song_activity_hint_author"
-            android:inputType="textMultiLine"/>
+        android:id="@+id/strummingPatternsField"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:textSize="18sp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/shape_field_generic"
+        android:hint="@string/add_edit_song_activity_hint_strumming_patterns"
+        android:inputType="textFilter|textMultiLine|textCapCharacters"
+        android:padding="8dp"
+        android:gravity="top"
+        android:textColor="@color/colorPrimaryDark"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/authorField" />
 
     <EditText
-            android:id="@+id/tabField"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/add_edit_song_activity_hint_tab"
-            android:inputType="textMultiLine"/>
+        android:id="@+id/tabField"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/shape_field_generic"
+        android:fontFamily="@font/roboto_mono_regular"
+        android:gravity="top"
+        android:hint="@string/add_edit_song_activity_hint_tab"
+        android:textSize="18sp"
+        android:inputType="textFilter|textMultiLine"
+        android:padding="8dp"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/strummingPatternsField" />
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

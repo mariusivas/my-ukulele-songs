@@ -8,7 +8,8 @@ import androidx.room.PrimaryKey
 data class Song(@PrimaryKey(autoGenerate = true) var id: Long?,
                 @ColumnInfo(name = "title") var title: String,
                 @ColumnInfo(name = "author") var author: String,
+                @ColumnInfo(name = "strumming_patterns") var strummingPatterns: String,
                 @ColumnInfo(name = "tab") var tab: String) {
-    constructor() : this(null, "", "", "")
-    constructor(title: String = "", author: String = "", tab: String = "") : this(null, title, author, tab)
+    constructor() : this(null, "", "", "", "")
+    constructor(title: String = "", author: String = "", strummingPatterns: String = "", tab: String = "") : this(null, title, author, strummingPatterns, tab)
 }

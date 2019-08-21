@@ -12,7 +12,10 @@ import com.mivas.myukulelesongs.R
 import com.mivas.myukulelesongs.database.model.Song
 import com.mivas.myukulelesongs.listeners.SongsActivityListener
 import com.mivas.myukulelesongs.ui.adapter.SongsAdapter
+import com.mivas.myukulelesongs.util.Constants
 import com.mivas.myukulelesongs.util.Constants.EXTRA_ID
+import com.mivas.myukulelesongs.util.FirstRunUtils
+import com.mivas.myukulelesongs.util.Prefs
 import com.mivas.myukulelesongs.viewmodel.SongsViewModel
 import kotlinx.android.synthetic.main.activity_songs.*
 import org.jetbrains.anko.alert
@@ -53,6 +56,8 @@ class SongsActivity : AppCompatActivity(), SongsActivityListener {
         initViews()
         initListeners()
         initObservers()
+
+        viewModel.checkFirstRun()
     }
 
     private fun initViews() {

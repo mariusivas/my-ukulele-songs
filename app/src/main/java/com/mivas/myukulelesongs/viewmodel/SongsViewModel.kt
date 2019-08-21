@@ -4,6 +4,9 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import com.mivas.myukulelesongs.database.model.Song
 import com.mivas.myukulelesongs.repository.SongsRepository
+import com.mivas.myukulelesongs.util.Constants
+import com.mivas.myukulelesongs.util.FirstRunUtils
+import com.mivas.myukulelesongs.util.Prefs
 
 class SongsViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -15,4 +18,11 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
     fun deleteSong(song: Song) = songsRepository.delete(song)
     fun deleteAllSongs() = songsRepository.deleteAll()
     fun getAllSongs() = songs
+
+    fun checkFirstRun() {
+        if (Prefs.getBoolean(Constants.PREF_FIRST_RUN, true)) {
+            Prefs.putBoolean(Constants.PREF_FIRST_RUN, false)
+            insertSong(FirstRunUtils().getSampleSong())
+        }
+    }
 }

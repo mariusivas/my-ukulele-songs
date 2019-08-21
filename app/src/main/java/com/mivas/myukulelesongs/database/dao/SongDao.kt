@@ -18,7 +18,7 @@ interface SongDao {
     @Query("SELECT * FROM songs where id = :id")
     fun getById(id: Long): LiveData<Song>
 
-    @Query("SELECT * FROM songs")
+    @Query("SELECT * FROM songs ORDER BY title")
     fun getAll(): LiveData<List<Song>>
 
     @Delete

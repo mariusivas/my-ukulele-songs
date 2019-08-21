@@ -39,6 +39,7 @@ class SongsAdapter(private val context: Context, private val listener: SongsActi
         with(holder) {
             titleText.text = currentSong.title
             authorText.text = currentSong.author
+            authorText.visibility = if (currentSong.author.isEmpty()) View.GONE else View.VISIBLE
 
             val builder = MenuBuilder(context)
             MenuInflater(context).inflate(R.menu.menu_song_options, builder)

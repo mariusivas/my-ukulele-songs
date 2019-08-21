@@ -72,6 +72,7 @@ class AddEditSongActivity : AppCompatActivity() {
             it?.run {
                 titleField.setText(title)
                 authorField.setText(author)
+                strummingPatternsField.setText(strummingPatterns)
                 tabField.setText(tab)
             }
         })
@@ -87,6 +88,7 @@ class AddEditSongActivity : AppCompatActivity() {
             val song = viewModel.getSong().value!!.apply {
                 title = titleField.text.toString()
                 author = authorField.text.toString()
+                strummingPatterns = strummingPatternsField.text.toString()
                 tab = tabField.text.toString()
             }
             viewModel.updateSong(song)
@@ -94,6 +96,7 @@ class AddEditSongActivity : AppCompatActivity() {
             val song = Song().apply {
                 title = titleField.text.toString()
                 author = authorField.text.toString()
+                strummingPatterns = strummingPatternsField.text.toString()
                 tab = tabField.text.toString()
             }
             viewModel.insertSong(song)
