@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "315252682150",
+    "firebase_url": "https://my-ukulele-songs.firebaseio.com",
+    "project_id": "my-ukulele-songs",
+    "storage_bucket": "my-ukulele-songs.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:315252682150:android:d5e79ac10c715818",
+        "android_client_info": {
+          "package_name": "com.mivas.myukulelesongs"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "315252682150-tmvsveukq76ghkaia460ipigt54v9e92.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBAXt7xr5JvA8z6iTXZVaCrmOxRyrm8aTc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "315252682150-tmvsveukq76ghkaia460ipigt54v9e92.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

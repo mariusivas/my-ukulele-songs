@@ -32,19 +32,19 @@ class SongsActivity : AppCompatActivity(), SongsActivityListener {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.action_search_song -> {
+            /*R.id.action_search_song -> {
                 true
-            }
+            }*/
             R.id.action_add_song -> {
                 startActivity(Intent(this, AddEditSongActivity::class.java))
                 true
             }
-            R.id.action_randomize -> {
+            /*R.id.action_randomize -> {
                 true
             }
             R.id.action_settings -> {
                 true
-            }
+            }*/
             else -> super.onOptionsItemSelected(item)
         }
     }
