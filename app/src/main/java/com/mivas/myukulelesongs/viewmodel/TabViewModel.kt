@@ -19,8 +19,13 @@ class TabViewModel(application: Application, songId: Long) : AndroidViewModel(ap
 
     fun getSong() = song
 
+    private fun getChordColor() = Prefs.getInt(Constants.PREF_TAB_CHORD_COLOR, Constants.DEFAULT_TAB_CHORD_COLOR)
+    fun getTextSize() = Prefs.getInt(Constants.PREF_TAB_TEXT_SIZE, Constants.DEFAULT_TAB_TEXT_SIZE)
+    fun getTextColor() = Prefs.getInt(Constants.PREF_TAB_TEXT_COLOR, Constants.DEFAULT_TAB_TEXT_COLOR)
+    fun getBackgroundColor() = Prefs.getInt(Constants.PREF_TAB_BACKGROUND_COLOR, Constants.DEFAULT_TAB_BACKGROUND_COLOR)
+
     fun getChordData(song: Song): ChordData {
-        val chordColor = Prefs.getInt(Constants.PREF_TAB_CHORD_COLOR, Constants.DEFAULT_TAB_CHORD_COLOR)
+        val chordColor = getChordColor()
         val songChords = mutableSetOf<String>()
         val builder = SpannableStringBuilder()
         val lines = song.tab.split("\n")

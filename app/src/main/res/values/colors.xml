@@ -11,4 +11,6 @@
     <color name="colorSong">#87471a</color>
     <color name="mapple">#e6b371</color>
     <color name="colorFieldBackground">#fff8e8</color>
+    <color name="greyCC">#CCCCCC</color>
+    <color name="greyEE">#EEEEEE</color>
 </resources>

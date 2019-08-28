@@ -1,6 +1,9 @@
 package com.mivas.myukulelesongs.ui.activity
 
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -24,6 +27,16 @@ import org.jetbrains.anko.textColor
 class TabActivity : AppCompatActivity() {
 
     private lateinit var viewModel: TabViewModel
+    private val customizationsReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            initStyles()
+            tabText.setText(
+                viewModel.getChordData(viewModel.getSong().value!!).spannableBuilder,
+                TextView.BufferType.SPANNABLE
+            )
+        }
+
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,6 +47,11 @@ class TabActivity : AppCompatActivity() {
 
         initStyles()
         initObservers()
+
+        registerReceiver(
+            customizationsReceiver,
+            IntentFilter(Constants.BROADCAST_CUSTOMIZATIONS_UPDATED)
+        )
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -49,6 +67,10 @@ class TabActivity : AppCompatActivity() {
                 })
                 true
             }
+            R.id.action_customize -> {
+                startActivity(Intent(this, CustomizeTabActivity::class.java))
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -60,16 +82,22 @@ class TabActivity : AppCompatActivity() {
                 val chordData = viewModel.getChordData(it)
                 chordsText.text = viewModel.getDisplayChords(chordData)
                 strummingPatternsText.text = it.strummingPatterns
-                strummingPatternsLayout.visibility = if (it.strummingPatterns.isEmpty()) View.GONE else View.VISIBLE
+                strummingPatternsLayout.visibility =
+                    if (it.strummingPatterns.isEmpty()) View.GONE else View.VISIBLE
                 tabText.setText(chordData.spannableBuilder, TextView.BufferType.SPANNABLE)
             } ?: finish()
         })
     }
 
     private fun initStyles() {
-        tabText.textSize = Prefs.getFloat(Constants.PREF_TAB_TEXT_SIZE, Constants.DEFAULT_TAB_TEXT_SIZE)
-        tabText.textColor = Prefs.getInt(Constants.PREF_TAB_TEXT_COLOR, Constants.DEFAULT_TAB_TEXT_COLOR)
-        tabParent.backgroundColor = Prefs.getInt(Constants.PREF_TAB_BACKGROUND_COLOR, Constants.DEFAULT_TAB_BACKGROUND_COLOR)
+        tabText.textSize = viewModel.getTextSize().toFloat()
+        tabText.textColor = viewModel.getTextColor()
+        tabParent.backgroundColor = viewModel.getBackgroundColor()
+    }
+
+    override fun onDestroy() {
+        unregisterReceiver(customizationsReceiver)
+        super.onDestroy()
     }
 
 }

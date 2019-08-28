@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mivas.myukulelesongs.R
 import com.mivas.myukulelesongs.database.model.Song
+import com.mivas.myukulelesongs.exception.NoSongsException
 import com.mivas.myukulelesongs.listeners.SongsActivityListener
 import com.mivas.myukulelesongs.ui.adapter.SongsAdapter
 import com.mivas.myukulelesongs.util.Constants
@@ -19,6 +20,7 @@ import com.mivas.myukulelesongs.util.Prefs
 import com.mivas.myukulelesongs.viewmodel.SongsViewModel
 import kotlinx.android.synthetic.main.activity_songs.*
 import org.jetbrains.anko.alert
+import org.jetbrains.anko.toast
 
 class SongsActivity : AppCompatActivity(), SongsActivityListener {
 
@@ -39,10 +41,18 @@ class SongsActivity : AppCompatActivity(), SongsActivityListener {
                 startActivity(Intent(this, AddEditSongActivity::class.java))
                 true
             }
-            /*R.id.action_randomize -> {
+            R.id.action_randomize -> {
+                try {
+                    val song = viewModel.getRandomSong()
+                    startActivity(Intent(this, TabActivity::class.java).apply {
+                        putExtra(EXTRA_ID, song.id)
+                    })
+                } catch (e: NoSongsException) {
+                    toast(R.string.songs_activity_toast_no_songs)
+                }
                 true
             }
-            R.id.action_settings -> {
+            /*R.id.action_settings -> {
                 true
             }*/
             else -> super.onOptionsItemSelected(item)
@@ -53,6 +63,8 @@ class SongsActivity : AppCompatActivity(), SongsActivityListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_songs)
 
+        viewModel = ViewModelProviders.of(this).get(SongsViewModel::class.java)
+
         initViews()
         initListeners()
         initObservers()
@@ -61,9 +73,8 @@ class SongsActivity : AppCompatActivity(), SongsActivityListener {
     }
 
     private fun initViews() {
-        viewModel = ViewModelProviders.of(this).get(SongsViewModel::class.java)
         songsAdapter = SongsAdapter(this, this)
-        with (songsRecycler) {
+        with(songsRecycler) {
             layoutManager = LinearLayoutManager(this@SongsActivity)
             adapter = songsAdapter
         }
@@ -92,7 +103,10 @@ class SongsActivity : AppCompatActivity(), SongsActivityListener {
     }
 
     override fun onSongDeleteClicked(song: Song) {
-        alert(R.string.add_edit_song_activity_dialog_delete_song_description, R.string.add_edit_song_activity_dialog_delete_song_title) {
+        alert(
+            R.string.add_edit_song_activity_dialog_delete_song_description,
+            R.string.add_edit_song_activity_dialog_delete_song_title
+        ) {
             negativeButton(R.string.generic_cancel) {}
             positiveButton(R.string.generic_delete) {
                 viewModel.deleteSong(song)

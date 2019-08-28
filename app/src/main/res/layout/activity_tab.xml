@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/tabParent"
     android:layout_width="match_parent"
+    android:keepScreenOn="true"
     android:layout_height="match_parent"
     tools:context=".ui.activity.TabActivity">
 
@@ -37,6 +38,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
                     android:background="@drawable/background_mahogany_light"
                     android:elevation="4dp"
                     app:layout_constraintBottom_toTopOf="@+id/strummingPatternsLayout"
@@ -77,7 +79,6 @@
                     android:id="@+id/strummingPatternsLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
                     android:layout_marginBottom="8dp"
                     android:background="@drawable/background_mahogany_light"
                     android:elevation="4dp"
