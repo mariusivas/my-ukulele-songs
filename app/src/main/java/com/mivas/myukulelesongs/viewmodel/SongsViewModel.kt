@@ -16,9 +16,7 @@ class SongsViewModel(application: Application) : AndroidViewModel(application) {
     private var songs = songsRepository.getAll()
 
     fun insertSong(song: Song) = songsRepository.insert(song)
-    fun updateSong(song: Song) = songsRepository.update(song)
     fun deleteSong(song: Song) = songsRepository.delete(song)
-    fun deleteAllSongs() = songsRepository.deleteAll()
     fun getAllSongs() = songs
 
     fun checkFirstRun() {

@@ -7,6 +7,7 @@ class FirstRunUtils {
     fun getSampleSong(): Song {
         return Song().apply {
             title = "Happy Birthday Sample Song"
+            type = 0
             strummingPatterns = "D D D D"
             tab =
 """      C           G7

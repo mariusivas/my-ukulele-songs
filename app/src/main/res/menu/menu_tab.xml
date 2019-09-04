@@ -3,6 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/action_auto_scroll"
+        android:icon="@drawable/icon_scroll"
+        android:title="@string/tab_activity_menu_auto_scroll"
+        app:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/action_edit_song"
         android:icon="@drawable/icon_edit"
         android:title="@string/tab_activity_menu_edit"

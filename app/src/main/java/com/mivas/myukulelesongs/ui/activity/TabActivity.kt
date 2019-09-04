@@ -6,7 +6,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import android.os.Handler
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -18,15 +18,23 @@ import com.mivas.myukulelesongs.database.model.Song
 import com.mivas.myukulelesongs.util.Constants
 import com.mivas.myukulelesongs.viewmodel.TabViewModel
 import com.mivas.myukulelesongs.util.Constants.EXTRA_ID
-import com.mivas.myukulelesongs.util.Prefs
 import com.mivas.myukulelesongs.viewmodel.TabViewModelFactory
 import kotlinx.android.synthetic.main.activity_tab.*
 import org.jetbrains.anko.backgroundColor
+import org.jetbrains.anko.imageResource
 import org.jetbrains.anko.textColor
+
 
 class TabActivity : AppCompatActivity() {
 
     private lateinit var viewModel: TabViewModel
+    private val scrollHandler = Handler()
+    private val scrollRunnable = object : Runnable {
+        override fun run() {
+            scrollView.smoothScrollTo(0, scrollView.scrollY + 1)
+            scrollHandler.postDelayed(this, 150 - scrollSeekBar.progress.toLong())
+        }
+    }
     private val customizationsReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             initStyles()
@@ -35,7 +43,6 @@ class TabActivity : AppCompatActivity() {
                 TextView.BufferType.SPANNABLE
             )
         }
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,6 +53,7 @@ class TabActivity : AppCompatActivity() {
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(TabViewModel::class.java)
 
         initStyles()
+        initListeners()
         initObservers()
 
         registerReceiver(
@@ -61,6 +69,11 @@ class TabActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
+            R.id.action_auto_scroll -> {
+                scrollTabView.visibility =
+                    if (scrollTabView.visibility == View.GONE) View.VISIBLE else View.GONE
+                true
+            }
             R.id.action_edit_song -> {
                 startActivity(Intent(this, AddEditSongActivity::class.java).apply {
                     putExtra(EXTRA_ID, intent.getLongExtra(EXTRA_ID, -1))
@@ -84,15 +97,43 @@ class TabActivity : AppCompatActivity() {
                 strummingPatternsText.text = it.strummingPatterns
                 strummingPatternsLayout.visibility =
                     if (it.strummingPatterns.isEmpty()) View.GONE else View.VISIBLE
+                pickingPatternsText.text = it.pickingPatterns
+                pickingPatternsLayout.visibility =
+                    if (it.pickingPatterns.isEmpty()) View.GONE else View.VISIBLE
                 tabText.setText(chordData.spannableBuilder, TextView.BufferType.SPANNABLE)
             } ?: finish()
         })
+    }
+
+    private fun initListeners() {
+        playButton.setOnClickListener {
+            if (viewModel.scrollRunning) {
+                stopScroll()
+            } else {
+                startScroll()
+            }
+        }
+        closeButton.setOnClickListener {
+            scrollTabView.visibility = View.GONE
+        }
     }
 
     private fun initStyles() {
         tabText.textSize = viewModel.getTextSize().toFloat()
         tabText.textColor = viewModel.getTextColor()
         tabParent.backgroundColor = viewModel.getBackgroundColor()
+    }
+
+    private fun startScroll() {
+        viewModel.scrollRunning = true
+        playButton.imageResource = R.drawable.selector_button_pause
+        scrollHandler.postDelayed(scrollRunnable, 150 - scrollSeekBar.progress.toLong())
+    }
+
+    private fun stopScroll() {
+        viewModel.scrollRunning = false
+        playButton.imageResource = R.drawable.selector_button_play
+        scrollHandler.removeCallbacks(scrollRunnable)
     }
 
     override fun onDestroy() {

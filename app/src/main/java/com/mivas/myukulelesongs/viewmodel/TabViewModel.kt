@@ -1,6 +1,7 @@
 package com.mivas.myukulelesongs.viewmodel
 
 import android.app.Application
+import android.os.Handler
 import android.text.SpannableString
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
@@ -11,11 +12,13 @@ import com.mivas.myukulelesongs.repository.TabRepository
 import com.mivas.myukulelesongs.util.ChordDetector
 import com.mivas.myukulelesongs.util.Constants
 import com.mivas.myukulelesongs.util.Prefs
+import kotlinx.android.synthetic.main.activity_tab.*
 
 class TabViewModel(application: Application, songId: Long) : AndroidViewModel(application) {
 
     private var tabRepository = TabRepository(application)
     private var song = tabRepository.getSongById(songId)
+    var scrollRunning = false
 
     fun getSong() = song
 

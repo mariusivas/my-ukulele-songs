@@ -3,6 +3,7 @@ package com.mivas.myukulelesongs.ui.activity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -25,19 +26,21 @@ class AddEditSongActivity : AppCompatActivity() {
         supportActionBar?.setHomeAsUpIndicator(R.drawable.icon_plus)
 
         if (intent.hasExtra(EXTRA_ID)) {
-            val viewModelFactory = AddEditSongViewModelFactory(application, intent.getLongExtra(EXTRA_ID, -1))
-            viewModel = ViewModelProviders.of(this, viewModelFactory).get(AddEditSongViewModel::class.java)
+            val viewModelFactory =
+                AddEditSongViewModelFactory(application, intent.getLongExtra(EXTRA_ID, -1))
+            viewModel =
+                ViewModelProviders.of(this, viewModelFactory).get(AddEditSongViewModel::class.java)
 
             title = getString(R.string.add_edit_song_activity_text_edit_song)
         } else {
             val viewModelFactory = AddEditSongViewModelFactory(application, -1)
-            viewModel = ViewModelProviders.of(this, viewModelFactory).get(AddEditSongViewModel::class.java)
+            viewModel =
+                ViewModelProviders.of(this, viewModelFactory).get(AddEditSongViewModel::class.java)
 
             title = getString(R.string.add_edit_song_activity_text_add_song)
         }
-        if (intent.hasExtra(EXTRA_ID)) {
-            initObservers()
-        }
+        initListeners()
+        initObservers()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -50,7 +53,10 @@ class AddEditSongActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_delete_song -> {
-                alert(R.string.add_edit_song_activity_dialog_delete_song_description, R.string.add_edit_song_activity_dialog_delete_song_title) {
+                alert(
+                    R.string.add_edit_song_activity_dialog_delete_song_description,
+                    R.string.add_edit_song_activity_dialog_delete_song_title
+                ) {
                     negativeButton(R.string.generic_cancel) {}
                     positiveButton(R.string.generic_delete) {
                         viewModel.deleteSong(viewModel.getSong().value!!)
@@ -67,14 +73,40 @@ class AddEditSongActivity : AppCompatActivity() {
         }
     }
 
+    private fun initListeners() {
+        strummingButton.setOnClickListener { viewModel.selectedType.value = 0 }
+        pickingButton.setOnClickListener { viewModel.selectedType.value = 1 }
+        strummingPickingButton.setOnClickListener { viewModel.selectedType.value = 2 }
+    }
+
     private fun initObservers() {
-        viewModel.getSong().observe(this, Observer<Song> {
-            it?.run {
-                titleField.setText(title)
-                authorField.setText(author)
-                strummingPatternsField.setText(strummingPatterns)
-                tabField.setText(tab)
-            }
+        if (intent.hasExtra(EXTRA_ID)) {
+            viewModel.getSong().observe(this, Observer<Song> {
+                it?.run {
+                    titleField.setText(title)
+                    authorField.setText(author)
+                    viewModel.selectedType.value = type
+                    strummingPatternsField.setText(strummingPatterns)
+                    pickingPatternsField.setText(pickingPatterns)
+                    tabField.setText(tab)
+                }
+            })
+        }
+        viewModel.selectedType.observe(this, Observer<Int> {
+            strummingPatternsField.visibility = if (it == 0 || it == 2) View.VISIBLE else View.GONE
+            pickingPatternsField.visibility = if (it == 1 || it == 2) View.VISIBLE else View.GONE
+            strummingButton.background =
+                if (viewModel.selectedType.value!! == 0) getDrawable(R.drawable.background_mahogany_medium) else getDrawable(
+                    R.drawable.background_mahogany_light
+                )
+            pickingButton.background =
+                if (viewModel.selectedType.value!! == 1) getDrawable(R.drawable.background_mahogany_medium) else getDrawable(
+                    R.drawable.background_mahogany_light
+                )
+            strummingPickingButton.background =
+                if (viewModel.selectedType.value!! == 2) getDrawable(R.drawable.background_mahogany_medium) else getDrawable(
+                    R.drawable.background_mahogany_light
+                )
         })
     }
 
@@ -83,24 +115,22 @@ class AddEditSongActivity : AppCompatActivity() {
             toast(R.string.add_edit_song_activity_toast_empty_title)
             return
         }
-
         if (intent.hasExtra(EXTRA_ID)) {
-            val song = viewModel.getSong().value!!.apply {
-                title = titleField.text.toString()
-                author = authorField.text.toString()
-                strummingPatterns = strummingPatternsField.text.toString()
-                tab = tabField.text.toString()
-            }
+            val song = viewModel.getSong().value!!.run { populateSong(this) }
             viewModel.updateSong(song)
         } else {
-            val song = Song().apply {
-                title = titleField.text.toString()
-                author = authorField.text.toString()
-                strummingPatterns = strummingPatternsField.text.toString()
-                tab = tabField.text.toString()
-            }
+            val song = Song().run { populateSong(this) }
             viewModel.insertSong(song)
         }
         finish()
+    }
+
+    private fun populateSong(song: Song) = song.apply {
+        title = titleField.text.toString()
+        author = authorField.text.toString()
+        type = viewModel.selectedType.value!!
+        strummingPatterns = if (type == 0 || type == 2) strummingPatternsField.text.toString() else ""
+        pickingPatterns = if (type == 1 || type == 2) pickingPatternsField.text.toString() else ""
+        tab = tabField.text.toString()
     }
 }

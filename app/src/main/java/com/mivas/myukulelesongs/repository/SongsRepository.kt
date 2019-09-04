@@ -10,9 +10,7 @@ class SongsRepository(application: Application) {
     private val songDao = Db.instance.getSongsDao()
 
     fun insert(song: Song) = doAsync { songDao.insert(song) }
-    fun update(song: Song) = doAsync { songDao.update(song) }
     fun delete(song: Song) = doAsync { songDao.delete(song) }
-    fun deleteAll() = doAsync { songDao.deleteAll() }
     fun getAll() = songDao.getAll()
 
 }

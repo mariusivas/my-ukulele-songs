@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background_mapple"
+    android:orientation="vertical"
     android:padding="8dp">
 
     <EditText
@@ -15,18 +16,14 @@
         android:inputType="textFilter|textCapWords"
         android:maxLines="1"
         android:paddingStart="8dp"
-        android:textSize="18sp"
         android:paddingEnd="8dp"
         android:textColor="@color/colorPrimaryDark"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:textSize="18sp" />
 
     <EditText
         android:id="@+id/authorField"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:textSize="18sp"
         android:layout_marginTop="8dp"
         android:background="@drawable/shape_field_generic"
         android:hint="@string/add_edit_song_activity_hint_author"
@@ -35,42 +32,97 @@
         android:paddingStart="8dp"
         android:paddingEnd="8dp"
         android:textColor="@color/colorPrimaryDark"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/titleField" />
+        android:textSize="18sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/strummingButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:background="@drawable/background_mahogany_light"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:text="@string/add_edit_song_activity_text_strumming"
+            android:textColor="@color/white"
+            android:textSize="17sp" />
+
+        <TextView
+            android:id="@+id/pickingButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="4dp"
+            android:layout_weight="1"
+            android:background="@drawable/background_mahogany_light"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:text="@string/add_edit_song_activity_text_picking"
+            android:textColor="@color/white"
+            android:textSize="17sp" />
+
+        <TextView
+            android:id="@+id/strummingPickingButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:background="@drawable/background_mahogany_medium"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:text="@string/add_edit_song_activity_text_strumming_picking"
+            android:textColor="@color/white"
+            android:textSize="17sp" />
+    </LinearLayout>
 
     <EditText
         android:id="@+id/strummingPatternsField"
         android:layout_width="match_parent"
         android:layout_height="64dp"
-        android:textSize="18sp"
         android:layout_marginTop="8dp"
         android:background="@drawable/shape_field_generic"
+        android:gravity="top"
         android:hint="@string/add_edit_song_activity_hint_strumming_patterns"
         android:inputType="textFilter|textMultiLine|textCapCharacters"
         android:padding="8dp"
-        android:gravity="top"
         android:textColor="@color/colorPrimaryDark"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/authorField" />
+        android:textSize="18sp" />
+
+    <EditText
+        android:id="@+id/pickingPatternsField"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/shape_field_generic"
+        android:gravity="top"
+        android:hint="@string/add_edit_song_activity_hint_picking_patterns"
+        android:inputType="textFilter|textMultiLine|textCapWords"
+        android:padding="8dp"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="18sp" />
 
     <EditText
         android:id="@+id/tabField"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="match_parent"
         android:layout_marginTop="8dp"
         android:background="@drawable/shape_field_generic"
         android:fontFamily="@font/roboto_mono_regular"
         android:gravity="top"
         android:hint="@string/add_edit_song_activity_hint_tab"
-        android:textSize="18sp"
         android:inputType="textFilter|textMultiLine"
         android:padding="8dp"
         android:textColor="@color/black"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/strummingPatternsField" />
+        android:textSize="18sp" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

@@ -20,7 +20,11 @@
     <string name="add_edit_song_activity_hint_title">Title</string>
     <string name="add_edit_song_activity_hint_author">Author</string>
     <string name="add_edit_song_activity_hint_strumming_patterns">Strumming patterns</string>
+    <string name="add_edit_song_activity_hint_picking_patterns">Picking patterns</string>
     <string name="add_edit_song_activity_hint_tab">Tab</string>
+    <string name="add_edit_song_activity_text_strumming">Strumming</string>
+    <string name="add_edit_song_activity_text_picking">Picking</string>
+    <string name="add_edit_song_activity_text_strumming_picking">Both</string>
     <string name="add_edit_song_activity_menu_save">Save</string>
     <string name="add_edit_song_activity_menu_edit">Edit</string>
     <string name="add_edit_song_activity_menu_delete">Delete</string>
@@ -30,9 +34,11 @@
 
     <!--Tab Activity-->
     <string name="tab_activity_menu_edit">Edit</string>
+    <string name="tab_activity_menu_auto_scroll">Auto Scroll</string>
     <string name="tab_activity_menu_customize">Customize</string>
     <string name="tab_activity_text_chords">Chords</string>
     <string name="tab_activity_text_strumming_patterns">Strumming\npatterns</string>
+    <string name="tab_activity_text_picking_patterns">Picking\npatterns</string>
 
     <!--Customize Tab Activity-->
     <string name="customize_tab_activity_title">Customize Tab</string>
