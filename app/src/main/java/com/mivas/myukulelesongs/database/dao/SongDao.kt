@@ -21,6 +21,9 @@ interface SongDao {
     @Query("SELECT * FROM songs ORDER BY title")
     fun getAll(): LiveData<List<Song>>
 
+    @Query("SELECT * FROM songs WHERE title LIKE :query OR author LIKE :query ORDER BY title")
+    fun getWithFilter(query: String): LiveData<List<Song>>
+
     @Delete
     fun delete(song: Song)
 

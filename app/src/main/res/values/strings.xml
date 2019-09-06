@@ -13,6 +13,7 @@
     <string name="songs_activity_menu_randomize">Randomize</string>
     <string name="songs_activity_menu_settings">Settings</string>
     <string name="songs_activity_toast_no_songs">You have no songs</string>
+    <string name="songs_activity_hint_search">Search</string>
 
     <!--Add Edit Song Activity-->
     <string name="add_edit_song_activity_text_add_song">Add Song</string>
