@@ -6,12 +6,10 @@
 
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
-    <color name="colorSong">#87471a</color>
     <color name="mapple">#e6b371</color>
     <color name="colorFieldBackground">#fff8e8</color>
     <color name="greyCC">#CCCCCC</color>
     <color name="greyEE">#EEEEEE</color>
     <color name="black80">#CC000000</color>
     <color name="brown80">#CC331507</color>
-    <color name="black20">#33000000</color>
 </resources>

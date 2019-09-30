@@ -10,7 +10,7 @@ import com.mivas.myukulelesongs.database.dao.SongDao
 import com.mivas.myukulelesongs.database.model.Song
 
 
-@Database(entities = [Song::class], version = 2)
+@Database(entities = [Song::class], version = 2, exportSchema = false)
 abstract class Db : RoomDatabase() {
 
     abstract fun getSongsDao(): SongDao

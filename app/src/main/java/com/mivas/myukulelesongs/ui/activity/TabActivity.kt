@@ -7,22 +7,25 @@ import android.content.IntentFilter
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
+import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.google.android.flexbox.FlexboxLayout
 import com.mivas.myukulelesongs.R
 import com.mivas.myukulelesongs.database.model.Song
+import com.mivas.myukulelesongs.model.ChordData
+import com.mivas.myukulelesongs.ui.fragment.ChordDialogFragment
 import com.mivas.myukulelesongs.util.Constants
 import com.mivas.myukulelesongs.viewmodel.TabViewModel
 import com.mivas.myukulelesongs.util.Constants.EXTRA_ID
+import com.mivas.myukulelesongs.util.DimensionUtils
 import com.mivas.myukulelesongs.viewmodel.TabViewModelFactory
 import kotlinx.android.synthetic.main.activity_tab.*
-import org.jetbrains.anko.backgroundColor
-import org.jetbrains.anko.imageResource
-import org.jetbrains.anko.textColor
+import org.jetbrains.anko.*
 
 
 class TabActivity : AppCompatActivity() {
@@ -93,7 +96,7 @@ class TabActivity : AppCompatActivity() {
             it?.run {
                 this@TabActivity.title = it.title
                 val chordData = viewModel.getChordData(it)
-                chordsText.text = viewModel.getDisplayChords(chordData)
+                initChords(chordData)
                 strummingPatternsText.text = it.strummingPatterns
                 strummingPatternsLayout.visibility =
                     if (it.strummingPatterns.isEmpty()) View.GONE else View.VISIBLE
@@ -122,6 +125,25 @@ class TabActivity : AppCompatActivity() {
         tabText.textSize = viewModel.getTextSize().toFloat()
         tabText.textColor = viewModel.getTextColor()
         tabParent.backgroundColor = viewModel.getBackgroundColor()
+    }
+
+    private fun initChords(chordData: ChordData) {
+        chordsFlexLayout.removeAllViews()
+        val inflater = LayoutInflater.from(this)
+        chordData.chords.forEach { chord ->
+            val margin = DimensionUtils.dpToPx(2)
+            val layoutParams = FlexboxLayout.LayoutParams(FlexboxLayout.LayoutParams.WRAP_CONTENT, FlexboxLayout.LayoutParams.WRAP_CONTENT)
+            layoutParams.setMargins(margin, margin, margin, margin)
+            val chordText = inflater.inflate(R.layout.list_item_chord, null) as TextView
+            chordText.layoutParams = layoutParams
+            chordText.text = chord
+            chordText.setOnClickListener {
+                val transaction = supportFragmentManager.beginTransaction()
+                transaction.addToBackStack(null)
+                ChordDialogFragment(chord).show(transaction, "")
+            }
+            chordsFlexLayout.addView(chordText)
+        }
     }
 
     private fun startScroll() {

@@ -48,10 +48,4 @@ class TabViewModel(application: Application, songId: Long) : AndroidViewModel(ap
         return ChordData(builder, songChords)
     }
 
-    fun getDisplayChords(chordData: ChordData): String {
-        var display = ""
-        chordData.chords.forEach { display += "$it  " }
-        return display
-    }
-
 }

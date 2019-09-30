@@ -98,7 +98,6 @@ class SongsActivity : AppCompatActivity(), SongsActivityListener {
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 viewModel.filter.value = searchField.text.toString()
             }
-
         })
     }
 
