@@ -12,17 +12,23 @@ interface SongDao {
     @Insert(onConflict = REPLACE)
     fun insert(song: Song)
 
+    @Insert(onConflict = REPLACE)
+    fun insertAll(songs: List<Song>)
+
     @Update
     fun update(song: Song)
 
     @Query("SELECT * FROM songs where id = :id")
-    fun getById(id: Long): LiveData<Song>
+    fun getByIdLive(id: Long): LiveData<Song>
 
     @Query("SELECT * FROM songs ORDER BY title")
-    fun getAll(): LiveData<List<Song>>
+    fun getAllLive(): LiveData<List<Song>>
+
+    @Query("SELECT * FROM songs ORDER BY title")
+    fun getAll(): List<Song>
 
     @Query("SELECT * FROM songs WHERE title LIKE :query OR author LIKE :query ORDER BY title")
-    fun getWithFilter(query: String): LiveData<List<Song>>
+    fun getWithFilterLive(query: String): LiveData<List<Song>>
 
     @Delete
     fun delete(song: Song)

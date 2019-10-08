@@ -18,8 +18,8 @@
         android:title="@string/songs_activity_menu_randomize"
         app:showAsAction="never" />
 
-    <!--<item
+    <item
         android:id="@+id/action_settings"
         android:title="@string/songs_activity_menu_settings"
-        app:showAsAction="never" />-->
+        app:showAsAction="never" />
 </menu>

@@ -23,6 +23,7 @@ import com.mivas.myukulelesongs.util.Constants
 import com.mivas.myukulelesongs.viewmodel.TabViewModel
 import com.mivas.myukulelesongs.util.Constants.EXTRA_ID
 import com.mivas.myukulelesongs.util.DimensionUtils
+import com.mivas.myukulelesongs.util.ExportHelper
 import com.mivas.myukulelesongs.viewmodel.TabViewModelFactory
 import kotlinx.android.synthetic.main.activity_tab.*
 import org.jetbrains.anko.*
@@ -81,6 +82,18 @@ class TabActivity : AppCompatActivity() {
                 startActivity(Intent(this, AddEditSongActivity::class.java).apply {
                     putExtra(EXTRA_ID, intent.getLongExtra(EXTRA_ID, -1))
                 })
+                true
+            }
+            R.id.action_export_mus -> {
+                val songsList = listOf(viewModel.getSong().value!!)
+                val fileName = "${viewModel.getSong().value!!.title}.mus"
+                ExportHelper.launchExportMusIntent(this, songsList, fileName)
+                true
+            }
+            R.id.action_export_txt -> {
+                val text = viewModel.getSong().value!!.tab
+                val fileName = "${viewModel.getSong().value!!.title}.txt"
+                ExportHelper.launchExportTxtIntent(this, text, fileName)
                 true
             }
             R.id.action_customize -> {

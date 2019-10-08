@@ -15,6 +15,16 @@
         app:showAsAction="ifRoom" />
 
     <item
+        android:id="@+id/action_export_mus"
+        android:title="@string/tab_activity_menu_export_mus"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_export_txt"
+        android:title="@string/tab_activity_menu_export_txt"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/action_customize"
         android:title="@string/tab_activity_menu_customize"
         app:showAsAction="never" />

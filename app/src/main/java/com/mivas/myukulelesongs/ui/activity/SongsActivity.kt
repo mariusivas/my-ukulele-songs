@@ -63,9 +63,10 @@ class SongsActivity : AppCompatActivity(), SongsActivityListener {
                 }
                 true
             }
-            /*R.id.action_settings -> {
+            R.id.action_settings -> {
+                startActivity(Intent(this, SettingsActivity::class.java))
                 true
-            }*/
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }

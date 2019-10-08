@@ -6,6 +6,7 @@
     <string name="generic_delete">Delete</string>
     <string name="generic_cancel">Cancel</string>
     <string name="generic_reset">Reset</string>
+    <string name="generic_restore">Restore</string>
 
     <!--Songs Activity-->
     <string name="songs_activity_menu_search">Search</string>
@@ -36,10 +37,13 @@
     <!--Tab Activity-->
     <string name="tab_activity_menu_edit">Edit</string>
     <string name="tab_activity_menu_auto_scroll">Auto Scroll</string>
+    <string name="tab_activity_menu_export_mus">Export .mus</string>
+    <string name="tab_activity_menu_export_txt">Export .txt</string>
     <string name="tab_activity_menu_customize">Customize</string>
     <string name="tab_activity_text_chords">Chords</string>
     <string name="tab_activity_text_strumming_patterns">Strumming\npatterns</string>
     <string name="tab_activity_text_picking_patterns">Picking\npatterns</string>
+    <string name="tab_activity_text_export_with">Export with…</string>
 
     <!--Customize Tab Activity-->
     <string name="customize_tab_activity_title">Customize Tab</string>
@@ -51,5 +55,33 @@
     <string name="customize_tab_activity_dialog_reset_title">Reset customizations</string>
     <string name="customize_tab_activity_dialog_reset_description">Are you sure you want to reset customizations to default settings?</string>
 
+    <!--Settings Activity-->
+    <string name="settings_activity_title">Settings</string>
+    <string name="settings_activity_text_sharing">SHARING</string>
+    <string name="settings_activity_text_import_title">Import Song</string>
+    <string name="settings_activity_text_import_description">Import a song from a .mus file</string>
+    <string name="settings_activity_text_backup_restore">BACKUP/RESTORE</string>
+    <string name="settings_activity_text_backup_title">Backup</string>
+    <string name="settings_activity_text_backup_description">Create a backup file</string>
+    <string name="settings_activity_text_restore_title">Restore</string>
+    <string name="settings_activity_text_restore_description">Import songs from a backup file</string>
+    <string name="settings_activity_text_general_settings">GENERAL SETTINGS</string>
+    <string name="settings_activity_text_rate_app">Rate the app</string>
+    <string name="settings_activity_text_feedback">Feedback</string>
+    <string name="settings_activity_text_about">ABOUT</string>
+    <string name="settings_activity_text_privacy_policy">Privacy policy</string>
+    <string name="settings_activity_text_version">Version</string>
+    <string name="settings_activity_dialog_restore_songs_title">Warning!</string>
+    <string name="settings_activity_dialog_restore_songs_description">This will delete your songs and import songs from a backup file. Are you sure you want to restore?</string>
+    <string name="settings_activity_toast_backup_error">Backup error</string>
+    <string name="settings_activity_toast_no_file_picker">No file picker app available on the device</string>
+    <string name="settings_activity_toast_import_error">Import error</string>
+    <string name="settings_activity_toast_not_mus_file">Not a mus file</string>
+    <string name="settings_activity_toast_permission_needed">Permission needed to import songs</string>
+    <string name="settings_activity_toast_song_imported">%d song imported</string>
+    <string name="settings_activity_toast_songs_imported">%d songs imported</string>
+    <string name="settings_activity_toast_no_email_app">No email app available on the device</string>
+    <string name="settings_activity_feedback_subject">My Ukulele Songs Feedback</string>
+    <string name="settings_activity_feedback_chooser">Send feedback using…</string>
 
 </resources>

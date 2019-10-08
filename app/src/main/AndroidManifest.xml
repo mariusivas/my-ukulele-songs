@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:name=".App"
@@ -24,6 +25,15 @@
         <activity android:name=".ui.activity.AddEditSongActivity" />
         <activity android:name=".ui.activity.CustomizeTabActivity" />
         <activity android:name=".ui.activity.TabActivity" />
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.mivas.myukulelesongs.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/filepaths" />
+        </provider>
     </application>
 
 </manifest>

@@ -11,7 +11,7 @@ class SongsRepository(application: Application) {
 
     fun insert(song: Song) = doAsync { songDao.insert(song) }
     fun delete(song: Song) = doAsync { songDao.delete(song) }
-    fun getAll() = songDao.getAll()
-    fun getWithFilter(filter: String) = songDao.getWithFilter("%$filter%")
+    fun getAll() = songDao.getAllLive()
+    fun getWithFilter(filter: String) = songDao.getWithFilterLive("%$filter%")
 
 }

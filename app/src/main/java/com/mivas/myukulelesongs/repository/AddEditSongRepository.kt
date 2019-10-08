@@ -12,6 +12,6 @@ class AddEditSongRepository(application: Application) {
     fun insert(song: Song) = doAsync { songDao.insert(song) }
     fun update(song: Song) = doAsync { songDao.update(song) }
     fun delete(song: Song) = doAsync { songDao.delete(song) }
-    fun getSongById(id: Long) = songDao.getById(id)
+    fun getSongById(id: Long) = songDao.getByIdLive(id)
 
 }
