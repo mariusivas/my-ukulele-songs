@@ -14,11 +14,7 @@ class ChordDialogFragment(private val chord: String) : DialogFragment() {
 
     private lateinit var image: ImageView
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.layout_chord_image, container, false)
         image = view.findViewById(R.id.chordImage)
         image.setImageDrawable(getDrawable(getChordFileName(chord)))

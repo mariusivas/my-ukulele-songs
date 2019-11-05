@@ -5,6 +5,7 @@ import android.graphics.Color
 object Constants {
 
     const val URL_PRIVACY_POLICY = "https://www.freeprivacypolicy.com/privacy/view/75eb2f2494a017039da6c2b979dbc8b8"
+    const val API_KEY_UKULELE_CHORDS = "bbec19965dd6b66598365c7129784401"
 
     /* Preferences */
     const val PREFS = "templates_prefs"

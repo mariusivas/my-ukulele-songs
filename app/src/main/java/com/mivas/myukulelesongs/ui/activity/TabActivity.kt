@@ -24,7 +24,7 @@ import com.mivas.myukulelesongs.viewmodel.TabViewModel
 import com.mivas.myukulelesongs.util.Constants.EXTRA_ID
 import com.mivas.myukulelesongs.util.DimensionUtils
 import com.mivas.myukulelesongs.util.ExportHelper
-import com.mivas.myukulelesongs.viewmodel.TabViewModelFactory
+import com.mivas.myukulelesongs.viewmodel.factory.TabViewModelFactory
 import kotlinx.android.synthetic.main.activity_tab.*
 import org.jetbrains.anko.*
 

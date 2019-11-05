@@ -19,5 +19,4 @@ object Prefs {
     fun getFloat(key: String, defValue: Float = 0f) = prefs.getFloat(key, defValue)
     fun getLong(key: String, defValue: Long = 0L) = prefs.getLong(key, defValue)
 
-
 }

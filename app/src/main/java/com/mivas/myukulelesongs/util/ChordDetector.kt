@@ -1,7 +1,5 @@
 package com.mivas.myukulelesongs.util
 
-import com.mivas.myukulelesongs.model.ChordLineData
-
 object ChordDetector {
 
     private val chords = listOf("Ab", "A", "A#", "Bb", "B", "C", "C#", "Db", "D", "D#", "Eb", "E", "F", "F#", "Gb", "G", "G#")

@@ -121,10 +121,7 @@ class SongsActivity : AppCompatActivity(), SongsActivityListener {
     }
 
     override fun onSongDeleteClicked(song: Song) {
-        alert(
-            R.string.add_edit_song_activity_dialog_delete_song_description,
-            R.string.add_edit_song_activity_dialog_delete_song_title
-        ) {
+        alert(R.string.add_edit_song_activity_dialog_delete_song_description, R.string.add_edit_song_activity_dialog_delete_song_title) {
             negativeButton(R.string.generic_cancel) {}
             positiveButton(R.string.generic_delete) {
                 viewModel.deleteSong(song)

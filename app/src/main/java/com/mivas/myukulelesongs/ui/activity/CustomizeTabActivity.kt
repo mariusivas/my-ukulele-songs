@@ -1,22 +1,17 @@
 package com.mivas.myukulelesongs.ui.activity
 
-import android.content.DialogInterface
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.SeekBar
-import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProviders
 import com.flask.colorpicker.ColorPickerView
-import com.flask.colorpicker.builder.ColorPickerClickListener
 import com.flask.colorpicker.builder.ColorPickerDialogBuilder
 import com.mivas.myukulelesongs.R
 import com.mivas.myukulelesongs.util.Constants
 import com.mivas.myukulelesongs.viewmodel.CustomizeTabViewModel
-import com.mivas.myukulelesongs.viewmodel.SongsViewModel
 import kotlinx.android.synthetic.main.activity_customize_tab.*
 import org.jetbrains.anko.alert
 
@@ -43,14 +38,7 @@ class CustomizeTabActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_reset -> {
-                alert(R.string.customize_tab_activity_dialog_reset_description, R.string.customize_tab_activity_dialog_reset_title) {
-                    negativeButton(R.string.generic_cancel) {}
-                    positiveButton(R.string.generic_reset) {
-                        viewModel.reset()
-                        initViews()
-                        sendUpdateBroadcast()
-                    }
-                }.show()
+                showResetCustomizationsDialog()
                 true
             }
             android.R.id.home -> {
@@ -126,6 +114,17 @@ class CustomizeTabActivity : AppCompatActivity() {
                 .build()
                 .show()
         }
+    }
+
+    private fun showResetCustomizationsDialog() {
+        alert(R.string.customize_tab_activity_dialog_reset_description, R.string.customize_tab_activity_dialog_reset_title) {
+            negativeButton(R.string.generic_cancel) {}
+            positiveButton(R.string.generic_reset) {
+                viewModel.reset()
+                initViews()
+                sendUpdateBroadcast()
+            }
+        }.show()
     }
 
     private fun sendUpdateBroadcast() = sendBroadcast(Intent(Constants.BROADCAST_CUSTOMIZATIONS_UPDATED))

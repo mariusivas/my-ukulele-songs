@@ -27,12 +27,10 @@ class CustomizeTabViewModel(application: Application) : AndroidViewModel(applica
     fun setChordColor(chordColor: Int) = Prefs.putInt(Constants.PREF_TAB_CHORD_COLOR, chordColor)
     fun setBackgroundColor(backgroundColor: Int) = Prefs.putInt(Constants.PREF_TAB_BACKGROUND_COLOR, backgroundColor)
 
-    fun createBackground(backgroundColor: Int): GradientDrawable {
-        return GradientDrawable().apply {
-            shape = GradientDrawable.RECTANGLE
-            cornerRadius = DimensionUtils.dpToPx(6).toFloat()
-            setColor(backgroundColor)
-        }
+    fun createBackground(backgroundColor: Int) = GradientDrawable().apply {
+        shape = GradientDrawable.RECTANGLE
+        cornerRadius = DimensionUtils.dpToPx(6).toFloat()
+        setColor(backgroundColor)
     }
 
     fun reset() {
