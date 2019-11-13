@@ -1,9 +1,13 @@
 package com.mivas.myukulelesongs.util
 
-object ChordDetector {
+import com.mivas.myukulelesongs.model.UCChordData
+
+object ChordHelper {
 
     private val chords = listOf("Ab", "A", "A#", "Bb", "B", "C", "C#", "Db", "D", "D#", "Eb", "E", "F", "F#", "Gb", "G", "G#")
-    private val variations = listOf("m", "aug", "dim", "7", "m7", "maj7", "aug7", "dim7", "m7b5", "add9", "madd9", "6", "m6", "5", "9", "m9", "11", "13", "sus2", "sus4", "7sus2", "7sus4")
+    //private val variations = listOf("m", "aug", "dim", "7", "m7", "maj7", "aug7", "dim7", "m7b5", "add9", "madd9", "6", "m6", "5", "9", "m9", "11", "13", "sus2", "sus4", "7sus2", "7sus4")
+    private val variations =
+        listOf("m", "aug", "dim", "7", "m7", "maj7", "m7b5", "sus2", "sus4", "7sus4", "9", "11", "13", "6", "m6", "add9", "m9", "5", "dim7", "m13", "7sus2", "mMaj7", "m11", "maj9")
 
     fun isChordLine(line: String): Boolean {
         val words = line.split(" ").map { it.trim() }
@@ -46,7 +50,7 @@ object ChordDetector {
     }
 
     private fun getChordsInWord(word: String, chords: MutableList<String>) {
-        for (chord in ChordDetector.chords) {
+        for (chord in ChordHelper.chords) {
             if (word.startsWith(chord)) {
                 if (word == chord) {
                     chords.add(word)
@@ -62,4 +66,27 @@ object ChordDetector {
             }
         }
     }
+
+    fun getUCChordData(chord: String): UCChordData {
+        if (chords.contains(chord)) {
+            return UCChordData(fixUCPreChord(chord), "major")
+        } else {
+            chords.forEach { preChord ->
+                variations.forEach { variation ->
+                    if (chord == preChord + variation) {
+                        return UCChordData(fixUCPreChord(preChord), variation)
+                    }
+                }
+            }
+        }
+        return UCChordData("", "")
+    }
+
+    private fun fixUCPreChord(preChord: String) = preChord
+        .replace("A#", "Bb")
+        .replace("C#", "Db")
+        .replace("D#", "Eb")
+        .replace("F#", "Gb")
+        .replace("G#", "Ab")
+
 }

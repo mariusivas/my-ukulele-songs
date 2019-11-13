@@ -9,8 +9,8 @@ android {
         applicationId "com.mivas.myukulelesongs"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 6
-        versionName "1.5.0"
+        versionCode 7
+        versionName "1.6.0"
     }
     buildTypes {
         release {
@@ -20,6 +20,10 @@ android {
     }
     lintOptions {
         disable 'RestrictedApi'
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
@@ -51,6 +55,13 @@ dependencies {
     // Guava
     implementation 'com.google.guava:guava:22.0-android'
 
+    // retrofit
+    implementation 'com.squareup.retrofit2:converter-simplexml:2.5.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.14.1'
+
     // Gson
     implementation 'com.google.code.gson:gson:2.8.5'
+
+    // Picasso
+    implementation 'com.squareup.picasso:picasso:2.71828'
 }

@@ -25,6 +25,7 @@
         <activity android:name=".ui.activity.AddEditSongActivity" />
         <activity android:name=".ui.activity.CustomizeTabActivity" />
         <activity android:name=".ui.activity.TabActivity" />
+        <activity android:name=".ui.activity.ChordActivity" />
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.mivas.myukulelesongs.fileprovider"

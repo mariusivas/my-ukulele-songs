@@ -11,6 +11,7 @@ import com.flask.colorpicker.ColorPickerView
 import com.flask.colorpicker.builder.ColorPickerDialogBuilder
 import com.mivas.myukulelesongs.R
 import com.mivas.myukulelesongs.util.Constants
+import com.mivas.myukulelesongs.util.Prefs
 import com.mivas.myukulelesongs.viewmodel.CustomizeTabViewModel
 import kotlinx.android.synthetic.main.activity_customize_tab.*
 import org.jetbrains.anko.alert
@@ -56,6 +57,7 @@ class CustomizeTabActivity : AppCompatActivity() {
         textColorView.background = viewModel.createBackground(viewModel.getTextColor())
         chordColorView.background = viewModel.createBackground(viewModel.getChordColor())
         backgroundColorView.background = viewModel.createBackground(viewModel.getBackgroundColor())
+        preferSharpToogle.isChecked = viewModel.getPreferSharp()
     }
 
     private fun initListeners() {
@@ -113,6 +115,9 @@ class CustomizeTabActivity : AppCompatActivity() {
                 }
                 .build()
                 .show()
+        }
+        preferSharpToogle.setOnCheckedChangeListener { _, isChecked ->
+            Prefs.putBoolean(Constants.PREF_PREFER_SHARP, isChecked)
         }
     }
 

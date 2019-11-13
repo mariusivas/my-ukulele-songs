@@ -37,6 +37,7 @@
     <!--Tab Activity-->
     <string name="tab_activity_menu_edit">Edit</string>
     <string name="tab_activity_menu_auto_scroll">Auto Scroll</string>
+    <string name="tab_activity_menu_transpose">Transpose</string>
     <string name="tab_activity_menu_export_mus">Export .mus</string>
     <string name="tab_activity_menu_export_txt">Export .txt</string>
     <string name="tab_activity_menu_customize">Customize</string>
@@ -52,6 +53,10 @@
     <string name="customize_tab_activity_text_text_color">Text color</string>
     <string name="customize_tab_activity_text_chord_color">Chord color</string>
     <string name="customize_tab_activity_text_background_color">Background color</string>
+    <string name="customize_tab_activity_text_prefer_sharp_title">Sharp / Flat preference</string>
+    <string name="customize_tab_activity_text_prefer_sharp_description">Will display sharp(A#) or flat(Bb) notes when transpositioning</string>
+    <string name="customize_tab_activity_toggle_flat">Flat</string>
+    <string name="customize_tab_activity_toggle_sharp">Sharp</string>
     <string name="customize_tab_activity_dialog_reset_title">Reset customizations</string>
     <string name="customize_tab_activity_dialog_reset_description">Are you sure you want to reset customizations to default settings?</string>
 
@@ -83,5 +88,9 @@
     <string name="settings_activity_toast_no_email_app">No email app available on the device</string>
     <string name="settings_activity_feedback_subject">My Ukulele Songs Feedback</string>
     <string name="settings_activity_feedback_chooser">Send feedback using…</string>
+
+    <!--Chord Activity-->
+    <string name="chord_activity_text_diagram">Chart</string>
+    <string name="chord_activity_text_photo">Image</string>
 
 </resources>

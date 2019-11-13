@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -15,6 +16,8 @@ import com.mivas.myukulelesongs.R
 import com.mivas.myukulelesongs.database.model.Song
 import com.mivas.myukulelesongs.exception.NoSongsException
 import com.mivas.myukulelesongs.listeners.SongsActivityListener
+import com.mivas.myukulelesongs.rest.model.ChordsXml
+import com.mivas.myukulelesongs.rest.service.UkuleleChordsClient
 import com.mivas.myukulelesongs.ui.adapter.SongsAdapter
 import com.mivas.myukulelesongs.util.*
 import com.mivas.myukulelesongs.util.Constants.EXTRA_ID
@@ -22,6 +25,9 @@ import com.mivas.myukulelesongs.viewmodel.SongsViewModel
 import kotlinx.android.synthetic.main.activity_songs.*
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.toast
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class SongsActivity : AppCompatActivity(), SongsActivityListener {
 
