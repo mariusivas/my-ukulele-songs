@@ -24,6 +24,8 @@
     <string name="add_edit_song_activity_hint_strumming_patterns">Strumming patterns</string>
     <string name="add_edit_song_activity_hint_picking_patterns">Picking patterns</string>
     <string name="add_edit_song_activity_hint_tab">Tab</string>
+    <string name="add_edit_song_activity_text_original_key">Original key:</string>
+    <string name="add_edit_song_activity_text_select_key">Select Key</string>
     <string name="add_edit_song_activity_text_strumming">Strumming</string>
     <string name="add_edit_song_activity_text_picking">Picking</string>
     <string name="add_edit_song_activity_text_strumming_picking">Both</string>
@@ -33,6 +35,7 @@
     <string name="add_edit_song_activity_toast_empty_title">Please type in a song title</string>
     <string name="add_edit_song_activity_dialog_delete_song_title">Delete song</string>
     <string name="add_edit_song_activity_dialog_delete_song_description">Are you sure you want to delete this song?</string>
+    <string name="add_edit_song_activity_button_clear">Clear</string>
 
     <!--Tab Activity-->
     <string name="tab_activity_menu_edit">Edit</string>
@@ -41,6 +44,8 @@
     <string name="tab_activity_menu_export_mus">Export .mus</string>
     <string name="tab_activity_menu_export_txt">Export .txt</string>
     <string name="tab_activity_menu_customize">Customize</string>
+    <string name="tab_activity_text_key">Key</string>
+    <string name="tab_activity_text_original_key">Original</string>
     <string name="tab_activity_text_chords">Chords</string>
     <string name="tab_activity_text_strumming_patterns">Strumming\npatterns</string>
     <string name="tab_activity_text_picking_patterns">Picking\npatterns</string>

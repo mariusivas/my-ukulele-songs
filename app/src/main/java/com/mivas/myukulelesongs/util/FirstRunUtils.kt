@@ -9,6 +9,7 @@ class FirstRunUtils {
             title = "Happy Birthday Sample Song"
             type = 0
             strummingPatterns = "D D D D"
+            originalKey = "C"
             tab =
 """      C           G7
 Happy birthday to you

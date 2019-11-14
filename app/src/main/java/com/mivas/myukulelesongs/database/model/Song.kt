@@ -11,7 +11,8 @@ data class Song(@PrimaryKey(autoGenerate = true) var id: Long?,
                 @ColumnInfo(name = "type") var type: Int,
                 @ColumnInfo(name = "strumming_patterns") var strummingPatterns: String,
                 @ColumnInfo(name = "picking_patterns") var pickingPatterns: String,
+                @ColumnInfo(name = "original_key") var originalKey: String,
                 @ColumnInfo(name = "tab") var tab: String) {
-    constructor() : this(null, "", "", 0, "", "", "")
-    constructor(title: String = "", author: String = "", type: Int = 0, strummingPatterns: String = "", pickingPatterns: String = "", tab: String = "") : this(null, title, author, type, strummingPatterns, pickingPatterns, tab)
+    constructor() : this(null, "", "", 0, "", "", "", "")
+    constructor(title: String = "", author: String = "", type: Int = 0, strummingPatterns: String = "", pickingPatterns: String = "", originalKey: String = "", tab: String = "") : this(null, title, author, type, strummingPatterns, pickingPatterns, originalKey, tab)
 }

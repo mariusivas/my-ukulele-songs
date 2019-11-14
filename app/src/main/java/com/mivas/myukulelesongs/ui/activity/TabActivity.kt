@@ -25,6 +25,7 @@ import com.mivas.myukulelesongs.viewmodel.TabViewModel
 import com.mivas.myukulelesongs.util.Constants.EXTRA_ID
 import com.mivas.myukulelesongs.util.DimensionUtils
 import com.mivas.myukulelesongs.util.ExportHelper
+import com.mivas.myukulelesongs.util.KeyHelper
 import com.mivas.myukulelesongs.viewmodel.factory.TabViewModelFactory
 import kotlinx.android.synthetic.main.activity_tab.*
 import org.jetbrains.anko.*
@@ -115,6 +116,8 @@ class TabActivity : AppCompatActivity() {
             it?.run {
                 this@TabActivity.title = it.title
                 val chordData = viewModel.getChordData(it.tab)
+                keyText.text = KeyHelper.findKey(chordData.chords)
+                initOriginalKey()
                 initChords(chordData)
                 strummingPatternsText.text = it.strummingPatterns
                 strummingPatternsLayout.visibility = if (it.strummingPatterns.isEmpty()) View.GONE else View.VISIBLE
@@ -126,11 +129,13 @@ class TabActivity : AppCompatActivity() {
         viewModel.transposedText.observe(this, Observer<String> {
             if (it.isNotEmpty()) {
                 val chordData = viewModel.getChordData(it)
+                keyText.text = KeyHelper.findKey(chordData.chords)
                 initChords(chordData)
                 tabText.setText(chordData.spannableBuilder, TextView.BufferType.SPANNABLE)
             } else {
-                viewModel.getSong().value?.let {song ->
+                viewModel.getSong().value?.let { song ->
                     val chordData = viewModel.getChordData(song.tab)
+                    keyText.text = KeyHelper.findKey(chordData.chords)
                     initChords(chordData)
                     tabText.setText(chordData.spannableBuilder, TextView.BufferType.SPANNABLE)
                 }
@@ -189,6 +194,13 @@ class TabActivity : AppCompatActivity() {
             }
             chordsFlexLayout.addView(chordText)
         }
+    }
+
+    private fun initOriginalKey() {
+        val original = viewModel.getSong().value!!.originalKey
+        originalKeyText.text = original
+        originalKeyText.visibility = if (original.isEmpty()) View.GONE else View.VISIBLE
+        originalKeyLabel.visibility = if (original.isEmpty()) View.GONE else View.VISIBLE
     }
 
     private fun startScroll() {

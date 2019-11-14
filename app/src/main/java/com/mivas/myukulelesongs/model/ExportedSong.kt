@@ -7,9 +7,10 @@ data class ExportedSong(var title: String,
                         var type: Int,
                         var strummingPatterns: String,
                         var pickingPatterns: String,
+                        var originalKey: String,
                         var tab: String) {
-    constructor() : this("", "", 0, "", "", "")
-    constructor(song: Song) : this(song.title, song.author, song.type, song.strummingPatterns, song.pickingPatterns, song.tab)
+    constructor() : this("", "", 0, "", "", "", "")
+    constructor(song: Song) : this(song.title, song.author, song.type, song.strummingPatterns, song.pickingPatterns, song.originalKey, song.tab)
 
-    fun toSong() = Song(title, author, type, strummingPatterns, pickingPatterns, tab)
+    fun toSong() = Song(title, author, type, strummingPatterns, pickingPatterns, originalKey, tab)
 }

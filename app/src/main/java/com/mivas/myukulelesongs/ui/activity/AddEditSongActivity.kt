@@ -9,13 +9,16 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.mivas.myukulelesongs.R
 import com.mivas.myukulelesongs.database.model.Song
+import com.mivas.myukulelesongs.listeners.KeyPickerListener
+import com.mivas.myukulelesongs.ui.fragment.ChordDialogFragment
+import com.mivas.myukulelesongs.ui.fragment.KeysDialogFragment
 import com.mivas.myukulelesongs.util.Constants.EXTRA_ID
 import com.mivas.myukulelesongs.viewmodel.AddEditSongViewModel
 import com.mivas.myukulelesongs.viewmodel.factory.AddEditSongViewModelFactory
 import kotlinx.android.synthetic.main.activity_add_edit_song.*
 import org.jetbrains.anko.*
 
-class AddEditSongActivity : AppCompatActivity() {
+class AddEditSongActivity : AppCompatActivity(), KeyPickerListener {
 
     private lateinit var viewModel: AddEditSongViewModel
 
@@ -67,6 +70,11 @@ class AddEditSongActivity : AppCompatActivity() {
         strummingButton.setOnClickListener { viewModel.selectedType.value = 0 }
         pickingButton.setOnClickListener { viewModel.selectedType.value = 1 }
         strummingPickingButton.setOnClickListener { viewModel.selectedType.value = 2 }
+        selectKeyButton.setOnClickListener {
+            val transaction = supportFragmentManager.beginTransaction()
+            transaction.addToBackStack(null)
+            KeysDialogFragment(this).show(transaction, "")
+        }
     }
 
     private fun initObservers() {
@@ -75,6 +83,7 @@ class AddEditSongActivity : AppCompatActivity() {
                 it?.run {
                     titleField.setText(title)
                     authorField.setText(author)
+                    originalKeyText.text = originalKey
                     viewModel.selectedType.value = type
                     strummingPatternsField.setText(strummingPatterns)
                     pickingPatternsField.setText(pickingPatterns)
@@ -128,6 +137,11 @@ class AddEditSongActivity : AppCompatActivity() {
         type = viewModel.selectedType.value!!
         strummingPatterns = if (type == 0 || type == 2) strummingPatternsField.text.toString() else ""
         pickingPatterns = if (type == 1 || type == 2) pickingPatternsField.text.toString() else ""
+        originalKey = originalKeyText.text.toString()
         tab = tabField.text.toString()
+    }
+
+    override fun onKeyClicked(key: String) {
+        originalKeyText.text = key
     }
 }
