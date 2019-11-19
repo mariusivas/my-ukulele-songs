@@ -24,7 +24,6 @@ class CustomizeTabActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_customize_tab)
 
-        title = getString(R.string.customize_tab_activity_title)
         viewModel = ViewModelProviders.of(this).get(CustomizeTabViewModel::class.java)
 
         initViews()
@@ -36,21 +35,24 @@ class CustomizeTabActivity : AppCompatActivity() {
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.action_reset -> {
-                showResetCustomizationsDialog()
-                true
-            }
-            android.R.id.home -> {
-                onBackPressed()
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
+    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
+        R.id.action_reset -> {
+            showResetCustomizationsDialog()
+            true
         }
+        android.R.id.home -> {
+            onBackPressed()
+            true
+        }
+        else -> super.onOptionsItemSelected(item)
     }
 
     private fun initViews() {
+        supportActionBar?.run {
+            setDisplayHomeAsUpEnabled(true)
+            setDisplayShowHomeEnabled(true)
+            title = getString(R.string.customize_tab_activity_title)
+        }
         val textSize = viewModel.getTextSize()
         textSizeSeekBar.progress = textSize
         textSizeText.text = textSize.toString()

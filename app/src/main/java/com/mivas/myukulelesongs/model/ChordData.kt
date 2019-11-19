@@ -4,5 +4,6 @@ import android.text.SpannableStringBuilder
 
 data class ChordData(
         val spannableBuilder: SpannableStringBuilder,
-        val chords: Set<String>
+        val chords: Set<String>,
+        val allChords: List<String>
 )

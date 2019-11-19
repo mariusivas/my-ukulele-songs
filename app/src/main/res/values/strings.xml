@@ -59,7 +59,7 @@
     <string name="customize_tab_activity_text_chord_color">Chord color</string>
     <string name="customize_tab_activity_text_background_color">Background color</string>
     <string name="customize_tab_activity_text_prefer_sharp_title">Sharp / Flat preference</string>
-    <string name="customize_tab_activity_text_prefer_sharp_description">Will display sharp(A#) or flat(Bb) notes when transpositioning</string>
+    <string name="customize_tab_activity_text_prefer_sharp_description">Will display sharp(A#) or flat(Bb) notes when transposing</string>
     <string name="customize_tab_activity_toggle_flat">Flat</string>
     <string name="customize_tab_activity_toggle_sharp">Sharp</string>
     <string name="customize_tab_activity_dialog_reset_title">Reset customizations</string>
@@ -95,7 +95,7 @@
     <string name="settings_activity_feedback_chooser">Send feedback using…</string>
 
     <!--Chord Activity-->
-    <string name="chord_activity_text_diagram">Chart</string>
-    <string name="chord_activity_text_photo">Image</string>
+    <string name="chord_activity_text_diagram">Diagram</string>
+    <string name="chord_activity_text_alternative">Alternatives</string>
 
 </resources>

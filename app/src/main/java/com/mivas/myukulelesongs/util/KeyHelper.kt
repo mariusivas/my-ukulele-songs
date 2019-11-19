@@ -30,11 +30,11 @@ object KeyHelper {
     
     private val originalKeys = listOf("Ab", "A", "A#", "Bb", "B", "C", "C#", "Db", "D", "D#", "Eb", "E", "F", "F#", "Gb", "G", "G#", "Abm", "Am", "A#m", "Bbm", "Bm", "Cm", "C#m", "Dbm", "Dm", "D#m", "Ebm", "Em", "Fm", "F#m", "Gbm", "Gm", "G#m")
 
-    fun findKey(chords: Set<String>): String {
+    fun findKey(chords: List<String>): String {
         var bestMatches = 0
         var bestList = listOf<String>()
         keys.forEach { keySet ->
-            val matches = keySet.count { chords.contains(it) }
+            val matches = chords.count { keySet.contains(it) }
             if (matches > bestMatches) {
                 bestMatches = matches
                 bestList = keySet

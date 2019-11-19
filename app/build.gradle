@@ -9,8 +9,8 @@ android {
         applicationId "com.mivas.myukulelesongs"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 8
-        versionName "1.7.0"
+        versionCode 10
+        versionName "1.8.0"
     }
     buildTypes {
         release {

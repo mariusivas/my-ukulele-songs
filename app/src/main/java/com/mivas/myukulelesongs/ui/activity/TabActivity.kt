@@ -20,12 +20,9 @@ import com.mivas.myukulelesongs.R
 import com.mivas.myukulelesongs.database.model.Song
 import com.mivas.myukulelesongs.model.ChordData
 import com.mivas.myukulelesongs.ui.fragment.ChordDialogFragment
-import com.mivas.myukulelesongs.util.Constants
+import com.mivas.myukulelesongs.util.*
 import com.mivas.myukulelesongs.viewmodel.TabViewModel
 import com.mivas.myukulelesongs.util.Constants.EXTRA_ID
-import com.mivas.myukulelesongs.util.DimensionUtils
-import com.mivas.myukulelesongs.util.ExportHelper
-import com.mivas.myukulelesongs.util.KeyHelper
 import com.mivas.myukulelesongs.viewmodel.factory.TabViewModelFactory
 import kotlinx.android.synthetic.main.activity_tab.*
 import org.jetbrains.anko.*
@@ -116,7 +113,7 @@ class TabActivity : AppCompatActivity() {
             it?.run {
                 this@TabActivity.title = it.title
                 val chordData = viewModel.getChordData(it.tab)
-                keyText.text = KeyHelper.findKey(chordData.chords)
+                keyText.text = KeyHelper.findKey(chordData.allChords)
                 initOriginalKey()
                 initChords(chordData)
                 strummingPatternsText.text = it.strummingPatterns
@@ -129,13 +126,13 @@ class TabActivity : AppCompatActivity() {
         viewModel.transposedText.observe(this, Observer<String> {
             if (it.isNotEmpty()) {
                 val chordData = viewModel.getChordData(it)
-                keyText.text = KeyHelper.findKey(chordData.chords)
+                keyText.text = KeyHelper.findKey(chordData.allChords)
                 initChords(chordData)
                 tabText.setText(chordData.spannableBuilder, TextView.BufferType.SPANNABLE)
             } else {
                 viewModel.getSong().value?.let { song ->
                     val chordData = viewModel.getChordData(song.tab)
-                    keyText.text = KeyHelper.findKey(chordData.chords)
+                    keyText.text = KeyHelper.findKey(chordData.allChords)
                     initChords(chordData)
                     tabText.setText(chordData.spannableBuilder, TextView.BufferType.SPANNABLE)
                 }
@@ -185,12 +182,15 @@ class TabActivity : AppCompatActivity() {
             chordText.layoutParams = layoutParams
             chordText.text = chord
             chordText.setOnClickListener {
-                val transaction = supportFragmentManager.beginTransaction()
-                transaction.addToBackStack(null)
-                ChordDialogFragment(chord).show(transaction, "")
-                /*startActivity(Intent(this, ChordActivity::class.java).apply {
-                    putExtra(Constants.EXTRA_CHORD, chord)
-                })*/
+                if (NetworkUtils.isInternetAvailable()) {
+                    startActivity(Intent(this, ChordActivity::class.java).apply {
+                        putExtra(Constants.EXTRA_CHORD, chord)
+                    })
+                } else {
+                    val transaction = supportFragmentManager.beginTransaction()
+                    transaction.addToBackStack(null)
+                    ChordDialogFragment(chord).show(transaction, "")
+                }
             }
             chordsFlexLayout.addView(chordText)
         }

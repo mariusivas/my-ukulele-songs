@@ -10,7 +10,6 @@ import androidx.lifecycle.ViewModelProviders
 import com.mivas.myukulelesongs.R
 import com.mivas.myukulelesongs.database.model.Song
 import com.mivas.myukulelesongs.listeners.KeyPickerListener
-import com.mivas.myukulelesongs.ui.fragment.ChordDialogFragment
 import com.mivas.myukulelesongs.ui.fragment.KeysDialogFragment
 import com.mivas.myukulelesongs.util.Constants.EXTRA_ID
 import com.mivas.myukulelesongs.viewmodel.AddEditSongViewModel

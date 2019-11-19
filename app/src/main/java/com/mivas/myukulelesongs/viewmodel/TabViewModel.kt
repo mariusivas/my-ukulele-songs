@@ -33,6 +33,7 @@ class TabViewModel(application: Application, songId: Long) : AndroidViewModel(ap
     fun getChordData(tab: String): ChordData {
         val chordColor = getChordColor()
         val songChords = mutableSetOf<String>()
+        val allChords = mutableListOf<String>()
         val builder = SpannableStringBuilder()
         val lines = tab.split("\n")
         lines.forEach { line ->
@@ -42,13 +43,14 @@ class TabViewModel(application: Application, songId: Long) : AndroidViewModel(ap
                 builder.append(spannable)
                 val lineChords = ChordHelper.getChordsInLine(line)
                 songChords.addAll(lineChords)
+                allChords.addAll(lineChords)
 
             } else {
                 builder.append(line)
             }
             builder.append("\n")
         }
-        return ChordData(builder, songChords)
+        return ChordData(builder, songChords, allChords)
     }
 
     fun transpose(plus: Boolean) {

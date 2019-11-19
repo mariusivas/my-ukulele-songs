@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.MenuItem
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -42,6 +43,11 @@ class SettingsActivity : AppCompatActivity(), SongsImportedListener {
     }
 
     private fun initViews() {
+        supportActionBar?.run {
+            setDisplayHomeAsUpEnabled(true)
+            setDisplayShowHomeEnabled(true)
+            title = getString(R.string.settings_activity_title)
+        }
         versionDescriptionText.text = BuildConfig.VERSION_NAME
     }
 
@@ -85,6 +91,14 @@ class SettingsActivity : AppCompatActivity(), SongsImportedListener {
         privacyPolicyLayout.setOnClickListener {
             startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(Constants.URL_PRIVACY_POLICY)))
         }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
+        android.R.id.home -> {
+            onBackPressed()
+            true
+        }
+        else -> super.onOptionsItemSelected(item)
     }
 
     private fun checkPermissionAndImport(requestCode: Int) {

@@ -1,12 +1,8 @@
 package com.mivas.myukulelesongs.viewmodel
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.mivas.myukulelesongs.database.model.Song
-import com.mivas.myukulelesongs.repository.AddEditSongRepository
 import com.mivas.myukulelesongs.rest.model.ChordsXml
 import com.mivas.myukulelesongs.rest.service.UkuleleChordsClient
 import com.mivas.myukulelesongs.util.ChordHelper
@@ -34,4 +30,10 @@ class ChordViewModel(application: Application, chord: String) : AndroidViewModel
     }
 
     fun getXmlData() = xmlData
+
+    fun getAlternativeUrls(): List<String> {
+        val urls = xmlData.value!!.chords.map { it.miniDiagram }.toMutableList()
+        if (urls.isNotEmpty()) urls.removeAt(0)
+        return urls
+    }
 }

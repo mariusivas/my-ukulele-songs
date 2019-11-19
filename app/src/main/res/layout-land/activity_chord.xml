@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_mapple"
+    android:orientation="vertical"
+    android:padding="8dp">
+
+    <ImageView
+        android:id="@+id/diagramBackground"
+        android:layout_width="0dp"
+        android:layout_height="160dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/background_mahogany"
+        app:layout_constraintBottom_toTopOf="@+id/alternativeBackground"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/diagramDivider"
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="@+id/diagramBackground"
+        app:layout_constraintEnd_toEndOf="@+id/diagramBackground"
+        app:layout_constraintHorizontal_bias="0.4"
+        app:layout_constraintStart_toStartOf="@+id/diagramBackground"
+        app:layout_constraintTop_toTopOf="@+id/diagramBackground" />
+
+    <TextView
+        android:id="@+id/diagramText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/bree_serif_regular"
+        android:text="@string/chord_activity_text_diagram"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="@+id/diagramBackground"
+        app:layout_constraintStart_toStartOf="@+id/diagramBackground"
+        app:layout_constraintTop_toTopOf="@+id/diagramBackground" />
+
+    <ImageView
+        android:id="@+id/diagramImage"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="8dp"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toBottomOf="@+id/diagramBackground"
+        app:layout_constraintEnd_toStartOf="@+id/diagramDivider"
+        app:layout_constraintStart_toStartOf="@+id/diagramBackground"
+        app:layout_constraintTop_toBottomOf="@+id/diagramText" />
+
+    <ImageView
+        android:id="@+id/photoImage"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="8dp"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toBottomOf="@+id/diagramBackground"
+        app:layout_constraintEnd_toEndOf="@+id/diagramBackground"
+        app:layout_constraintStart_toEndOf="@+id/diagramDivider"
+        app:layout_constraintTop_toBottomOf="@+id/diagramText" />
+
+    <ImageView
+        android:id="@+id/alternativeBackground"
+        android:layout_width="0dp"
+        android:layout_height="120dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/background_mahogany"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/diagramBackground" />
+
+    <TextView
+        android:id="@+id/alternativeText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/bree_serif_regular"
+        android:text="@string/chord_activity_text_alternative"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="@+id/alternativeBackground"
+        app:layout_constraintStart_toStartOf="@+id/alternativeBackground"
+        app:layout_constraintTop_toTopOf="@+id/alternativeBackground" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/alternativeRecycler"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:clipToPadding="false"
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp"
+        app:layout_constraintBottom_toBottomOf="@+id/alternativeBackground"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/alternativeText" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
