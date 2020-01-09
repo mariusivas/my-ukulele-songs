@@ -10,7 +10,7 @@ import com.mivas.myukulelesongs.database.dao.SongDao
 import com.mivas.myukulelesongs.database.model.Song
 
 
-@Database(entities = [Song::class], version = 3, exportSchema = false)
+@Database(entities = [Song::class], version = 4, exportSchema = false)
 abstract class Db : RoomDatabase() {
 
     abstract fun getSongsDao(): SongDao
@@ -30,9 +30,19 @@ abstract class Db : RoomDatabase() {
             }
         }
 
+        private val MIGRATION_3_4 = object : Migration(3, 4) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("ALTER TABLE songs ADD COLUMN version INTEGER NOT NULL DEFAULT 0")
+                database.execSQL("ALTER TABLE songs ADD COLUMN uploaded INTEGER NOT NULL DEFAULT 0")
+                database.execSQL("ALTER TABLE songs ADD COLUMN deleted INTEGER NOT NULL DEFAULT 0")
+                database.execSQL("ALTER TABLE songs ADD COLUMN unique_id TEXT NOT NULL DEFAULT ''")
+            }
+        }
+
         val instance: Db = Room.databaseBuilder(App.instance.applicationContext, Db::class.java, "MUS_DB")
                 .addMigrations(MIGRATION_1_2)
                 .addMigrations(MIGRATION_2_3)
+                .addMigrations(MIGRATION_3_4)
                 .build()
     }
 

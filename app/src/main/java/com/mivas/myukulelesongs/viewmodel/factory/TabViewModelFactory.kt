@@ -6,9 +6,9 @@ import androidx.lifecycle.ViewModelProvider
 import com.mivas.myukulelesongs.viewmodel.TabViewModel
 
 
-class TabViewModelFactory(private val application: Application, private val songId: Long) : ViewModelProvider.Factory {
+class TabViewModelFactory(private val songId: Long) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return TabViewModel(application, songId) as T
+        return TabViewModel(songId) as T
     }
 }

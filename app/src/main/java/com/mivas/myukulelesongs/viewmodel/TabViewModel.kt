@@ -1,12 +1,11 @@
 package com.mivas.myukulelesongs.viewmodel
 
-import android.app.Application
 import android.text.SpannableString
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
-import android.util.Log
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.mivas.myukulelesongs.database.model.Song
 import com.mivas.myukulelesongs.model.ChordData
 import com.mivas.myukulelesongs.repository.TabRepository
@@ -14,16 +13,17 @@ import com.mivas.myukulelesongs.util.ChordHelper
 import com.mivas.myukulelesongs.util.Constants
 import com.mivas.myukulelesongs.util.Prefs
 import com.mivas.myukulelesongs.util.TransposeHelper
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.launch
 
-class TabViewModel(application: Application, songId: Long) : AndroidViewModel(application) {
+class TabViewModel(songId: Long) : ViewModel() {
 
-    private var tabRepository = TabRepository(application)
-    private var song = tabRepository.getSongById(songId)
-    var transposedText = MutableLiveData<String>().apply { postValue("") }
+    private val tabRepository = TabRepository()
+    val song = tabRepository.getSongById(songId)
+    var transposedText = MutableLiveData<String>().apply { value = "" }
     var scrollRunning = false
 
-    fun getSong() = song
-    fun updateSong(song: Song) = tabRepository.update(song)
+    fun updateSong(song: Song) = viewModelScope.launch(IO) { tabRepository.update(song) }
 
     private fun getChordColor() = Prefs.getInt(Constants.PREF_TAB_CHORD_COLOR, Constants.DEFAULT_TAB_CHORD_COLOR)
     fun getTextSize() = Prefs.getInt(Constants.PREF_TAB_TEXT_SIZE, Constants.DEFAULT_TAB_TEXT_SIZE)

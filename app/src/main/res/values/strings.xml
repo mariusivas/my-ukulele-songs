@@ -8,7 +8,10 @@
     <string name="generic_reset">Reset</string>
     <string name="generic_restore">Restore</string>
 
-    <!--Songs Activity-->
+    <!--Loading Activity-->
+    <string name="loading_activity_text_syncing">Synchronizing songs…</string>
+
+    <!--Main Activity-->
     <string name="songs_activity_menu_search">Search</string>
     <string name="songs_activity_menu_add">Add Song</string>
     <string name="songs_activity_menu_randomize">Randomize</string>
@@ -75,6 +78,9 @@
     <string name="settings_activity_text_backup_description">Create a backup file</string>
     <string name="settings_activity_text_restore_title">Restore</string>
     <string name="settings_activity_text_restore_description">Import songs from a backup file</string>
+    <string name="settings_activity_text_cloud_sync">CLOUD SYNC</string>
+    <string name="settings_activity_text_drive_sync_title">Sync with Google Drive</string>
+    <string name="settings_activity_text_drive_sync_description">Use Google Drive to create a cloud backup and synchronize your songs across multiple devices</string>
     <string name="settings_activity_text_general_settings">GENERAL SETTINGS</string>
     <string name="settings_activity_text_rate_app">Rate the app</string>
     <string name="settings_activity_text_feedback">Feedback</string>
@@ -91,6 +97,8 @@
     <string name="settings_activity_toast_song_imported">%d song imported</string>
     <string name="settings_activity_toast_songs_imported">%d songs imported</string>
     <string name="settings_activity_toast_no_email_app">No email app available on the device</string>
+    <string name="settings_activity_toast_login_success">Connected to Google Drive</string>
+    <string name="settings_activity_toast_login_failed">Failed to connect to Google Drive</string>
     <string name="settings_activity_feedback_subject">My Ukulele Songs Feedback</string>
     <string name="settings_activity_feedback_chooser">Send feedback using…</string>
 

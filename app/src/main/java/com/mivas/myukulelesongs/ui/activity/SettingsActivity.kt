@@ -8,30 +8,48 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.api.client.extensions.android.http.AndroidHttp
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
+import com.google.api.client.json.gson.GsonFactory
+import com.google.api.services.drive.Drive
+import com.google.api.services.drive.DriveScopes
 import com.google.common.base.Charsets
 import com.google.common.io.CharStreams
+import com.google.gson.Gson
 import com.mivas.myukulelesongs.BuildConfig
 import com.mivas.myukulelesongs.R
 import com.mivas.myukulelesongs.database.Db
 import com.mivas.myukulelesongs.listeners.SongsImportedListener
 import com.mivas.myukulelesongs.util.Constants
+import com.mivas.myukulelesongs.drive.DriveHelper
+import com.mivas.myukulelesongs.drive.DriveSync
+import com.mivas.myukulelesongs.model.ExportSongsJson
 import com.mivas.myukulelesongs.util.ExportHelper
+import com.mivas.myukulelesongs.util.GoogleUtils
+import com.mivas.myukulelesongs.util.Prefs
 import kotlinx.android.synthetic.main.activity_settings.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.jetbrains.anko.alert
-import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.toast
-import org.jetbrains.anko.uiThread
 import java.io.InputStreamReader
 import java.lang.Exception
+import java.util.*
 
 class SettingsActivity : AppCompatActivity(), SongsImportedListener {
 
     companion object {
-        const val REQUEST_CODE_IMPORT_SONG = 1
-        const val REQUEST_CODE_RESTORE_SONGS = 2
+        private const val REQUEST_CODE_IMPORT_SONG = 1
+        private const val REQUEST_CODE_RESTORE_SONGS = 2
+        private const val REQUEST_CODE_GOOGLE_SIGN_IN = 3
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,6 +66,7 @@ class SettingsActivity : AppCompatActivity(), SongsImportedListener {
             setDisplayShowHomeEnabled(true)
             title = getString(R.string.settings_activity_title)
         }
+        driveSyncCheckbox.isChecked = Prefs.getBoolean(Constants.PREF_DRIVE_SYNC)
         versionDescriptionText.text = BuildConfig.VERSION_NAME
     }
 
@@ -56,10 +75,10 @@ class SettingsActivity : AppCompatActivity(), SongsImportedListener {
             checkPermissionAndImport(REQUEST_CODE_IMPORT_SONG)
         }
         backupLayout.setOnClickListener {
-            doAsync {
+            lifecycleScope.launch(IO) {
                 val songs = Db.instance.getSongsDao().getAll()
                 val fileName = "Backup${System.currentTimeMillis()}.mus"
-                uiThread { ExportHelper.launchExportMusIntent(this@SettingsActivity, songs, fileName) }
+                withContext(Main) { ExportHelper.launchExportMusIntent(this@SettingsActivity, songs, fileName) }
             }
         }
         restoreLayout.setOnClickListener {
@@ -69,6 +88,15 @@ class SettingsActivity : AppCompatActivity(), SongsImportedListener {
                     checkPermissionAndImport(REQUEST_CODE_RESTORE_SONGS)
                 }
             }.show()
+        }
+        driveSyncLayout.setOnClickListener { driveSyncCheckbox.toggle() }
+        driveSyncCheckbox.setOnCheckedChangeListener { _, checked ->
+            if (checked) {
+                startActivityForResult(GoogleUtils.getSignInClient(this).signInIntent, REQUEST_CODE_GOOGLE_SIGN_IN)
+            } else {
+                GoogleUtils.signOut(this)
+                Prefs.putBoolean(Constants.PREF_DRIVE_SYNC, false)
+            }
         }
         rateAppLayout.setOnClickListener {
             try {
@@ -129,20 +157,37 @@ class SettingsActivity : AppCompatActivity(), SongsImportedListener {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode in listOf(REQUEST_CODE_IMPORT_SONG, REQUEST_CODE_RESTORE_SONGS) && resultCode == RESULT_OK) {
-            data?.data?.let {
+            if (data?.data != null) {
                 try {
-                    if (ExportHelper.isMusFile(this, it)) {
-                        val inputStream = contentResolver.openInputStream(it)!!
+                    if (ExportHelper.isMusFile(this, data.data!!)) {
+                        val inputStream = contentResolver.openInputStream(data.data!!)!!
                         val fileJson = CharStreams.toString(InputStreamReader(inputStream, Charsets.UTF_8))
-                        val clearDb = requestCode == REQUEST_CODE_RESTORE_SONGS
-                        ExportHelper.importSongs(fileJson, this, clearDb)
+                        val exportedSongs = Gson().fromJson(fileJson, ExportSongsJson::class.java)
+                        val songs = exportedSongs.exportedSongs.map { exported -> exported.toSong() }
+                        val songDao = Db.instance.getSongsDao()
+                        lifecycleScope.launch(IO) {
+                            if (requestCode == REQUEST_CODE_RESTORE_SONGS) songDao.deleteAll()
+                            songDao.insertAll(songs)
+                            withContext(Main) {
+                                val string = getString(if (songs.size == 1) R.string.settings_activity_toast_song_imported else R.string.settings_activity_toast_songs_imported)
+                                toast(String.format(string, songs.size))
+                            }
+                            if (songs.size > 1 && Prefs.getBoolean(Constants.PREF_DRIVE_SYNC)) {
+                                finishAffinity()
+                                startActivity(Intent(this@SettingsActivity, LoadingActivity::class.java))
+                            }
+                        }
                     } else {
                         toast(R.string.settings_activity_toast_not_mus_file)
                     }
                 } catch (e: Exception) {
                     toast(R.string.settings_activity_toast_import_error)
                 }
-            } ?: toast(R.string.settings_activity_toast_import_error)
+            } else {
+                toast(R.string.settings_activity_toast_import_error)
+            }
+        } else if (requestCode == REQUEST_CODE_GOOGLE_SIGN_IN && data != null) {
+            handleSignInResult(data)
         }
     }
 
@@ -154,6 +199,21 @@ class SettingsActivity : AppCompatActivity(), SongsImportedListener {
             } else {
                 toast(R.string.settings_activity_toast_permission_needed)
             }
+        }
+    }
+
+    private fun handleSignInResult(data: Intent) {
+        toast(R.string.settings_activity_toast_login_success)
+        GoogleSignIn.getSignedInAccountFromIntent(data).addOnSuccessListener {
+            val credential = GoogleAccountCredential.usingOAuth2(this, Collections.singleton(DriveScopes.DRIVE_APPDATA)).apply { selectedAccount = it.account }
+            DriveHelper.drive = Drive.Builder(AndroidHttp.newCompatibleTransport(), GsonFactory(), credential)
+                .setApplicationName(getString(R.string.app_name))
+                .build()
+            Prefs.putBoolean(Constants.PREF_DRIVE_SYNC, true)
+            lifecycleScope.launch(IO) { DriveSync.syncAll(this) }
+        }.addOnFailureListener {
+            driveSyncCheckbox.isChecked = false
+            toast(R.string.settings_activity_toast_login_failed)
         }
     }
 }

@@ -6,9 +6,9 @@ import androidx.lifecycle.ViewModelProvider
 import com.mivas.myukulelesongs.viewmodel.ChordViewModel
 
 
-class ChordViewModelFactory(private val application: Application, private val chord: String) : ViewModelProvider.Factory {
+class ChordViewModelFactory(private val chord: String) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return ChordViewModel(application, chord) as T
+        return ChordViewModel(chord) as T
     }
 }

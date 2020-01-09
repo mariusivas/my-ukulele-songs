@@ -7,9 +7,9 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mivas.myukulelesongs.R
-import com.mivas.myukulelesongs.rest.model.ChordsXml
+import com.mivas.myukulelesongs.ukulelechords.model.ChordsXml
 import com.mivas.myukulelesongs.ui.adapter.AlternativeAdapter
-import com.mivas.myukulelesongs.util.Constants
+import com.mivas.myukulelesongs.util.Constants.EXTRA_CHORD
 import com.mivas.myukulelesongs.viewmodel.ChordViewModel
 import com.mivas.myukulelesongs.viewmodel.factory.ChordViewModelFactory
 import com.squareup.picasso.Picasso
@@ -18,34 +18,49 @@ import kotlinx.android.synthetic.main.activity_chord.*
 class ChordActivity : AppCompatActivity() {
 
     private lateinit var viewModel: ChordViewModel
+    private lateinit var chord: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chord)
 
-        val viewModelFactory = ChordViewModelFactory(application, intent.getStringExtra(Constants.EXTRA_CHORD)!!)
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(ChordViewModel::class.java)
-
+        initExtras()
+        initViewModel()
+        initActionBar()
         initViews()
         initObservers()
     }
 
+    private fun initExtras() {
+        chord = intent.getStringExtra(EXTRA_CHORD)!!
+    }
+
+    private fun initViewModel() {
+        val viewModelFactory = ChordViewModelFactory(chord)
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(ChordViewModel::class.java)
+    }
+
     private fun initViews() {
-        supportActionBar?.run {
-            setDisplayHomeAsUpEnabled(true)
-            setDisplayShowHomeEnabled(true)
-            title = "${intent.getStringExtra(Constants.EXTRA_CHORD)} Chord"
-        }
         alternativeRecycler.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
     }
 
+    private fun initActionBar() {
+        supportActionBar?.run {
+            setDisplayHomeAsUpEnabled(true)
+            setDisplayShowHomeEnabled(true)
+            title = "$chord Chord"
+        }
+    }
+
     private fun initObservers() {
-        viewModel.getXmlData().observe(this, Observer<ChordsXml> {
-            val diagramUrl = it.chords[0].diagram
-            Picasso.get().load(diagramUrl).into(diagramImage)
-            val photoUrl = it.chords[0].photo
-            Picasso.get().load(photoUrl).into(photoImage)
-            alternativeRecycler.adapter = AlternativeAdapter(this, viewModel.getAlternativeUrls())
+        viewModel.xmlData.observe(this, Observer<ChordsXml> {
+            if (it.chords.isNotEmpty()) {
+                val diagramUrl = it.chords[0].diagram
+                val photoUrl = it.chords[0].photo
+                Picasso.get().load(diagramUrl).into(diagramImage)
+                Picasso.get().load(photoUrl).into(photoImage)
+                alternativeRecycler.adapter = AlternativeAdapter(this, viewModel.getAlternativeUrls())
+            }
         })
     }
 

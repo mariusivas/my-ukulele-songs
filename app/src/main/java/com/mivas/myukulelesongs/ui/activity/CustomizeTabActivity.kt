@@ -24,8 +24,7 @@ class CustomizeTabActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_customize_tab)
 
-        viewModel = ViewModelProviders.of(this).get(CustomizeTabViewModel::class.java)
-
+        initViewModel()
         initViews()
         initListeners()
     }
@@ -45,6 +44,10 @@ class CustomizeTabActivity : AppCompatActivity() {
             true
         }
         else -> super.onOptionsItemSelected(item)
+    }
+
+    private fun initViewModel() {
+        viewModel = ViewModelProviders.of(this).get(CustomizeTabViewModel::class.java)
     }
 
     private fun initViews() {

@@ -7,7 +7,6 @@ import android.content.IntentFilter
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
@@ -17,6 +16,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.flexbox.FlexboxLayout
 import com.mivas.myukulelesongs.R
+import com.mivas.myukulelesongs.drive.DriveSync
 import com.mivas.myukulelesongs.database.model.Song
 import com.mivas.myukulelesongs.model.ChordData
 import com.mivas.myukulelesongs.ui.fragment.ChordDialogFragment
@@ -41,10 +41,7 @@ class TabActivity : AppCompatActivity() {
     private val customizationsReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             initStyles()
-            tabText.setText(
-                viewModel.getChordData(viewModel.getSong().value!!.tab).spannableBuilder,
-                TextView.BufferType.SPANNABLE
-            )
+            tabText.setText(viewModel.getChordData(viewModel.song.value!!.tab).spannableBuilder, TextView.BufferType.SPANNABLE)
         }
     }
 
@@ -52,17 +49,12 @@ class TabActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tab)
 
-        val viewModelFactory = TabViewModelFactory(application, intent.getLongExtra(EXTRA_ID, -1))
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(TabViewModel::class.java)
-
+        initViewModel()
         initStyles()
         initListeners()
         initObservers()
 
-        registerReceiver(
-            customizationsReceiver,
-            IntentFilter(Constants.BROADCAST_CUSTOMIZATIONS_UPDATED)
-        )
+        registerReceiver(customizationsReceiver, IntentFilter(Constants.BROADCAST_CUSTOMIZATIONS_UPDATED))
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -89,14 +81,14 @@ class TabActivity : AppCompatActivity() {
                 true
             }
             R.id.action_export_mus -> {
-                val songsList = listOf(viewModel.getSong().value!!)
-                val fileName = "${viewModel.getSong().value!!.title}.mus"
+                val songsList = listOf(viewModel.song.value!!)
+                val fileName = "${viewModel.song.value!!.title}.mus"
                 ExportHelper.launchExportMusIntent(this, songsList, fileName)
                 true
             }
             R.id.action_export_txt -> {
-                val text = viewModel.getSong().value!!.tab
-                val fileName = "${viewModel.getSong().value!!.title}.txt"
+                val text = viewModel.song.value!!.tab
+                val fileName = "${viewModel.song.value!!.title}.txt"
                 ExportHelper.launchExportTxtIntent(this, text, fileName)
                 true
             }
@@ -108,8 +100,13 @@ class TabActivity : AppCompatActivity() {
         }
     }
 
+    private fun initViewModel() {
+        val viewModelFactory = TabViewModelFactory(intent.getLongExtra(EXTRA_ID, -1))
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(TabViewModel::class.java)
+    }
+
     private fun initObservers() {
-        viewModel.getSong().observe(this, Observer<Song> {
+        viewModel.song.observe(this, Observer<Song> {
             it?.run {
                 this@TabActivity.title = it.title
                 val chordData = viewModel.getChordData(it.tab)
@@ -130,7 +127,7 @@ class TabActivity : AppCompatActivity() {
                 initChords(chordData)
                 tabText.setText(chordData.spannableBuilder, TextView.BufferType.SPANNABLE)
             } else {
-                viewModel.getSong().value?.let { song ->
+                viewModel.song.value?.let { song ->
                     val chordData = viewModel.getChordData(song.tab)
                     keyText.text = KeyHelper.findKey(chordData.allChords)
                     initChords(chordData)
@@ -142,11 +139,8 @@ class TabActivity : AppCompatActivity() {
 
     private fun initListeners() {
         scrollPlayButton.setOnClickListener {
-            if (viewModel.scrollRunning) {
-                stopScroll()
-            } else {
-                startScroll()
-            }
+            if (viewModel.scrollRunning) stopScroll()
+            else startScroll()
         }
         scrollCloseButton.setOnClickListener { scrollTabView.visibility = View.GONE }
         transposeCloseButton.setOnClickListener {
@@ -155,11 +149,15 @@ class TabActivity : AppCompatActivity() {
             supportActionBar?.show()
         }
         transposeSaveButton.setOnClickListener {
-            val song = viewModel.getSong().value!!.apply { tab = viewModel.transposedText.value!! }
+            val song = viewModel.song.value!!.apply {
+                tab = viewModel.transposedText.value!!
+                version = viewModel.song.value!!.version + 1
+            }
             viewModel.updateSong(song)
             viewModel.transposedText.value = ""
             transposeView.visibility = View.GONE
             supportActionBar?.show()
+            if (DriveSync.isActive()) DriveSync.syncUpdatedSong((song))
         }
         transposeMinus.setOnClickListener { viewModel.transpose(false) }
         transposePlus.setOnClickListener { viewModel.transpose(true) }
@@ -173,12 +171,11 @@ class TabActivity : AppCompatActivity() {
 
     private fun initChords(chordData: ChordData) {
         chordsFlexLayout.removeAllViews()
-        val inflater = LayoutInflater.from(this)
         chordData.chords.forEach { chord ->
             val margin = DimensionUtils.dpToPx(2)
             val layoutParams = FlexboxLayout.LayoutParams(FlexboxLayout.LayoutParams.WRAP_CONTENT, FlexboxLayout.LayoutParams.WRAP_CONTENT)
             layoutParams.setMargins(margin, margin, margin, margin)
-            val chordText = inflater.inflate(R.layout.list_item_chord, null) as TextView
+            val chordText = LayoutInflater.from(this).inflate(R.layout.list_item_chord, null) as TextView
             chordText.layoutParams = layoutParams
             chordText.text = chord
             chordText.setOnClickListener {
@@ -197,7 +194,7 @@ class TabActivity : AppCompatActivity() {
     }
 
     private fun initOriginalKey() {
-        val original = viewModel.getSong().value!!.originalKey
+        val original = viewModel.song.value!!.originalKey
         originalKeyText.text = original
         originalKeyText.visibility = if (original.isEmpty()) View.GONE else View.VISIBLE
         originalKeyLabel.visibility = if (original.isEmpty()) View.GONE else View.VISIBLE

@@ -1,4 +1,4 @@
-package com.mivas.myukulelesongs.rest.model;
+package com.mivas.myukulelesongs.ukulelechords.model;
 
 import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Root;

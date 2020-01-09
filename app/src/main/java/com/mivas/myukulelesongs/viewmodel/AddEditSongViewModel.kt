@@ -1,24 +1,20 @@
 package com.mivas.myukulelesongs.viewmodel
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.*
 import com.mivas.myukulelesongs.database.model.Song
 import com.mivas.myukulelesongs.repository.AddEditSongRepository
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.launch
 
-class AddEditSongViewModel(application: Application, songId: Long) : AndroidViewModel(application) {
+class AddEditSongViewModel(songId: Long) : ViewModel() {
 
-    private var addEditSongRepository = AddEditSongRepository(application)
-    private var song = addEditSongRepository.getSongById(songId)
-    var selectedType: MutableLiveData<Int> = MutableLiveData()
+    private val addEditSongRepository = AddEditSongRepository()
 
-    init {
-        selectedType.value = 0
-    }
+    val song = addEditSongRepository.getSongById(songId)
+    var selectedType = MutableLiveData<Int>().apply { value = 0 }
+    var isEdit = songId != -1L
 
-    fun insertSong(song: Song) = addEditSongRepository.insert(song)
-    fun updateSong(song: Song) = addEditSongRepository.update(song)
-    fun deleteSong(song: Song) = addEditSongRepository.delete(song)
-    fun getSong() = song
+    fun insertSong(song: Song) = viewModelScope.launch(IO) { addEditSongRepository.insert(song) }
+    fun updateSong(song: Song) = viewModelScope.launch(IO) { addEditSongRepository.update(song) }
+    fun deleteSong(song: Song) = viewModelScope.launch(IO) { addEditSongRepository.delete(song) }
 }

@@ -8,10 +8,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.mivas.myukulelesongs.R
+import com.mivas.myukulelesongs.drive.DriveSync
 import com.mivas.myukulelesongs.database.model.Song
 import com.mivas.myukulelesongs.listeners.KeyPickerListener
 import com.mivas.myukulelesongs.ui.fragment.KeysDialogFragment
 import com.mivas.myukulelesongs.util.Constants.EXTRA_ID
+import com.mivas.myukulelesongs.util.IdUtils
 import com.mivas.myukulelesongs.viewmodel.AddEditSongViewModel
 import com.mivas.myukulelesongs.viewmodel.factory.AddEditSongViewModelFactory
 import kotlinx.android.synthetic.main.activity_add_edit_song.*
@@ -25,9 +27,8 @@ class AddEditSongActivity : AppCompatActivity(), KeyPickerListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_edit_song)
 
-        supportActionBar?.setHomeAsUpIndicator(R.drawable.icon_plus)
-
-        initAddOrEdit()
+        initViewModel()
+        initActionBar()
         initListeners()
         initObservers()
     }
@@ -35,7 +36,7 @@ class AddEditSongActivity : AppCompatActivity(), KeyPickerListener {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_add_edit_song, menu)
         val deleteButton = menu!!.findItem(R.id.action_delete_song)
-        deleteButton.isVisible = intent.hasExtra(EXTRA_ID)
+        deleteButton.isVisible = viewModel.isEdit
         return true
     }
 
@@ -53,32 +54,25 @@ class AddEditSongActivity : AppCompatActivity(), KeyPickerListener {
         }
     }
 
-    private fun initAddOrEdit() {
-        if (intent.hasExtra(EXTRA_ID)) {
-            val viewModelFactory = AddEditSongViewModelFactory(application, intent.getLongExtra(EXTRA_ID, -1))
-            viewModel = ViewModelProviders.of(this, viewModelFactory).get(AddEditSongViewModel::class.java)
-            title = getString(R.string.add_edit_song_activity_text_edit_song)
-        } else {
-            val viewModelFactory = AddEditSongViewModelFactory(application, -1)
-            viewModel = ViewModelProviders.of(this, viewModelFactory).get(AddEditSongViewModel::class.java)
-            title = getString(R.string.add_edit_song_activity_text_add_song)
-        }
+    private fun initViewModel() {
+        val viewModelFactory = AddEditSongViewModelFactory(intent.getLongExtra(EXTRA_ID, -1))
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(AddEditSongViewModel::class.java)
+    }
+
+    private fun initActionBar() {
+        title = getString(if (viewModel.isEdit) R.string.add_edit_song_activity_text_edit_song else R.string.add_edit_song_activity_text_add_song)
     }
 
     private fun initListeners() {
         strummingButton.setOnClickListener { viewModel.selectedType.value = 0 }
         pickingButton.setOnClickListener { viewModel.selectedType.value = 1 }
-        strummingPickingButton.setOnClickListener { viewModel.selectedType.value = 2 }
-        selectKeyButton.setOnClickListener {
-            val transaction = supportFragmentManager.beginTransaction()
-            transaction.addToBackStack(null)
-            KeysDialogFragment(this).show(transaction, "")
-        }
+        bothButton.setOnClickListener { viewModel.selectedType.value = 2 }
+        selectKeyButton.setOnClickListener { showKeySelectionDialog() }
     }
 
     private fun initObservers() {
-        if (intent.hasExtra(EXTRA_ID)) {
-            viewModel.getSong().observe(this, Observer<Song> {
+        if (viewModel.isEdit) {
+            viewModel.song.observe(this, Observer {
                 it?.run {
                     titleField.setText(title)
                     authorField.setText(author)
@@ -90,26 +84,31 @@ class AddEditSongActivity : AppCompatActivity(), KeyPickerListener {
                 }
             })
         }
-        viewModel.selectedType.observe(this, Observer<Int> {
+        viewModel.selectedType.observe(this, Observer {
             strummingPatternsField.visibility = if (it == 0 || it == 2) View.VISIBLE else View.GONE
             pickingPatternsField.visibility = if (it == 1 || it == 2) View.VISIBLE else View.GONE
-            strummingButton.background =
-                if (viewModel.selectedType.value!! == 0) getDrawable(R.drawable.background_mahogany_medium)
-                else getDrawable(R.drawable.background_mahogany_light)
-            pickingButton.background =
-                if (viewModel.selectedType.value!! == 1) getDrawable(R.drawable.background_mahogany_medium)
-                else getDrawable(R.drawable.background_mahogany_light)
-            strummingPickingButton.background =
-                if (viewModel.selectedType.value!! == 2) getDrawable(R.drawable.background_mahogany_medium)
-                else getDrawable(R.drawable.background_mahogany_light)
+            strummingButton.background = getDrawable(if (viewModel.selectedType.value!! == 0) R.drawable.background_mahogany_medium else R.drawable.background_mahogany_light)
+            pickingButton.background = getDrawable(if (viewModel.selectedType.value!! == 1) R.drawable.background_mahogany_medium else R.drawable.background_mahogany_light)
+            bothButton.background = getDrawable(if (viewModel.selectedType.value!! == 2) R.drawable.background_mahogany_medium else R.drawable.background_mahogany_light)
         })
+    }
+
+    private fun showKeySelectionDialog() {
+        val transaction = supportFragmentManager.beginTransaction()
+        transaction.addToBackStack(null)
+        KeysDialogFragment(this).show(transaction, "")
     }
 
     private fun showDeleteSongDialog() {
         alert(R.string.add_edit_song_activity_dialog_delete_song_description, R.string.add_edit_song_activity_dialog_delete_song_title) {
             negativeButton(R.string.generic_cancel) {}
             positiveButton(R.string.generic_delete) {
-                viewModel.deleteSong(viewModel.getSong().value!!)
+                if (DriveSync.isActive()) {
+                    viewModel.updateSong(viewModel.song.value!!.apply { deleted = true })
+                    DriveSync.syncDeletedSong(viewModel.song.value!!)
+                } else {
+                    viewModel.deleteSong(viewModel.song.value!!)
+                }
                 finish()
             }
         }.show()
@@ -120,17 +119,19 @@ class AddEditSongActivity : AppCompatActivity(), KeyPickerListener {
             toast(R.string.add_edit_song_activity_toast_empty_title)
             return
         }
-        if (intent.hasExtra(EXTRA_ID)) {
-            val song = viewModel.getSong().value!!.run { initSong(this) }
+        if (viewModel.isEdit) {
+            val song = viewModel.song.value!!.run { updateSongData(this) }
             viewModel.updateSong(song)
+            if (DriveSync.isActive()) DriveSync.syncUpdatedSong((song))
         } else {
-            val song = Song().run { initSong(this) }
+            val song = Song().run { updateSongData(this) }
             viewModel.insertSong(song)
+            if (DriveSync.isActive()) DriveSync.syncCreatedSong((song))
         }
         finish()
     }
 
-    private fun initSong(song: Song) = song.apply {
+    private fun updateSongData(song: Song) = song.apply {
         title = titleField.text.toString()
         author = authorField.text.toString()
         type = viewModel.selectedType.value!!
@@ -138,6 +139,11 @@ class AddEditSongActivity : AppCompatActivity(), KeyPickerListener {
         pickingPatterns = if (type == 1 || type == 2) pickingPatternsField.text.toString() else ""
         originalKey = originalKeyText.text.toString()
         tab = tabField.text.toString()
+        if (viewModel.isEdit) {
+            version = song.version + 1
+        } else {
+            uniqueId = IdUtils.generateUniqueId()
+        }
     }
 
     override fun onKeyClicked(key: String) {

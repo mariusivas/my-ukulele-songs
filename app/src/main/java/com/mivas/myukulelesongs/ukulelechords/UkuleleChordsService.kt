@@ -1,6 +1,6 @@
-package com.mivas.myukulelesongs.rest.service
+package com.mivas.myukulelesongs.ukulelechords
 
-import com.mivas.myukulelesongs.rest.model.ChordsXml
+import com.mivas.myukulelesongs.ukulelechords.model.ChordsXml
 import retrofit2.Call
 import retrofit2.http.*
 

@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -13,45 +12,31 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mivas.myukulelesongs.R
+import com.mivas.myukulelesongs.drive.DriveSync
 import com.mivas.myukulelesongs.database.model.Song
-import com.mivas.myukulelesongs.exception.NoSongsException
 import com.mivas.myukulelesongs.listeners.SongsActivityListener
-import com.mivas.myukulelesongs.rest.model.ChordsXml
-import com.mivas.myukulelesongs.rest.service.UkuleleChordsClient
 import com.mivas.myukulelesongs.ui.adapter.SongsAdapter
-import com.mivas.myukulelesongs.util.*
 import com.mivas.myukulelesongs.util.Constants.EXTRA_ID
+import com.mivas.myukulelesongs.util.KeyboardUtils
 import com.mivas.myukulelesongs.viewmodel.SongsViewModel
-import kotlinx.android.synthetic.main.activity_songs.*
+import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.toast
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
-class SongsActivity : AppCompatActivity(), SongsActivityListener {
+class MainActivity : AppCompatActivity(), SongsActivityListener {
 
     private lateinit var viewModel: SongsViewModel
     private lateinit var songsAdapter: SongsAdapter
-    private var searchMode = false
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_songs_activity, menu)
+        menuInflater.inflate(R.menu.menu_main_activity, menu)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_search_song -> {
-                if (searchMode) {
-                    KeyboardUtils.closeKeyboard(this)
-                    searchField.setText("")
-                    searchView.visibility = View.GONE
-                } else {
-                    searchView.visibility = View.VISIBLE
-                    KeyboardUtils.focusEditText(this, searchField)
-                }
-                searchMode = !searchMode
+                viewModel.revertSearchMode()
                 true
             }
             R.id.action_add_song -> {
@@ -61,10 +46,8 @@ class SongsActivity : AppCompatActivity(), SongsActivityListener {
             R.id.action_randomize -> {
                 try {
                     val song = viewModel.getRandomSong()
-                    startActivity(Intent(this, TabActivity::class.java).apply {
-                        putExtra(EXTRA_ID, song.id)
-                    })
-                } catch (e: NoSongsException) {
+                    startActivity(Intent(this, TabActivity::class.java).apply { putExtra(EXTRA_ID, song.id) })
+                } catch (e: NoSuchElementException) {
                     toast(R.string.songs_activity_toast_no_songs)
                 }
                 true
@@ -79,10 +62,9 @@ class SongsActivity : AppCompatActivity(), SongsActivityListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_songs)
+        setContentView(R.layout.activity_main)
 
-        viewModel = ViewModelProviders.of(this).get(SongsViewModel::class.java)
-
+        initViewModel()
         initViews()
         initListeners()
         initObservers()
@@ -90,10 +72,14 @@ class SongsActivity : AppCompatActivity(), SongsActivityListener {
         viewModel.checkFirstRun()
     }
 
+    private fun initViewModel() {
+        viewModel = ViewModelProviders.of(this).get(SongsViewModel::class.java)
+    }
+
     private fun initViews() {
         songsAdapter = SongsAdapter(this, this)
         with(songsRecycler) {
-            layoutManager = LinearLayoutManager(this@SongsActivity)
+            layoutManager = LinearLayoutManager(this@MainActivity)
             adapter = songsAdapter
         }
     }
@@ -109,38 +95,46 @@ class SongsActivity : AppCompatActivity(), SongsActivityListener {
     }
 
     private fun initObservers() {
-        viewModel.getAllSongs().observe(this, Observer<List<Song>> {
+        viewModel.songs.observe(this, Observer {
             songsAdapter.submitList(it)
+        })
+        viewModel.searchMode.observe(this, Observer {
+            if (it) {
+                searchView.visibility = View.VISIBLE
+                KeyboardUtils.focusEditText(this, searchField)
+            } else {
+                KeyboardUtils.closeKeyboard(this)
+                searchField.setText("")
+                searchView.visibility = View.GONE
+            }
         })
     }
 
     override fun onSongClicked(song: Song) {
-        startActivity(Intent(this, TabActivity::class.java).apply {
-            putExtra(EXTRA_ID, song.id)
-        })
+        startActivity(Intent(this, TabActivity::class.java).apply { putExtra(EXTRA_ID, song.id) })
     }
 
     override fun onSongEditClicked(song: Song) {
-        startActivity(Intent(this, AddEditSongActivity::class.java).apply {
-            putExtra(EXTRA_ID, song.id)
-        })
+        startActivity(Intent(this, AddEditSongActivity::class.java).apply { putExtra(EXTRA_ID, song.id) })
     }
 
     override fun onSongDeleteClicked(song: Song) {
         alert(R.string.add_edit_song_activity_dialog_delete_song_description, R.string.add_edit_song_activity_dialog_delete_song_title) {
             negativeButton(R.string.generic_cancel) {}
             positiveButton(R.string.generic_delete) {
-                viewModel.deleteSong(song)
+                if (DriveSync.isActive()) {
+                    viewModel.updateSong(song.apply { deleted = true })
+                    DriveSync.syncDeletedSong(song)
+                } else {
+                    viewModel.deleteSong(song)
+                }
             }
         }.show()
     }
 
     override fun onBackPressed() {
-
-        if (searchMode) {
-            searchMode = false
-            searchField.setText("")
-            searchView.visibility = View.GONE
+        if (viewModel.searchMode.value!!) {
+            viewModel.revertSearchMode()
         } else {
             super.onBackPressed()
         }

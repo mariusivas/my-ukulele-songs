@@ -15,17 +15,22 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.activity.SettingsActivity"></activity>
-        <activity android:name=".ui.activity.SongsActivity">
+        <activity android:name=".ui.activity.LoadingActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+            </intent-filter>
         </activity>
+        <activity android:name=".ui.activity.MainActivity" />
         <activity android:name=".ui.activity.AddEditSongActivity" />
         <activity android:name=".ui.activity.CustomizeTabActivity" />
         <activity android:name=".ui.activity.TabActivity" />
+        <activity android:name=".ui.activity.SettingsActivity" />
         <activity android:name=".ui.activity.ChordActivity" />
         <provider
             android:name="androidx.core.content.FileProvider"

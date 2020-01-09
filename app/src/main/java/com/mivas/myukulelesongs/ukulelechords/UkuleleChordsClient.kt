@@ -1,4 +1,4 @@
-package com.mivas.myukulelesongs.rest.service
+package com.mivas.myukulelesongs.ukulelechords
 
 import com.mivas.myukulelesongs.BuildConfig
 import okhttp3.OkHttpClient

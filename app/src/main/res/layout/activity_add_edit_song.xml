@@ -115,7 +115,7 @@
             android:textSize="17sp" />
 
         <TextView
-            android:id="@+id/strummingPickingButton"
+            android:id="@+id/bothButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_gravity="center"

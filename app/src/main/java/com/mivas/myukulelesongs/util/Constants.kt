@@ -4,8 +4,15 @@ import android.graphics.Color
 
 object Constants {
 
+    /* Privacy policy */
     const val URL_PRIVACY_POLICY = "https://www.freeprivacypolicy.com/privacy/view/75eb2f2494a017039da6c2b979dbc8b8"
+
+    /* Ukulele chords */
     const val API_KEY_UKULELE_CHORDS = "bbec19965dd6b66598365c7129784401"
+
+    /* Drive */
+    const val CONFIG_FILE_NAME = "config.json"
+    const val CONFIG_FILE_DEFAULT_VALUE = "{\"songs\":[]}"
 
     /* Preferences */
     const val PREFS = "templates_prefs"
@@ -15,6 +22,8 @@ object Constants {
     const val PREF_TAB_CHORD_COLOR = "pref_tab_chord_color"
     const val PREF_TAB_BACKGROUND_COLOR = "pref_tab_background_color"
     const val PREF_PREFER_SHARP = "pref_prefer_sharp"
+    const val PREF_DRIVE_SYNC = "pref_drive_sync"
+    const val PREF_DRIVE_CONFIG_FILE_ID = "pref_drive_config_file_id"
 
     /* Defaults */
     const val DEFAULT_TAB_TEXT_SIZE = 15

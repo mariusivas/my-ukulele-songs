@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_mapple"
+    tools:context=".ui.activity.LoadingActivity">
+
+    <ImageView
+        android:id="@+id/syncBackground"
+        android:layout_width="140dp"
+        android:layout_height="140dp"
+        android:src="@drawable/shape_logo_circle"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.35" />
+
+    <ImageView
+        android:id="@+id/syncImage"
+        android:layout_width="130dp"
+        android:layout_height="130dp"
+        android:src="@drawable/icon_sync"
+        app:layout_constraintBottom_toBottomOf="@+id/syncBackground"
+        app:layout_constraintEnd_toEndOf="@+id/syncBackground"
+        app:layout_constraintStart_toStartOf="@+id/syncBackground"
+        app:layout_constraintTop_toTopOf="@+id/syncBackground" />
+
+    <ImageView
+        android:id="@+id/musicalNoteImage"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/icon_musical_note"
+        app:layout_constraintBottom_toBottomOf="@+id/syncBackground"
+        app:layout_constraintEnd_toEndOf="@+id/syncBackground"
+        app:layout_constraintStart_toStartOf="@+id/syncBackground"
+        app:layout_constraintTop_toTopOf="@+id/syncBackground" />
+
+    <TextView
+        android:id="@+id/syncingText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:fontFamily="@font/bree_serif_regular"
+        android:gravity="center"
+        android:padding="4dp"
+        android:text="@string/loading_activity_text_syncing"
+        android:textColor="@color/white"
+        android:textSize="22sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/syncImage" />
+</androidx.constraintlayout.widget.ConstraintLayout>

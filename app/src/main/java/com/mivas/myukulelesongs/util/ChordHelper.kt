@@ -68,12 +68,12 @@ object ChordHelper {
 
     fun getUCChordData(chord: String): UCChordData {
         if (chords.contains(chord)) {
-            return UCChordData(fixUCPreChord(chord), "major")
+            return UCChordData(fixSharps(chord), "major")
         } else {
             chords.forEach { preChord ->
                 variations.forEach { variation ->
                     if (chord == preChord + variation) {
-                        return UCChordData(fixUCPreChord(preChord), variation)
+                        return UCChordData(fixSharps(preChord), variation)
                     }
                 }
             }
@@ -81,7 +81,7 @@ object ChordHelper {
         return UCChordData("", "")
     }
 
-    private fun fixUCPreChord(preChord: String) = preChord
+    private fun fixSharps(preChord: String) = preChord
         .replace("A#", "Bb")
         .replace("C#", "Db")
         .replace("D#", "Eb")

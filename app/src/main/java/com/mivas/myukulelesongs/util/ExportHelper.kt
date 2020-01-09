@@ -14,6 +14,11 @@ import com.mivas.myukulelesongs.database.model.Song
 import com.mivas.myukulelesongs.listeners.SongsImportedListener
 import com.mivas.myukulelesongs.model.ExportSongsJson
 import com.mivas.myukulelesongs.model.ExportedSong
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.toast
 import org.jetbrains.anko.uiThread
@@ -37,17 +42,6 @@ object ExportHelper {
         return Files.getFileExtension(fileName) == "mus"
     }
 
-    fun importSongs(json: String, listener: SongsImportedListener, clearDb: Boolean) {
-        val exportedSongs = Gson().fromJson(json, ExportSongsJson::class.java)
-        val songs = exportedSongs.exportedSongs.map { it.toSong() }
-        val songDao = Db.instance.getSongsDao()
-        doAsync {
-            if (clearDb) songDao.deleteAll()
-            songDao.insertAll(songs)
-            uiThread { listener.onSongsImported(songs.size) }
-        }
-    }
-
     private fun startChooser(context: Context, songFile: File) {
         val contentUri = FileProvider.getUriForFile(context, "com.mivas.myukulelesongs.fileprovider", songFile)
         val intent = Intent(Intent.ACTION_SEND).apply {
@@ -62,9 +56,7 @@ object ExportHelper {
 
     private fun saveTempFile(context: Context, fileName: String, text: String): File {
         val exportDir = File(context.filesDir, "Songs")
-        if (!exportDir.exists()) {
-            exportDir.mkdir()
-        }
+        if (!exportDir.exists()) { exportDir.mkdir() }
         val file = File(exportDir, fileName)
         try {
             Files.asCharSink(file, Charsets.UTF_8).write(text)
