@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/songsFragment">
+
+    <fragment
+        android:id="@+id/songsFragment"
+        android:name="com.mivas.myukulelesongs.ui.fragment.SongsFragment"
+        android:label="@string/songs_fragment_title">
+    </fragment>
+
+    <fragment
+        android:id="@+id/chordsFragment"
+        android:name="com.mivas.myukulelesongs.ui.fragment.ChordsFragment"
+        android:label="@string/chords_fragment_title">
+    </fragment>
+
+    <fragment
+        android:id="@+id/virtualUkeFragment"
+        android:name="com.mivas.myukulelesongs.ui.fragment.VirtualUkeFragment"
+        android:label="@string/virtual_uke_fragment_title">
+    </fragment>
+
+    <activity
+        android:id="@+id/settingsActivity"
+        android:name="com.mivas.myukulelesongs.ui.activity.SettingsActivity"
+        android:label="@string/settings_activity_title">
+    </activity>
+
+</navigation>

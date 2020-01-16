@@ -7,6 +7,7 @@ import android.view.animation.LinearInterpolator
 import android.view.animation.RotateAnimation
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewModelScope
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.api.client.extensions.android.http.AndroidHttp
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
@@ -17,10 +18,7 @@ import com.mivas.myukulelesongs.R
 import com.mivas.myukulelesongs.database.Db
 import com.mivas.myukulelesongs.drive.DriveHelper
 import com.mivas.myukulelesongs.drive.DriveSync
-import com.mivas.myukulelesongs.util.Constants
-import com.mivas.myukulelesongs.util.GoogleUtils
-import com.mivas.myukulelesongs.util.IdUtils
-import com.mivas.myukulelesongs.util.Prefs
+import com.mivas.myukulelesongs.util.*
 import kotlinx.android.synthetic.main.activity_loading.*
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
@@ -42,6 +40,7 @@ class LoadingActivity : AppCompatActivity() {
 
         initViews()
         populateUniqueIds()
+        checkFirstRun()
         driveSignIn()
     }
 
@@ -84,11 +83,14 @@ class LoadingActivity : AppCompatActivity() {
         }
     }
 
-    private fun startDriveSync() = lifecycleScope.launch(IO) {
-        DriveSync.syncAll(this)
-        withContext(Main) {
-            startActivity(Intent(this@LoadingActivity, MainActivity::class.java))
-            finish()
+    private fun startDriveSync() {
+        val afterRestore = intent.hasExtra(Constants.EXTRA_AFTER_RESTORE) && intent.getBooleanExtra(Constants.EXTRA_AFTER_RESTORE, false)
+        lifecycleScope.launch(IO) {
+            DriveSync.syncAll(this, afterRestore)
+            withContext(Main) {
+                startActivity(Intent(this@LoadingActivity, MainActivity::class.java))
+                finish()
+            }
         }
     }
 
@@ -99,6 +101,17 @@ class LoadingActivity : AppCompatActivity() {
         if (songs.isNotEmpty()) {
             songs.forEach { it.uniqueId = IdUtils.generateUniqueId() }
             dao.updateAll(songs)
+        }
+    }
+
+    private fun checkFirstRun() {
+        if (Prefs.getBoolean(Constants.PREF_FIRST_RUN, true)) {
+            Prefs.putBoolean(Constants.PREF_FIRST_RUN, false)
+            val sampleSong = FirstRunUtils().getSampleSong()
+            lifecycleScope.launch(IO) {
+                val dao = Db.instance.getSongsDao()
+                dao.insert(sampleSong)
+            }
         }
     }
 

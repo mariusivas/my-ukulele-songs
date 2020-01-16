@@ -16,9 +16,9 @@ object DriveSync {
 
     fun isActive() = Prefs.getBoolean(Constants.PREF_DRIVE_SYNC)
 
-    fun syncAll(scope: CoroutineScope) {
+    fun syncAll(scope: CoroutineScope, afterRestore: Boolean) {
         val localSongs = songsDao.getAll()
-        val cloudSongs = readConfig()?.songs
+        val cloudSongs = if (afterRestore) mutableListOf() else readConfig()?.songs
         if (cloudSongs != null) {
             val newConfig = mutableListOf<DriveSong>() // prepare a new config file
             newConfig.addAll(importFromCloud(localSongs, cloudSongs)) // import the cloud songs that do not exist locally

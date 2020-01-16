@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "315252682150-mei3uf2paikicf1tqq6ufj8r4u1f2kd6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mivas.myukulelesongs",
+            "certificate_hash": "1dc8e090e67a0e93c0dcda1b573fe98dbf6b63cc"
+          }
+        },
+        {
           "client_id": "315252682150-tmvsveukq76ghkaia460ipigt54v9e92.apps.googleusercontent.com",
           "client_type": 3
         }

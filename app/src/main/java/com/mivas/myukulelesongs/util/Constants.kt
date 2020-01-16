@@ -24,6 +24,10 @@ object Constants {
     const val PREF_PREFER_SHARP = "pref_prefer_sharp"
     const val PREF_DRIVE_SYNC = "pref_drive_sync"
     const val PREF_DRIVE_CONFIG_FILE_ID = "pref_drive_config_file_id"
+    const val PREF_CHORDS_HINT_READ = "pref_chords_hint_read"
+    const val PREF_VIRTUAL_UKE_HINT_READ_HINT_READ = "pref_virtual_uke_hint_read_hint_read"
+    const val PREF_LAST_SCROLL_SPEED = "pref_last_scroll_speed"
+    const val PREF_VIRTUAL_UKE_STRING_SIZE = "pref_virtual_uke_string_size"
 
     /* Defaults */
     const val DEFAULT_TAB_TEXT_SIZE = 15
@@ -31,10 +35,13 @@ object Constants {
     val DEFAULT_TAB_CHORD_COLOR = Color.parseColor("#e00000")
     val DEFAULT_TAB_BACKGROUND_COLOR = Color.parseColor("#ededed")
     const val DEFAULT_PREFER_SHARP = false
+    const val DEFAULT_SCROLL_SPEED = 30
+    const val DEFAULT_VIRTUAL_UKE_STRING_SIZE = 60
 
     /* Extra */
     const val EXTRA_ID = "com.mivas.myukulelesongs.EXTRA_ID"
     const val EXTRA_CHORD = "com.mivas.myukulelesongs.EXTRA_CHORD"
+    const val EXTRA_AFTER_RESTORE = "com.mivas.myukulelesongs.EXTRA_AFTER_RESTORE"
 
     /* Broadcast */
     const val BROADCAST_CUSTOMIZATIONS_UPDATED = "broadcast_customizations_update"

@@ -32,10 +32,8 @@ import com.mivas.myukulelesongs.util.ExportHelper
 import com.mivas.myukulelesongs.util.GoogleUtils
 import com.mivas.myukulelesongs.util.Prefs
 import kotlinx.android.synthetic.main.activity_settings.*
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.jetbrains.anko.alert
@@ -174,7 +172,7 @@ class SettingsActivity : AppCompatActivity(), SongsImportedListener {
                             }
                             if (songs.size > 1 && Prefs.getBoolean(Constants.PREF_DRIVE_SYNC)) {
                                 finishAffinity()
-                                startActivity(Intent(this@SettingsActivity, LoadingActivity::class.java))
+                                startActivity(Intent(this@SettingsActivity, LoadingActivity::class.java).putExtra(Constants.EXTRA_AFTER_RESTORE, true))
                             }
                         }
                     } else {
@@ -210,7 +208,7 @@ class SettingsActivity : AppCompatActivity(), SongsImportedListener {
                 .setApplicationName(getString(R.string.app_name))
                 .build()
             Prefs.putBoolean(Constants.PREF_DRIVE_SYNC, true)
-            lifecycleScope.launch(IO) { DriveSync.syncAll(this) }
+            lifecycleScope.launch(IO) { DriveSync.syncAll(this, false) }
         }.addOnFailureListener {
             driveSyncCheckbox.isChecked = false
             toast(R.string.settings_activity_toast_login_failed)

@@ -11,7 +11,10 @@
     <color name="greyCC">#CCCCCC</color>
     <color name="greyEE">#EEEEEE</color>
     <color name="black80">#CC000000</color>
+    <color name="brown">#331507</color>
     <color name="brown80">#CC331507</color>
     <color name="grey77">#777777</color>
+    <color name="grey88">#888888</color>
     <color name="gold">#edd11a</color>
+    <color name="accent_20">#33d98730</color>
 </resources>

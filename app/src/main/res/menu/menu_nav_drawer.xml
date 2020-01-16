@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group
+        android:id="@+id/mainGroup"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/songsFragment"
+            android:icon="@drawable/icon_menu_library"
+            android:title="@string/songs_fragment_title" />
+        <item
+            android:id="@+id/chordsFragment"
+            android:icon="@drawable/icon_menu_chords"
+            android:title="@string/chords_fragment_title" />
+        <item
+            android:id="@+id/virtualUkeFragment"
+            android:icon="@drawable/icon_menu_uke"
+            android:title="@string/virtual_uke_fragment_title" />
+    </group>
+
+    <group
+        android:id="@+id/secondaryGroup"
+        android:checkableBehavior="none"
+        android:menuCategory="secondary">
+        <item
+            android:id="@+id/settingsActivity"
+            android:icon="@drawable/icon_menu_settings"
+            android:title="@string/settings_activity_title" />
+    </group>
+</menu>

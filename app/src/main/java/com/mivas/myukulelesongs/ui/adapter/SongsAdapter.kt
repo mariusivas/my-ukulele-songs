@@ -1,6 +1,7 @@
 package com.mivas.myukulelesongs.ui.adapter
 
 import android.content.Context
+import android.util.Log
 import android.view.*
 import android.widget.TextView
 import androidx.appcompat.view.menu.MenuBuilder
@@ -10,10 +11,10 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.mivas.myukulelesongs.R
 import com.mivas.myukulelesongs.database.model.Song
-import com.mivas.myukulelesongs.listeners.SongsActivityListener
+import com.mivas.myukulelesongs.listeners.SongsFragmentListener
 import kotlinx.android.synthetic.main.item_song.view.*
 
-class SongsAdapter(private val context: Context, private val listener: SongsActivityListener) : ListAdapter<Song, SongsAdapter.SongHolder>(DIFF_CALLBACK) {
+class SongsAdapter(private val context: Context, private val listener: SongsFragmentListener) : ListAdapter<Song, SongsAdapter.SongHolder>(DIFF_CALLBACK) {
 
     companion object {
         private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Song>() {
@@ -50,7 +51,8 @@ class SongsAdapter(private val context: Context, private val listener: SongsActi
                     when (item?.itemId) {
                         R.id.action_edit_song -> listener.onSongEditClicked(getItem(adapterPosition))
                         R.id.action_delete_song -> listener.onSongDeleteClicked(getItem(adapterPosition))
-                        else -> {}
+                        else -> {
+                        }
                     }
                     return false
                 }

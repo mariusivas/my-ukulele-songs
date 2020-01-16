@@ -19,6 +19,17 @@
     <string name="songs_activity_toast_no_songs">You have no songs</string>
     <string name="songs_activity_hint_search">Search</string>
 
+    <!--Songs Fragment-->
+    <string name="songs_fragment_title">Library</string>
+
+    <!--Chords Fragment-->
+    <string name="chords_fragment_title">Chords</string>
+    <string name="chords_fragment_text_hint">- Press a chord to play it\n- Long press a chord to see the chart</string>
+
+    <!--Virtual Uke Fragment-->
+    <string name="virtual_uke_fragment_title">Virtual Uke</string>
+    <string name="virtual_uke_fragment_text_hint">- With your left thumb press and hold a string\n- With your right thumb tap anywhere on the string to make a sound</string>
+
     <!--Add Edit Song Activity-->
     <string name="add_edit_song_activity_text_add_song">Add Song</string>
     <string name="add_edit_song_activity_text_edit_song">Edit Song</string>
@@ -62,7 +73,7 @@
     <string name="customize_tab_activity_text_chord_color">Chord color</string>
     <string name="customize_tab_activity_text_background_color">Background color</string>
     <string name="customize_tab_activity_text_prefer_sharp_title">Sharp / Flat preference</string>
-    <string name="customize_tab_activity_text_prefer_sharp_description">Will display sharp(A#) or flat(Bb) notes when transposing</string>
+    <string name="customize_tab_activity_text_prefer_sharp_description">Will display sharp(A#) notes or flat(Bb) notes</string>
     <string name="customize_tab_activity_toggle_flat">Flat</string>
     <string name="customize_tab_activity_toggle_sharp">Sharp</string>
     <string name="customize_tab_activity_dialog_reset_title">Reset customizations</string>

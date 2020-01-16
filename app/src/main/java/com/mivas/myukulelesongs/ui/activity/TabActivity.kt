@@ -11,7 +11,9 @@ import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.SeekBar
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.flexbox.FlexboxLayout
@@ -34,8 +36,10 @@ class TabActivity : AppCompatActivity() {
     private val scrollHandler = Handler()
     private val scrollRunnable = object : Runnable {
         override fun run() {
-            scrollView.smoothScrollTo(0, scrollView.scrollY + 1)
-            scrollHandler.postDelayed(this, 150 - scrollSeekBar.progress.toLong())
+            if (scrollSeekBar.progress != 0) {
+                scrollView.smoothScrollTo(0, scrollView.scrollY + 1)
+            }
+            scrollHandler.postDelayed(this, 105 - scrollSeekBar.progress.toLong())
         }
     }
     private val customizationsReceiver = object : BroadcastReceiver() {
@@ -51,6 +55,7 @@ class TabActivity : AppCompatActivity() {
 
         initViewModel()
         initStyles()
+        initViews()
         initListeners()
         initObservers()
 
@@ -137,12 +142,26 @@ class TabActivity : AppCompatActivity() {
         })
     }
 
+    private fun initViews() {
+        scrollSeekBar.progress = Prefs.getInt(Constants.PREF_LAST_SCROLL_SPEED, Constants.DEFAULT_SCROLL_SPEED)
+        scrollSpeedText.text = scrollSeekBar.progress.toString()
+        scrollSpeedTextContainer.layoutParams = (scrollSpeedTextContainer.layoutParams as ConstraintLayout.LayoutParams).apply { horizontalBias = scrollSeekBar.progress.toFloat() / 100f }
+    }
+
     private fun initListeners() {
-        scrollPlayButton.setOnClickListener {
-            if (viewModel.scrollRunning) stopScroll()
-            else startScroll()
-        }
+        scrollPlayButton.setOnClickListener { if (viewModel.scrollRunning) stopScroll() else startScroll() }
         scrollCloseButton.setOnClickListener { scrollTabView.visibility = View.GONE }
+        scrollSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onStartTrackingTouch(seekBar: SeekBar?) = Unit
+            override fun onStopTrackingTouch(seekBar: SeekBar) {
+                Prefs.putInt(Constants.PREF_LAST_SCROLL_SPEED, seekBar.progress)
+            }
+
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                scrollSpeedText.text = progress.toString()
+                scrollSpeedTextContainer.layoutParams = (scrollSpeedTextContainer.layoutParams as ConstraintLayout.LayoutParams).apply { horizontalBias = progress.toFloat() / 100f }
+            }
+        })
         transposeCloseButton.setOnClickListener {
             transposeView.visibility = View.GONE
             viewModel.transposedText.value = ""
@@ -159,8 +178,8 @@ class TabActivity : AppCompatActivity() {
             supportActionBar?.show()
             if (DriveSync.isActive()) DriveSync.syncUpdatedSong((song))
         }
-        transposeMinus.setOnClickListener { viewModel.transpose(false) }
-        transposePlus.setOnClickListener { viewModel.transpose(true) }
+        transposeMinusButton.setOnClickListener { viewModel.transpose(false) }
+        transposePlusButton.setOnClickListener { viewModel.transpose(true) }
     }
 
     private fun initStyles() {
@@ -179,8 +198,11 @@ class TabActivity : AppCompatActivity() {
             chordText.layoutParams = layoutParams
             chordText.text = chord
             chordText.setOnClickListener {
+                SoundPlayer.playChord(this, ChordHelper.toFlats(chord))
+            }
+            chordText.setOnLongClickListener {
                 if (NetworkUtils.isInternetAvailable()) {
-                    startActivity(Intent(this, ChordActivity::class.java).apply {
+                    startActivity(Intent(this, ChordDataActivity::class.java).apply {
                         putExtra(Constants.EXTRA_CHORD, chord)
                     })
                 } else {
@@ -188,6 +210,7 @@ class TabActivity : AppCompatActivity() {
                     transaction.addToBackStack(null)
                     ChordDialogFragment(chord).show(transaction, "")
                 }
+                true
             }
             chordsFlexLayout.addView(chordText)
         }
@@ -202,13 +225,13 @@ class TabActivity : AppCompatActivity() {
 
     private fun startScroll() {
         viewModel.scrollRunning = true
-        scrollPlayButton.imageResource = R.drawable.selector_button_pause
+        scrollPlayIcon.imageResource = R.drawable.selector_button_pause
         scrollHandler.postDelayed(scrollRunnable, 150 - scrollSeekBar.progress.toLong())
     }
 
     private fun stopScroll() {
         viewModel.scrollRunning = false
-        scrollPlayButton.imageResource = R.drawable.selector_button_play
+        scrollPlayIcon.imageResource = R.drawable.selector_button_play
         scrollHandler.removeCallbacks(scrollRunnable)
     }
 
