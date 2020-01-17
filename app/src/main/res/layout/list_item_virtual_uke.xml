@@ -16,7 +16,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <View
+    <RelativeLayout
         android:id="@+id/aString"
         android:layout_width="0dp"
         android:layout_height="60dp"
@@ -25,9 +25,17 @@
         app:layout_constraintBottom_toTopOf="@+id/eString"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <View
+        <View
+            android:id="@+id/aWire"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_centerVertical="true"
+            android:background="@drawable/selector_virtual_uke_string" />
+    </RelativeLayout>
+
+    <RelativeLayout
         android:id="@+id/eString"
         android:layout_width="0dp"
         android:layout_height="60dp"
@@ -36,9 +44,17 @@
         app:layout_constraintBottom_toTopOf="@+id/cString"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/aString" />
+        app:layout_constraintTop_toBottomOf="@+id/aString">
 
-    <View
+        <View
+            android:id="@+id/eWire"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_centerVertical="true"
+            android:background="@drawable/selector_virtual_uke_string" />
+    </RelativeLayout>
+
+    <RelativeLayout
         android:id="@+id/cString"
         android:layout_width="0dp"
         android:layout_height="60dp"
@@ -47,9 +63,17 @@
         app:layout_constraintBottom_toTopOf="@+id/gString"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/eString" />
+        app:layout_constraintTop_toBottomOf="@+id/eString">
 
-    <View
+        <View
+            android:id="@+id/cWire"
+            android:layout_width="match_parent"
+            android:layout_height="2.2dp"
+            android:layout_centerVertical="true"
+            android:background="@drawable/selector_virtual_uke_string" />
+    </RelativeLayout>
+
+    <RelativeLayout
         android:id="@+id/gString"
         android:layout_width="0dp"
         android:layout_height="60dp"
@@ -58,7 +82,15 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cString" />
+        app:layout_constraintTop_toBottomOf="@+id/cString">
+
+        <View
+            android:id="@+id/gWire"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_centerVertical="true"
+            android:background="@drawable/selector_virtual_uke_string" />
+    </RelativeLayout>
 
     <View
         android:id="@+id/leftFret1"
@@ -66,7 +98,7 @@
         android:layout_height="0dp"
         android:background="@color/grey77"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <View
@@ -75,7 +107,7 @@
         android:layout_height="0dp"
         android:background="@color/grey88"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/leftFret1"
+        app:layout_constraintEnd_toStartOf="@+id/leftFret1"
         app:layout_constraintTop_toTopOf="parent" />
 
     <View
@@ -84,46 +116,7 @@
         android:layout_height="0dp"
         android:background="@color/grey77"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/leftFret2"
+        app:layout_constraintEnd_toStartOf="@+id/leftFret2"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <View
-        android:id="@+id/aWire"
-        android:layout_width="0dp"
-        android:layout_height="1dp"
-        android:background="@color/white"
-        app:layout_constraintBottom_toBottomOf="@+id/aString"
-        app:layout_constraintEnd_toEndOf="@+id/aString"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/aString" />
-
-    <View
-        android:id="@+id/eWire"
-        android:layout_width="0dp"
-        android:layout_height="2dp"
-        android:background="@color/white"
-        app:layout_constraintBottom_toBottomOf="@+id/eString"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/eString" />
-
-    <View
-        android:id="@+id/cWire"
-        android:layout_width="0dp"
-        android:layout_height="2.2dp"
-        android:background="@color/white"
-        app:layout_constraintBottom_toBottomOf="@+id/cString"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/cString" />
-
-    <View
-        android:id="@+id/gWire"
-        android:layout_width="0dp"
-        android:layout_height="1dp"
-        android:background="@color/white"
-        app:layout_constraintBottom_toBottomOf="@+id/gString"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/gString" />
 </androidx.constraintlayout.widget.ConstraintLayout>

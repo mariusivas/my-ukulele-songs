@@ -7,7 +7,7 @@ object ChordHelper {
     private val chords = listOf("Ab", "A", "A#", "Bb", "B", "C", "C#", "Db", "D", "D#", "Eb", "E", "F", "F#", "Gb", "G", "G#")
     private val uniqueChords = listOf("A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#")
     private val variations =
-        listOf("m", "7", "m7", "aug", "dim", "maj7", "m7b5", "sus2", "sus4", "7sus4", "9", "11", "13", "6", "m6", "add9", "m9", "5", "dim7", "m13", "7sus2", "mMaj7", "m11", "maj9")
+        listOf("m", "7", "m7", "maj7", "aug", "dim", "dim7", "sus2", "sus4", "7sus2", "7sus4", "m7b5", "9", "11", "13", "6", "m6", "add9", "m9", "5", "m13", "mMaj7", "m11", "maj9")
 
     fun isChordLine(line: String): Boolean {
         val words = line.split(" ").map { it.trim() }
@@ -98,14 +98,12 @@ object ChordHelper {
 
     fun getAllChordsVariations(): List<List<String>> {
         val preferSharps = Prefs.getBoolean(Constants.PREF_PREFER_SHARP)
-        val chordsList = mutableListOf<List<String>>()
-        uniqueChords.forEach { chord ->
-            val convertedChord = if (preferSharps) toSharps(chord) else toFlats(chord)
-            val variationsList = mutableListOf(convertedChord)
-            variations.forEach { variation -> variationsList.add(convertedChord + variation) }
-            chordsList.add(variationsList)
+        val all = mutableListOf<List<String>>()
+        all.add(uniqueChords.map { if (preferSharps) toSharps(it) else toFlats(it) })
+        variations.forEach { variation ->
+            all.add(uniqueChords.map { "${if (preferSharps) toSharps(it) else toFlats(it)}$variation" })
         }
-        return chordsList
+        return all
     }
 
 }

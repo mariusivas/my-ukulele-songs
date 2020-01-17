@@ -44,10 +44,6 @@ class VirtualUkeFragment : Fragment() {
     }
 
     private fun initViews() {
-        if (!Prefs.getBoolean(Constants.PREF_VIRTUAL_UKE_HINT_READ_HINT_READ)) {
-            hintLayout.visibility = View.VISIBLE
-            scrollButtonsView.visibility = View.GONE
-        }
         linearLayoutManager = object : LinearLayoutManager(activity!!, HORIZONTAL, false) {
             override fun canScrollHorizontally() = scrollable
         }
@@ -63,11 +59,6 @@ class VirtualUkeFragment : Fragment() {
     }
 
     private fun initListeners() {
-        okHintButton.setOnClickListener {
-            Prefs.putBoolean(Constants.PREF_VIRTUAL_UKE_HINT_READ_HINT_READ, true)
-            hintLayout.visibility = View.GONE
-            scrollButtonsView.visibility = View.VISIBLE
-        }
         scrollBackwardButton.setOnClickListener {
             scrollable = true
             val nextPosition = if (linearLayoutManager.findFirstCompletelyVisibleItemPosition() - 1 < 0) 0 else linearLayoutManager.findFirstCompletelyVisibleItemPosition() - 1

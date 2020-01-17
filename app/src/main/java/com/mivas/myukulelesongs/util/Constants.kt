@@ -25,7 +25,6 @@ object Constants {
     const val PREF_DRIVE_SYNC = "pref_drive_sync"
     const val PREF_DRIVE_CONFIG_FILE_ID = "pref_drive_config_file_id"
     const val PREF_CHORDS_HINT_READ = "pref_chords_hint_read"
-    const val PREF_VIRTUAL_UKE_HINT_READ_HINT_READ = "pref_virtual_uke_hint_read_hint_read"
     const val PREF_LAST_SCROLL_SPEED = "pref_last_scroll_speed"
     const val PREF_VIRTUAL_UKE_STRING_SIZE = "pref_virtual_uke_string_size"
 
