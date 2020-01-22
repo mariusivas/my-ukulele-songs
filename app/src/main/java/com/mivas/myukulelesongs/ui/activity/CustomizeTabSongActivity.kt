@@ -11,18 +11,17 @@ import com.flask.colorpicker.ColorPickerView
 import com.flask.colorpicker.builder.ColorPickerDialogBuilder
 import com.mivas.myukulelesongs.R
 import com.mivas.myukulelesongs.util.Constants
-import com.mivas.myukulelesongs.util.Prefs
-import com.mivas.myukulelesongs.viewmodel.CustomizeTabViewModel
-import kotlinx.android.synthetic.main.activity_customize_tab.*
+import com.mivas.myukulelesongs.viewmodel.CustomizeTabSongViewModel
+import kotlinx.android.synthetic.main.activity_customize_tab_song.*
 import org.jetbrains.anko.alert
 
-class CustomizeTabActivity : AppCompatActivity() {
+class CustomizeTabSongActivity : AppCompatActivity() {
 
-    private lateinit var viewModel: CustomizeTabViewModel
+    private lateinit var viewModel: CustomizeTabSongViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_customize_tab)
+        setContentView(R.layout.activity_customize_tab_song)
 
         initViewModel()
         initViews()
@@ -30,7 +29,7 @@ class CustomizeTabActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_customize_tab, menu)
+        menuInflater.inflate(R.menu.menu_customize_song, menu)
         return true
     }
 
@@ -47,22 +46,22 @@ class CustomizeTabActivity : AppCompatActivity() {
     }
 
     private fun initViewModel() {
-        viewModel = ViewModelProviders.of(this).get(CustomizeTabViewModel::class.java)
+        viewModel = ViewModelProviders.of(this).get(CustomizeTabSongViewModel::class.java)
     }
 
     private fun initViews() {
         supportActionBar?.run {
             setDisplayHomeAsUpEnabled(true)
             setDisplayShowHomeEnabled(true)
-            title = getString(R.string.customize_tab_activity_title)
+            title = getString(R.string.customize_song_activity_title_tab)
         }
         val textSize = viewModel.getTextSize()
         textSizeSeekBar.progress = textSize
         textSizeText.text = textSize.toString()
-        textColorView.background = viewModel.createBackground(viewModel.getTextColor())
-        chordColorView.background = viewModel.createBackground(viewModel.getChordColor())
+        headerColorView.background = viewModel.createBackground(viewModel.getHeaderColor())
+        lineColorView.background = viewModel.createBackground(viewModel.getLineColor())
+        numbersColorView.background = viewModel.createBackground(viewModel.getNumbersColor())
         backgroundColorView.background = viewModel.createBackground(viewModel.getBackgroundColor())
-        preferSharpToogle.isChecked = viewModel.getPreferSharp()
     }
 
     private fun initListeners() {
@@ -79,29 +78,43 @@ class CustomizeTabActivity : AppCompatActivity() {
             }
 
         })
-        textColorLayout.setOnClickListener {
+        headerColorLayout.setOnClickListener {
             ColorPickerDialogBuilder
                 .with(this)
-                .initialColor(viewModel.getTextColor())
+                .initialColor(viewModel.getHeaderColor())
                 .wheelType(ColorPickerView.WHEEL_TYPE.CIRCLE)
                 .density(12)
                 .setPositiveButton(R.string.generic_ok) { _, color, _ ->
-                    viewModel.setTextColor(color)
-                    textColorView.background = viewModel.createBackground(color)
+                    viewModel.setHeaderColor(color)
+                    headerColorView.background = viewModel.createBackground(color)
                     sendUpdateBroadcast()
                 }
                 .build()
                 .show()
         }
-        chordColorLayout.setOnClickListener {
+        lineColorLayout.setOnClickListener {
             ColorPickerDialogBuilder
                 .with(this)
-                .initialColor(viewModel.getChordColor())
+                .initialColor(viewModel.getLineColor())
                 .wheelType(ColorPickerView.WHEEL_TYPE.CIRCLE)
                 .density(12)
                 .setPositiveButton(R.string.generic_ok) { _, color, _ ->
-                    viewModel.setChordColor(color)
-                    chordColorView.background = viewModel.createBackground(color)
+                    viewModel.setLineColor(color)
+                    lineColorView.background = viewModel.createBackground(color)
+                    sendUpdateBroadcast()
+                }
+                .build()
+                .show()
+        }
+        numbersColorLayout.setOnClickListener {
+            ColorPickerDialogBuilder
+                .with(this)
+                .initialColor(viewModel.getNumbersColor())
+                .wheelType(ColorPickerView.WHEEL_TYPE.CIRCLE)
+                .density(12)
+                .setPositiveButton(R.string.generic_ok) { _, color, _ ->
+                    viewModel.setNumbersColor(color)
+                    numbersColorView.background = viewModel.createBackground(color)
                     sendUpdateBroadcast()
                 }
                 .build()
@@ -121,13 +134,10 @@ class CustomizeTabActivity : AppCompatActivity() {
                 .build()
                 .show()
         }
-        preferSharpToogle.setOnCheckedChangeListener { _, isChecked ->
-            Prefs.putBoolean(Constants.PREF_PREFER_SHARP, isChecked)
-        }
     }
 
     private fun showResetCustomizationsDialog() {
-        alert(R.string.customize_tab_activity_dialog_reset_description, R.string.customize_tab_activity_dialog_reset_title) {
+        alert(R.string.customize_song_activity_dialog_reset_description, R.string.customize_song_activity_dialog_reset_title) {
             negativeButton(R.string.generic_cancel) {}
             positiveButton(R.string.generic_reset) {
                 viewModel.reset()

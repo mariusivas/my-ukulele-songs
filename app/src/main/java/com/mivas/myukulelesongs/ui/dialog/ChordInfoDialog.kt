@@ -1,4 +1,4 @@
-package com.mivas.myukulelesongs.ui.fragment
+package com.mivas.myukulelesongs.ui.dialog
 
 import android.graphics.drawable.Drawable
 import android.os.Bundle
@@ -10,13 +10,11 @@ import androidx.fragment.app.DialogFragment
 import com.mivas.myukulelesongs.R
 import java.util.*
 
-class ChordDialogFragment(private val chord: String) : DialogFragment() {
-
-    private lateinit var image: ImageView
+class ChordInfoDialog(private val chord: String) : DialogFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.dialog_chord_image, container, false)
-        image = view.findViewById(R.id.chordImage)
+        val view = inflater.inflate(R.layout.dialog_chord_info, container, false)
+        val image = view.findViewById(R.id.chordImage) as ImageView
         image.setImageDrawable(getDrawable(getChordFileName(chord)))
         return view
     }

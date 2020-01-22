@@ -1,14 +1,13 @@
 package com.mivas.myukulelesongs.viewmodel.factory
 
 import androidx.lifecycle.ViewModel
-import android.app.Application
 import androidx.lifecycle.ViewModelProvider
-import com.mivas.myukulelesongs.viewmodel.TabViewModel
+import com.mivas.myukulelesongs.viewmodel.SongViewModel
 
 
-class TabViewModelFactory(private val songId: Long) : ViewModelProvider.Factory {
+class SongViewModelFactory(private val songId: Long) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return TabViewModel(songId) as T
+        return SongViewModel(songId) as T
     }
 }

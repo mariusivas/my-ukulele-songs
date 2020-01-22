@@ -1,4 +1,4 @@
-package com.mivas.myukulelesongs.ui.fragment
+package com.mivas.myukulelesongs.ui.dialog
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,7 +13,7 @@ import com.mivas.myukulelesongs.listeners.KeyPickerListener
 import com.mivas.myukulelesongs.util.DimensionUtils
 import com.mivas.myukulelesongs.util.KeyHelper
 
-class KeysDialogFragment(private val listener: KeyPickerListener) : DialogFragment() {
+class KeyPickerDialog(private val listener: KeyPickerListener) : DialogFragment() {
 
     private lateinit var keysFlexbox: FlexboxLayout
 
@@ -31,7 +31,7 @@ class KeysDialogFragment(private val listener: KeyPickerListener) : DialogFragme
 
     private fun initFlexbox() {
         val inflater = LayoutInflater.from(activity)
-        KeyHelper.getOriginalKeys().forEach { key ->
+        KeyHelper.getAllKeys().forEach { key ->
             val margin = DimensionUtils.dpToPx(4)
             val layoutParams = FlexboxLayout.LayoutParams(FlexboxLayout.LayoutParams.WRAP_CONTENT, FlexboxLayout.LayoutParams.WRAP_CONTENT)
             layoutParams.setMargins(margin, margin, margin, margin)

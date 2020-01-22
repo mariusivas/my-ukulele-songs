@@ -11,12 +11,15 @@ import com.mivas.myukulelesongs.R
 import com.mivas.myukulelesongs.drive.DriveSync
 import com.mivas.myukulelesongs.database.model.Song
 import com.mivas.myukulelesongs.listeners.KeyPickerListener
-import com.mivas.myukulelesongs.ui.fragment.KeysDialogFragment
+import com.mivas.myukulelesongs.ui.dialog.KeyPickerDialog
+import com.mivas.myukulelesongs.util.Constants
 import com.mivas.myukulelesongs.util.Constants.EXTRA_ID
+import com.mivas.myukulelesongs.util.Constants.EXTRA_IS_TAB
 import com.mivas.myukulelesongs.util.IdUtils
 import com.mivas.myukulelesongs.viewmodel.AddEditSongViewModel
 import com.mivas.myukulelesongs.viewmodel.factory.AddEditSongViewModelFactory
 import kotlinx.android.synthetic.main.activity_add_edit_song.*
+import kotlinx.android.synthetic.main.activity_add_edit_song.originalKeyText
 import org.jetbrains.anko.*
 
 class AddEditSongActivity : AppCompatActivity(), KeyPickerListener {
@@ -28,7 +31,9 @@ class AddEditSongActivity : AppCompatActivity(), KeyPickerListener {
         setContentView(R.layout.activity_add_edit_song)
 
         initViewModel()
+        initType()
         initActionBar()
+        initViews()
         initListeners()
         initObservers()
     }
@@ -50,6 +55,10 @@ class AddEditSongActivity : AppCompatActivity(), KeyPickerListener {
                 saveSong()
                 true
             }
+            android.R.id.home -> {
+                onBackPressed()
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -60,7 +69,18 @@ class AddEditSongActivity : AppCompatActivity(), KeyPickerListener {
     }
 
     private fun initActionBar() {
-        title = getString(if (viewModel.isEdit) R.string.add_edit_song_activity_text_edit_song else R.string.add_edit_song_activity_text_add_song)
+        supportActionBar?.run {
+            setDisplayHomeAsUpEnabled(true)
+            setDisplayShowHomeEnabled(true)
+            title = getString(if (viewModel.isEdit) R.string.add_edit_song_activity_text_edit_song else R.string.add_edit_song_activity_text_add_song)
+        }
+    }
+
+    private fun initViews() {
+        tabField.setHorizontallyScrolling(true)
+        if (!viewModel.isEdit && viewModel.selectedType.value == 3) {
+            tabField.setText(Constants.TAB_DEFAULT_TEXT)
+        }
     }
 
     private fun initListeners() {
@@ -85,18 +105,32 @@ class AddEditSongActivity : AppCompatActivity(), KeyPickerListener {
             })
         }
         viewModel.selectedType.observe(this, Observer {
-            strummingPatternsField.visibility = if (it == 0 || it == 2) View.VISIBLE else View.GONE
-            pickingPatternsField.visibility = if (it == 1 || it == 2) View.VISIBLE else View.GONE
-            strummingButton.background = getDrawable(if (viewModel.selectedType.value!! == 0) R.drawable.background_mahogany_medium else R.drawable.background_mahogany_light)
-            pickingButton.background = getDrawable(if (viewModel.selectedType.value!! == 1) R.drawable.background_mahogany_medium else R.drawable.background_mahogany_light)
-            bothButton.background = getDrawable(if (viewModel.selectedType.value!! == 2) R.drawable.background_mahogany_medium else R.drawable.background_mahogany_light)
+            if (viewModel.selectedType.value == 3) {
+                selectTypeLayout.visibility = View.GONE
+                strummingPatternsField.visibility = View.GONE
+                pickingPatternsField.visibility = View.GONE
+                tabField.hint = getString(R.string.add_edit_song_activity_hint_tab)
+            } else {
+                strummingPatternsField.visibility = if (it == 0 || it == 2) View.VISIBLE else View.GONE
+                pickingPatternsField.visibility = if (it == 1 || it == 2) View.VISIBLE else View.GONE
+                strummingButton.background = getDrawable(if (viewModel.selectedType.value!! == 0) R.drawable.background_mahogany_medium else R.drawable.background_mahogany_light)
+                pickingButton.background = getDrawable(if (viewModel.selectedType.value!! == 1) R.drawable.background_mahogany_medium else R.drawable.background_mahogany_light)
+                bothButton.background = getDrawable(if (viewModel.selectedType.value!! == 2) R.drawable.background_mahogany_medium else R.drawable.background_mahogany_light)
+                tabField.hint = getString(R.string.add_edit_song_activity_hint_chords)
+            }
         })
+    }
+
+    private fun initType() {
+        if (intent.hasExtra(EXTRA_IS_TAB) && intent.getBooleanExtra(EXTRA_IS_TAB, false)) {
+            viewModel.selectedType.value = 3
+        }
     }
 
     private fun showKeySelectionDialog() {
         val transaction = supportFragmentManager.beginTransaction()
         transaction.addToBackStack(null)
-        KeysDialogFragment(this).show(transaction, "")
+        KeyPickerDialog(this).show(transaction, "")
     }
 
     private fun showDeleteSongDialog() {
@@ -149,4 +183,5 @@ class AddEditSongActivity : AppCompatActivity(), KeyPickerListener {
     override fun onKeyClicked(key: String) {
         originalKeyText.text = key
     }
+
 }

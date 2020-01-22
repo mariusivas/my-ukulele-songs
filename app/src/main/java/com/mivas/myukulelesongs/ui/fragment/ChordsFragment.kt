@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import com.google.android.flexbox.FlexboxLayout
 import com.mivas.myukulelesongs.R
 import com.mivas.myukulelesongs.ui.activity.ChordDataActivity
+import com.mivas.myukulelesongs.ui.dialog.ChordInfoDialog
 import com.mivas.myukulelesongs.util.*
 import kotlinx.android.synthetic.main.fragment_chords.*
 import kotlinx.android.synthetic.main.fragment_chords.hintLayout
@@ -53,7 +54,7 @@ class ChordsFragment: Fragment() {
                 chordText.layoutParams = layoutParams
                 chordText.text = chord
                 chordText.setOnClickListener {
-                    SoundPlayer.playChord(activity!!, ChordHelper.toFlats(chord))
+                    SoundPlayer.playChord(activity!!, chord.toFlats())
                 }
                 chordText.setOnLongClickListener {
                     if (NetworkUtils.isInternetAvailable()) {
@@ -63,7 +64,7 @@ class ChordsFragment: Fragment() {
                     } else {
                         val transaction = activity!!.supportFragmentManager.beginTransaction()
                         transaction.addToBackStack(null)
-                        ChordDialogFragment(chord).show(transaction, "")
+                        ChordInfoDialog(chord).show(transaction, "")
                     }
                     true
                 }

@@ -1,8 +1,10 @@
 package com.mivas.myukulelesongs.util
 
+import org.jetbrains.anko.collections.forEachReversedByIndex
+
 object KeyHelper {
 
-    private val keys = listOf(
+    private val keyChords = listOf(
         listOf("C", "Dm", "Em", "F", "G", "Am", "Bdim"),
         listOf("G", "Am", "Bm", "C", "D", "Em", "F#dim"),
         listOf("G", "Am", "Bm", "C", "D", "Em", "Gbdim"),
@@ -27,22 +29,68 @@ object KeyHelper {
         listOf("F#", "G#m", "A#m", "B", "C#", "D#m", "Fdim"),
         listOf("Gb", "Abm", "Bbm", "B", "Db", "Ebm", "Fdim")
     )
-    
-    private val originalKeys = listOf("Ab", "A", "A#", "Bb", "B", "C", "C#", "Db", "D", "D#", "Eb", "E", "F", "F#", "Gb", "G", "G#", "Abm", "Am", "A#m", "Bbm", "Bm", "Cm", "C#m", "Dbm", "Dm", "D#m", "Ebm", "Em", "Fm", "F#m", "Gbm", "Gm", "G#m")
 
-    fun findKey(chords: List<String>): String {
+    private val keyNotes = listOf(
+        listOf("C", "D", "E", "F", "G", "A", "B"),
+        listOf("G", "A", "B", "C", "D", "E", "Gb"),
+        listOf("D", "E", "Gb", "G", "A", "B", "Db"),
+        listOf("A", "B", "Db", "D", "E", "Gb", "Ab"),
+        listOf("E", "Gb", "Ab", "A", "B", "Db", "Eb"),
+        listOf("B", "Db", "Eb", "E", "Gb", "Ab", "Bb"),
+        listOf("Gb", "Ab", "Bb", "B", "Db", "Eb", "F"),
+        listOf("Db", "Eb", "F", "Gb", "Ab", "Bb", "C"),
+        listOf("Ab", "Bb", "C", "Db", "Eb", "F", "G"),
+        listOf("Eb", "F", "G", "Ab", "Bb", "C", "D"),
+        listOf("Bb", "C", "D", "Eb", "F", "G", "A"),
+        listOf("F", "G", "A", "Bb", "C", "D", "E")
+    )
+    
+    private val allKeys = listOf("Ab", "A", "A#", "Bb", "B", "C", "C#", "Db", "D", "D#", "Eb", "E", "F", "F#", "Gb", "G", "G#", "Abm", "Am", "A#m", "Bbm", "Bm", "Cm", "C#m", "Dbm", "Dm", "D#m", "Ebm", "Em", "Fm", "F#m", "Gbm", "Gm", "G#m")
+
+    fun findKeyFromChords(chords: List<String>): String {
         var bestMatches = 0
-        var bestList = listOf<String>()
-        keys.forEach { keySet ->
+        val bestKeys = mutableListOf<List<String>>()
+        keyChords.forEach { keySet ->
             val matches = chords.count { keySet.contains(it) }
             if (matches > bestMatches) {
                 bestMatches = matches
-                bestList = keySet
+                bestKeys.clear()
+                bestKeys.add(keySet)
+            } else if (matches == bestMatches) {
+                bestKeys.add(keySet)
             }
         }
-        return if (bestList.isEmpty()) "" else bestList[0]
+        return when {
+            bestKeys.size == 1 -> bestKeys[0][0]
+            bestKeys.size > 1 -> {
+                var bestRelativeMinorMatches = 0
+                var bestOverallKey = ""
+                bestKeys.forEachReversedByIndex { bestKey ->
+                    val matches = chords.count { it == bestKey[5] }
+                    if (matches >= bestRelativeMinorMatches) {
+                        bestRelativeMinorMatches = matches
+                        bestOverallKey = bestKey[0]
+                    }
+                }
+                bestOverallKey
+            }
+            else -> ""
+        }
     }
 
-    fun getOriginalKeys() = originalKeys
+    fun findKeyFromTab(notes: List<String>): String {
+        var bestMatches = 0
+        var bestKey = ""
+        keyNotes.forEach { keySet ->
+            val matches = notes.count { keySet.contains(it) }
+            if (matches > bestMatches) {
+                bestMatches = matches
+                bestKey = keySet[0]
+            }
+        }
+        return if (Prefs.getBoolean(Constants.PREF_PREFER_SHARP)) bestKey.toSharps() else bestKey.toFlats()
+    }
+
+    fun getAllKeys() = allKeys
 
 }

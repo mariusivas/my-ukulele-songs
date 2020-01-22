@@ -9,19 +9,10 @@ import com.google.common.base.Charsets
 import com.google.common.io.Files
 import com.google.gson.Gson
 import com.mivas.myukulelesongs.R
-import com.mivas.myukulelesongs.database.Db
 import com.mivas.myukulelesongs.database.model.Song
-import com.mivas.myukulelesongs.listeners.SongsImportedListener
 import com.mivas.myukulelesongs.model.ExportSongsJson
 import com.mivas.myukulelesongs.model.ExportedSong
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.Dispatchers.Main
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.toast
-import org.jetbrains.anko.uiThread
 import java.io.File
 import java.io.IOException
 
@@ -51,7 +42,7 @@ object ExportHelper {
             type = "file/*"
             putExtra(Intent.EXTRA_STREAM, contentUri)
         }
-        context.startActivity(Intent.createChooser(intent, context.getString(R.string.tab_activity_text_export_with)))
+        context.startActivity(Intent.createChooser(intent, context.getString(R.string.song_activity_text_export_with)))
     }
 
     private fun saveTempFile(context: Context, fileName: String, text: String): File {

@@ -37,6 +37,7 @@
     <string name="add_edit_song_activity_hint_author">Author</string>
     <string name="add_edit_song_activity_hint_strumming_patterns">Strumming patterns</string>
     <string name="add_edit_song_activity_hint_picking_patterns">Picking patterns</string>
+    <string name="add_edit_song_activity_hint_chords">Chords</string>
     <string name="add_edit_song_activity_hint_tab">Tab</string>
     <string name="add_edit_song_activity_text_original_key">Original key:</string>
     <string name="add_edit_song_activity_text_select_key">Select Key</string>
@@ -51,33 +52,33 @@
     <string name="add_edit_song_activity_dialog_delete_song_description">Are you sure you want to delete this song?</string>
     <string name="add_edit_song_activity_button_clear">Clear</string>
 
-    <!--Tab Activity-->
-    <string name="tab_activity_menu_edit">Edit</string>
-    <string name="tab_activity_menu_auto_scroll">Auto Scroll</string>
-    <string name="tab_activity_menu_transpose">Transpose</string>
-    <string name="tab_activity_menu_export_mus">Export .mus</string>
-    <string name="tab_activity_menu_export_txt">Export .txt</string>
-    <string name="tab_activity_menu_customize">Customize</string>
-    <string name="tab_activity_text_key">Key</string>
-    <string name="tab_activity_text_original_key">Original</string>
-    <string name="tab_activity_text_chords">Chords</string>
-    <string name="tab_activity_text_strumming_patterns">Strumming\npatterns</string>
-    <string name="tab_activity_text_picking_patterns">Picking\npatterns</string>
-    <string name="tab_activity_text_export_with">Export with…</string>
+    <!--Song Activity-->
+    <string name="song_activity_menu_edit">Edit</string>
+    <string name="song_activity_menu_auto_scroll">Auto Scroll</string>
+    <string name="song_activity_menu_transpose">Transpose</string>
+    <string name="song_activity_menu_export_mus">Export .mus</string>
+    <string name="song_activity_menu_export_txt">Export .txt</string>
+    <string name="song_activity_menu_customize">Customize</string>
+    <string name="song_activity_text_key">Key</string>
+    <string name="song_activity_text_original_key">Original</string>
+    <string name="song_activity_text_chords">Chords</string>
+    <string name="song_activity_text_strumming_patterns">Strumming\npatterns</string>
+    <string name="song_activity_text_picking_patterns">Picking\npatterns</string>
+    <string name="song_activity_text_export_with">Export with…</string>
 
-    <!--Customize Tab Activity-->
-    <string name="customize_tab_activity_title">Customize Tab</string>
-    <string name="customize_tab_activity_menu_reset">Reset</string>
-    <string name="customize_tab_activity_text_text_size">Text size</string>
-    <string name="customize_tab_activity_text_text_color">Text color</string>
-    <string name="customize_tab_activity_text_chord_color">Chord color</string>
-    <string name="customize_tab_activity_text_background_color">Background color</string>
-    <string name="customize_tab_activity_text_prefer_sharp_title">Sharp / Flat preference</string>
-    <string name="customize_tab_activity_text_prefer_sharp_description">Will display sharp(A#) notes or flat(Bb) notes</string>
-    <string name="customize_tab_activity_toggle_flat">Flat</string>
-    <string name="customize_tab_activity_toggle_sharp">Sharp</string>
-    <string name="customize_tab_activity_dialog_reset_title">Reset customizations</string>
-    <string name="customize_tab_activity_dialog_reset_description">Are you sure you want to reset customizations to default settings?</string>
+    <!--Customize Song Activity-->
+    <string name="customize_song_activity_title_chords">Customize Chords Song</string>
+    <string name="customize_song_activity_title_tab">Customize Tab Song</string>
+    <string name="customize_song_activity_menu_reset">Reset</string>
+    <string name="customize_song_activity_text_text_size">Text size</string>
+    <string name="customize_song_activity_text_text_color">Text color</string>
+    <string name="customize_song_activity_text_chord_color">Chord color</string>
+    <string name="customize_song_activity_text_header_color">Header color</string>
+    <string name="customize_song_activity_text_line_color">Line color</string>
+    <string name="customize_song_activity_text_numbers_color">Numbers color</string>
+    <string name="customize_song_activity_text_background_color">Background color</string>
+    <string name="customize_song_activity_dialog_reset_title">Reset customizations</string>
+    <string name="customize_song_activity_dialog_reset_description">Are you sure you want to reset customizations to default settings?</string>
 
     <!--Settings Activity-->
     <string name="settings_activity_title">Settings</string>
@@ -92,6 +93,11 @@
     <string name="settings_activity_text_cloud_sync">CLOUD SYNC</string>
     <string name="settings_activity_text_drive_sync_title">Sync with Google Drive</string>
     <string name="settings_activity_text_drive_sync_description">Use Google Drive to create a cloud backup and synchronize your songs across multiple devices</string>
+    <string name="settings_activity_text_customization">CUSTOMIZATION</string>
+    <string name="settings_activity_text_prefer_sharp_title">Sharp / Flat preference</string>
+    <string name="settings_activity_text_prefer_sharp_description">Will display sharp(A#) notes or flat(Bb) notes</string>
+    <string name="settings_activity_toggle_sharp">Sharp</string>
+    <string name="settings_activity_toggle_flat">Flat</string>
     <string name="settings_activity_text_general_settings">GENERAL SETTINGS</string>
     <string name="settings_activity_text_rate_app">Rate the app</string>
     <string name="settings_activity_text_feedback">Feedback</string>
@@ -116,5 +122,10 @@
     <!--Chord Activity-->
     <string name="chord_activity_text_diagram">Diagram</string>
     <string name="chord_activity_text_alternative">Alternatives</string>
+
+    <!--Create Song Dialog-->
+    <string name="create_song_dialog_text_title">Select song type</string>
+    <string name="create_song_dialog_text_chords">Chords</string>
+    <string name="create_song_dialog_text_tab">Tab</string>
 
 </resources>

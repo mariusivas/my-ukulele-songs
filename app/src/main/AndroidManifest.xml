@@ -28,8 +28,9 @@
         </activity>
         <activity android:name=".ui.activity.MainActivity" />
         <activity android:name=".ui.activity.AddEditSongActivity" />
-        <activity android:name=".ui.activity.CustomizeTabActivity" />
-        <activity android:name=".ui.activity.TabActivity" />
+        <activity android:name=".ui.activity.CustomizeChordsSongActivity" />
+        <activity android:name=".ui.activity.CustomizeTabSongActivity" />
+        <activity android:name=".ui.activity.SongActivity" />
         <activity android:name=".ui.activity.SettingsActivity" />
         <activity android:name=".ui.activity.ChordDataActivity" />
         <provider

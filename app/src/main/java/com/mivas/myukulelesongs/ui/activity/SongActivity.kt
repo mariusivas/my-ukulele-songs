@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.view.LayoutInflater
@@ -13,26 +12,30 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.SeekBar
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.flexbox.FlexboxLayout
 import com.mivas.myukulelesongs.R
-import com.mivas.myukulelesongs.drive.DriveSync
 import com.mivas.myukulelesongs.database.model.Song
+import com.mivas.myukulelesongs.drive.DriveSync
 import com.mivas.myukulelesongs.model.ChordData
-import com.mivas.myukulelesongs.ui.fragment.ChordDialogFragment
+import com.mivas.myukulelesongs.ui.dialog.ChordInfoDialog
 import com.mivas.myukulelesongs.util.*
-import com.mivas.myukulelesongs.viewmodel.TabViewModel
 import com.mivas.myukulelesongs.util.Constants.EXTRA_ID
-import com.mivas.myukulelesongs.viewmodel.factory.TabViewModelFactory
-import kotlinx.android.synthetic.main.activity_tab.*
-import org.jetbrains.anko.*
+import com.mivas.myukulelesongs.viewmodel.SongViewModel
+import com.mivas.myukulelesongs.viewmodel.factory.SongViewModelFactory
+import kotlinx.android.synthetic.main.activity_song.*
+import org.jetbrains.anko.backgroundColor
+import org.jetbrains.anko.imageResource
+import org.jetbrains.anko.textColor
 
 
-class TabActivity : AppCompatActivity() {
+class SongActivity : AppCompatActivity() {
 
-    private lateinit var viewModel: TabViewModel
+    private lateinit var viewModel: SongViewModel
+    private var maxCharsLine = 0
     private val scrollHandler = Handler()
     private val scrollRunnable = object : Runnable {
         override fun run() {
@@ -44,17 +47,23 @@ class TabActivity : AppCompatActivity() {
     }
     private val customizationsReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            initStyles()
-            tabText.setText(viewModel.getChordData(viewModel.song.value!!.tab).spannableBuilder, TextView.BufferType.SPANNABLE)
+            if (viewModel.song.value!!.type == 3) {
+                initTabStyles()
+                val tabData = viewModel.getTabData(viewModel.song.value!!.tab, maxCharsLine)
+                tabText.setText(tabData.spannableBuilder, TextView.BufferType.SPANNABLE)
+            } else {
+                initChordsStyles()
+                val chordData = viewModel.getChordData(viewModel.song.value!!.tab)
+                tabText.setText(chordData.spannableBuilder, TextView.BufferType.SPANNABLE)
+            }
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_tab)
+        setContentView(R.layout.activity_song)
 
         initViewModel()
-        initStyles()
         initViews()
         initListeners()
         initObservers()
@@ -62,8 +71,13 @@ class TabActivity : AppCompatActivity() {
         registerReceiver(customizationsReceiver, IntentFilter(Constants.BROADCAST_CUSTOMIZATIONS_UPDATED))
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_tab, menu)
+        if (intent.getBooleanExtra(Constants.EXTRA_IS_TAB, false)) {
+            invalidateOptionsMenu()
+            val transposeMenu = menu.findItem(R.id.action_transpose)
+            transposeMenu.isVisible = false
+        }
         return true
     }
 
@@ -98,7 +112,11 @@ class TabActivity : AppCompatActivity() {
                 true
             }
             R.id.action_customize -> {
-                startActivity(Intent(this, CustomizeTabActivity::class.java))
+                if (viewModel.song.value!!.type == 3) {
+                    startActivity(Intent(this, CustomizeTabSongActivity::class.java))
+                } else {
+                    startActivity(Intent(this, CustomizeChordsSongActivity::class.java))
+                }
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -106,35 +124,51 @@ class TabActivity : AppCompatActivity() {
     }
 
     private fun initViewModel() {
-        val viewModelFactory = TabViewModelFactory(intent.getLongExtra(EXTRA_ID, -1))
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(TabViewModel::class.java)
+        val viewModelFactory = SongViewModelFactory(intent.getLongExtra(EXTRA_ID, -1))
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(SongViewModel::class.java)
     }
 
     private fun initObservers() {
         viewModel.song.observe(this, Observer<Song> {
             it?.run {
-                this@TabActivity.title = it.title
-                val chordData = viewModel.getChordData(it.tab)
-                keyText.text = KeyHelper.findKey(chordData.allChords)
-                initOriginalKey()
-                initChords(chordData)
-                strummingPatternsText.text = it.strummingPatterns
-                strummingPatternsLayout.visibility = if (it.strummingPatterns.isEmpty()) View.GONE else View.VISIBLE
-                pickingPatternsText.text = it.pickingPatterns
-                pickingPatternsLayout.visibility = if (it.pickingPatterns.isEmpty()) View.GONE else View.VISIBLE
-                tabText.setText(chordData.spannableBuilder, TextView.BufferType.SPANNABLE)
+                this@SongActivity.title = it.title
+                if (it.type == 3) {
+                    initTabStyles()
+                    tabText.text = Constants.TAB_FILLER
+                    chordsLayout.visibility = View.GONE
+                    strummingPatternsLayout.visibility = View.GONE
+                    pickingPatternsLayout.visibility = View.GONE
+                    tabText.post {
+                        maxCharsLine = viewModel.getMaxCharsPerLine(tabText)
+                        val tabData = viewModel.getTabData(it.tab, maxCharsLine)
+                        keyText.text = KeyHelper.findKeyFromTab(tabData.notes)
+                        initOriginalKey()
+                        tabText.setText(tabData.spannableBuilder, TextView.BufferType.SPANNABLE)
+                    }
+                } else {
+                    initChordsStyles()
+                    val chordData = viewModel.getChordData(it.tab)
+                    keyText.text = KeyHelper.findKeyFromChords(chordData.chords)
+                    initOriginalKey()
+                    initChords(chordData)
+                    strummingPatternsText.text = it.strummingPatterns
+                    strummingPatternsLayout.visibility = if (it.strummingPatterns.isEmpty()) View.GONE else View.VISIBLE
+                    pickingPatternsText.text = it.pickingPatterns
+                    pickingPatternsLayout.visibility = if (it.pickingPatterns.isEmpty()) View.GONE else View.VISIBLE
+                    tabText.setText(chordData.spannableBuilder, TextView.BufferType.SPANNABLE)
+                }
             } ?: finish()
         })
         viewModel.transposedText.observe(this, Observer<String> {
             if (it.isNotEmpty()) {
                 val chordData = viewModel.getChordData(it)
-                keyText.text = KeyHelper.findKey(chordData.allChords)
+                keyText.text = KeyHelper.findKeyFromChords(chordData.chords)
                 initChords(chordData)
                 tabText.setText(chordData.spannableBuilder, TextView.BufferType.SPANNABLE)
             } else {
                 viewModel.song.value?.let { song ->
                     val chordData = viewModel.getChordData(song.tab)
-                    keyText.text = KeyHelper.findKey(chordData.allChords)
+                    keyText.text = KeyHelper.findKeyFromChords(chordData.chords)
                     initChords(chordData)
                     tabText.setText(chordData.spannableBuilder, TextView.BufferType.SPANNABLE)
                 }
@@ -182,15 +216,20 @@ class TabActivity : AppCompatActivity() {
         transposePlusButton.setOnClickListener { viewModel.transpose(true) }
     }
 
-    private fun initStyles() {
-        tabText.textSize = viewModel.getTextSize().toFloat()
-        tabText.textColor = viewModel.getTextColor()
-        tabParent.backgroundColor = viewModel.getBackgroundColor()
+    private fun initChordsStyles() {
+        tabText.textSize = viewModel.getTextSizeChords().toFloat()
+        tabText.textColor = viewModel.getTextColorChords()
+        tabParent.backgroundColor = viewModel.getBackgroundColorChords()
+    }
+
+    private fun initTabStyles() {
+        tabText.textSize = viewModel.getTextSizeTab().toFloat()
+        tabParent.backgroundColor = viewModel.getBackgroundColorTab()
     }
 
     private fun initChords(chordData: ChordData) {
         chordsFlexLayout.removeAllViews()
-        chordData.chords.forEach { chord ->
+        chordData.chords.toSet().forEach { chord ->
             val margin = DimensionUtils.dpToPx(2)
             val layoutParams = FlexboxLayout.LayoutParams(FlexboxLayout.LayoutParams.WRAP_CONTENT, FlexboxLayout.LayoutParams.WRAP_CONTENT)
             layoutParams.setMargins(margin, margin, margin, margin)
@@ -198,7 +237,7 @@ class TabActivity : AppCompatActivity() {
             chordText.layoutParams = layoutParams
             chordText.text = chord
             chordText.setOnClickListener {
-                SoundPlayer.playChord(this, ChordHelper.toFlats(chord))
+                SoundPlayer.playChord(this, chord.toFlats())
             }
             chordText.setOnLongClickListener {
                 if (NetworkUtils.isInternetAvailable()) {
@@ -208,7 +247,7 @@ class TabActivity : AppCompatActivity() {
                 } else {
                     val transaction = supportFragmentManager.beginTransaction()
                     transaction.addToBackStack(null)
-                    ChordDialogFragment(chord).show(transaction, "")
+                    ChordInfoDialog(chord).show(transaction, "")
                 }
                 true
             }

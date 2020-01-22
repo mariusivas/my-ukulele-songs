@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.api.client.extensions.android.http.AndroidHttp
@@ -31,6 +32,7 @@ import com.mivas.myukulelesongs.model.ExportSongsJson
 import com.mivas.myukulelesongs.util.ExportHelper
 import com.mivas.myukulelesongs.util.GoogleUtils
 import com.mivas.myukulelesongs.util.Prefs
+import com.mivas.myukulelesongs.viewmodel.SettingsViewModel
 import kotlinx.android.synthetic.main.activity_settings.*
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
@@ -44,6 +46,8 @@ import java.util.*
 
 class SettingsActivity : AppCompatActivity(), SongsImportedListener {
 
+    private lateinit var viewModel: SettingsViewModel
+
     companion object {
         private const val REQUEST_CODE_IMPORT_SONG = 1
         private const val REQUEST_CODE_RESTORE_SONGS = 2
@@ -54,8 +58,13 @@ class SettingsActivity : AppCompatActivity(), SongsImportedListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
 
+        initViewModel()
         initViews()
         initListeners()
+    }
+
+    private fun initViewModel() {
+        viewModel = ViewModelProviders.of(this).get(SettingsViewModel::class.java)
     }
 
     private fun initViews() {
@@ -65,6 +74,7 @@ class SettingsActivity : AppCompatActivity(), SongsImportedListener {
             title = getString(R.string.settings_activity_title)
         }
         driveSyncCheckbox.isChecked = Prefs.getBoolean(Constants.PREF_DRIVE_SYNC)
+        preferSharpToogle.isChecked = viewModel.getPreferSharp()
         versionDescriptionText.text = BuildConfig.VERSION_NAME
     }
 
@@ -95,6 +105,9 @@ class SettingsActivity : AppCompatActivity(), SongsImportedListener {
                 GoogleUtils.signOut(this)
                 Prefs.putBoolean(Constants.PREF_DRIVE_SYNC, false)
             }
+        }
+        preferSharpToogle.setOnCheckedChangeListener { _, isChecked ->
+            viewModel.setPreferSharp(isChecked)
         }
         rateAppLayout.setOnClickListener {
             try {
@@ -214,4 +227,5 @@ class SettingsActivity : AppCompatActivity(), SongsImportedListener {
             toast(R.string.settings_activity_toast_login_failed)
         }
     }
+
 }

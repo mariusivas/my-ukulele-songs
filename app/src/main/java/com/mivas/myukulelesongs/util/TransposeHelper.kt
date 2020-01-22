@@ -22,7 +22,7 @@ object TransposeHelper {
         listOf("G", "G#", "F#", "Ab", "Gb")
     )
 
-    fun transposeSong(text:String, plus: Boolean, preferSharp: Boolean): String {
+    fun transposeChordsSong(text:String, plus: Boolean, preferSharp: Boolean): String {
         val lines = text.split("\n")
         var transposed = ""
         lines.forEach { line ->
@@ -32,6 +32,7 @@ object TransposeHelper {
                 line + "\n"
             }
         }
+        if (transposed.length >=2) transposed = transposed.dropLast(2)
         return transposed
     }
 

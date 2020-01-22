@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/action_reset"
-        android:title="@string/customize_tab_activity_menu_reset"
+        android:title="@string/customize_song_activity_menu_reset"
         app:showAsAction="never" />
 
 </menu>

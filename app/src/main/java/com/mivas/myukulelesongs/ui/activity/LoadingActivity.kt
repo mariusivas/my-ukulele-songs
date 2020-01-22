@@ -7,7 +7,6 @@ import android.view.animation.LinearInterpolator
 import android.view.animation.RotateAnimation
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.viewModelScope
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.api.client.extensions.android.http.AndroidHttp
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
@@ -54,7 +53,7 @@ class LoadingActivity : AppCompatActivity() {
     }
 
     private fun driveSignIn() {
-        if (Prefs.getBoolean(Constants.PREF_DRIVE_SYNC)) {
+        if (Prefs.getBoolean(Constants.PREF_DRIVE_SYNC) && NetworkUtils.isInternetAvailable()) {
             startActivityForResult(GoogleUtils.getSignInClient(this).signInIntent, REQUEST_CODE_GOOGLE_SIGN_IN)
         } else {
             startActivity(Intent(this, MainActivity::class.java))
@@ -107,10 +106,12 @@ class LoadingActivity : AppCompatActivity() {
     private fun checkFirstRun() {
         if (Prefs.getBoolean(Constants.PREF_FIRST_RUN, true)) {
             Prefs.putBoolean(Constants.PREF_FIRST_RUN, false)
-            val sampleSong = FirstRunUtils().getSampleSong()
+            val dao = Db.instance.getSongsDao()
+            val sampleChordsSong = FirstRunUtils().getSampleChordsSong()
+            val sampleTabSong = FirstRunUtils().getSampleTabSong()
             lifecycleScope.launch(IO) {
-                val dao = Db.instance.getSongsDao()
-                dao.insert(sampleSong)
+                dao.insert(sampleChordsSong)
+                dao.insert(sampleTabSong)
             }
         }
     }

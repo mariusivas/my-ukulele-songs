@@ -69,12 +69,12 @@ object ChordHelper {
 
     fun getUCChordData(chord: String): UCChordData {
         if (chords.contains(chord)) {
-            return UCChordData(toFlats(chord), "major")
+            return UCChordData(chord.toFlats(), "major")
         } else {
             chords.forEach { preChord ->
                 variations.forEach { variation ->
                     if (chord == preChord + variation) {
-                        return UCChordData(toFlats(preChord), variation)
+                        return UCChordData(preChord.toFlats(), variation)
                     }
                 }
             }
@@ -82,26 +82,12 @@ object ChordHelper {
         return UCChordData("", "")
     }
 
-    fun toFlats(preChord: String) = preChord
-        .replace("A#", "Bb")
-        .replace("C#", "Db")
-        .replace("D#", "Eb")
-        .replace("F#", "Gb")
-        .replace("G#", "Ab")
-
-    fun toSharps(preChord: String) = preChord
-        .replace("Bb", "A#")
-        .replace("Db", "C#")
-        .replace("Eb", "D#")
-        .replace("Gb", "F#")
-        .replace("Ab", "G#")
-
     fun getAllChordsVariations(): List<List<String>> {
         val preferSharps = Prefs.getBoolean(Constants.PREF_PREFER_SHARP)
         val all = mutableListOf<List<String>>()
-        all.add(uniqueChords.map { if (preferSharps) toSharps(it) else toFlats(it) })
+        all.add(uniqueChords.map { if (preferSharps) it.toSharps() else it.toFlats() })
         variations.forEach { variation ->
-            all.add(uniqueChords.map { "${if (preferSharps) toSharps(it) else toFlats(it)}$variation" })
+            all.add(uniqueChords.map { "${if (preferSharps) it.toSharps() else it.toFlats()}$variation" })
         }
         return all
     }

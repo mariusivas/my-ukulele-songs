@@ -3,7 +3,7 @@ package com.mivas.myukulelesongs.repository
 import com.mivas.myukulelesongs.database.Db
 import com.mivas.myukulelesongs.database.model.Song
 
-class TabRepository {
+class SongRepository {
 
     private val songDao = Db.instance.getSongsDao()
 

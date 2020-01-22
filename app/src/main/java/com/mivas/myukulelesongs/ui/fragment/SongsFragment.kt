@@ -14,8 +14,9 @@ import com.mivas.myukulelesongs.database.model.Song
 import com.mivas.myukulelesongs.drive.DriveSync
 import com.mivas.myukulelesongs.listeners.SongsFragmentListener
 import com.mivas.myukulelesongs.ui.activity.AddEditSongActivity
-import com.mivas.myukulelesongs.ui.activity.TabActivity
+import com.mivas.myukulelesongs.ui.activity.SongActivity
 import com.mivas.myukulelesongs.ui.adapter.SongsAdapter
+import com.mivas.myukulelesongs.ui.dialog.SongTypeSelectionDialog
 import com.mivas.myukulelesongs.util.Constants
 import com.mivas.myukulelesongs.util.KeyboardUtils
 import com.mivas.myukulelesongs.viewmodel.SongsViewModel
@@ -40,13 +41,18 @@ class SongsFragment : Fragment(), SongsFragmentListener {
                 true
             }
             R.id.action_add_song -> {
-                startActivity(Intent(activity, AddEditSongActivity::class.java))
+                val transaction = activity!!.supportFragmentManager.beginTransaction()
+                transaction.addToBackStack(null)
+                SongTypeSelectionDialog().show(transaction, "")
                 true
             }
             R.id.action_randomize -> {
                 try {
                     val song = viewModel.getRandomSong()
-                    startActivity(Intent(activity, TabActivity::class.java).apply { putExtra(Constants.EXTRA_ID, song.id) })
+                    startActivity(Intent(activity, SongActivity::class.java).apply {
+                        putExtra(Constants.EXTRA_ID, song.id)
+                        putExtra(Constants.EXTRA_IS_TAB, song.type == 3)
+                    })
                 } catch (e: NoSuchElementException) {
                     activity!!.toast(R.string.songs_activity_toast_no_songs)
                 }
@@ -115,7 +121,10 @@ class SongsFragment : Fragment(), SongsFragmentListener {
     }
 
     override fun onSongClicked(song: Song) {
-        startActivity(Intent(activity, TabActivity::class.java).apply { putExtra(Constants.EXTRA_ID, song.id) })
+        startActivity(Intent(activity, SongActivity::class.java).apply {
+            putExtra(Constants.EXTRA_ID, song.id)
+            putExtra(Constants.EXTRA_IS_TAB, song.type == 3)
+        })
     }
 
     override fun onSongEditClicked(song: Song) {

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:keepScreenOn="true"
-    tools:context=".ui.activity.TabActivity">
+    tools:context=".ui.activity.SongActivity">
 
     <ScrollView
         android:id="@+id/scrollView"
@@ -59,7 +59,7 @@
                             android:layout_marginTop="8dp"
                             android:layout_marginBottom="8dp"
                             android:fontFamily="@font/bree_serif_regular"
-                            android:text="@string/tab_activity_text_key"
+                            android:text="@string/song_activity_text_key"
                             android:textColor="@color/white"
                             android:textSize="18sp"
                             app:layout_constraintBottom_toBottomOf="parent"
@@ -99,7 +99,7 @@
                             android:id="@+id/originalKeyLabel"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/tab_activity_text_original_key"
+                            android:text="@string/song_activity_text_original_key"
                             android:textColor="@color/gold"
                             android:textSize="8sp"
                             android:textStyle="bold"
@@ -126,7 +126,7 @@
                             android:layout_marginTop="8dp"
                             android:layout_marginBottom="8dp"
                             android:fontFamily="@font/bree_serif_regular"
-                            android:text="@string/tab_activity_text_chords"
+                            android:text="@string/song_activity_text_chords"
                             android:textColor="@color/white"
                             android:textSize="18sp"
                             app:layout_constraintBottom_toBottomOf="parent"
@@ -166,7 +166,7 @@
                             android:layout_marginTop="8dp"
                             android:layout_marginBottom="8dp"
                             android:fontFamily="@font/bree_serif_regular"
-                            android:text="@string/tab_activity_text_strumming_patterns"
+                            android:text="@string/song_activity_text_strumming_patterns"
                             android:textColor="@color/white"
                             android:textSize="18sp"
                             app:layout_constraintBottom_toBottomOf="parent"
@@ -204,7 +204,7 @@
                             android:layout_marginTop="8dp"
                             android:layout_marginBottom="8dp"
                             android:fontFamily="@font/bree_serif_regular"
-                            android:text="@string/tab_activity_text_picking_patterns"
+                            android:text="@string/song_activity_text_picking_patterns"
                             android:textColor="@color/white"
                             android:textSize="18sp"
                             app:layout_constraintBottom_toBottomOf="parent"

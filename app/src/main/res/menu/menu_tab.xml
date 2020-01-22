@@ -5,33 +5,33 @@
     <item
         android:id="@+id/action_auto_scroll"
         android:icon="@drawable/icon_scroll"
-        android:title="@string/tab_activity_menu_auto_scroll"
+        android:title="@string/song_activity_menu_auto_scroll"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_edit_song"
         android:icon="@drawable/icon_edit"
-        android:title="@string/tab_activity_menu_edit"
+        android:title="@string/song_activity_menu_edit"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_transpose"
-        android:title="@string/tab_activity_menu_transpose"
+        android:title="@string/song_activity_menu_transpose"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_export_mus"
-        android:title="@string/tab_activity_menu_export_mus"
+        android:title="@string/song_activity_menu_export_mus"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_export_txt"
-        android:title="@string/tab_activity_menu_export_txt"
+        android:title="@string/song_activity_menu_export_txt"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_customize"
-        android:title="@string/tab_activity_menu_customize"
+        android:title="@string/song_activity_menu_customize"
         app:showAsAction="never" />
 
 </menu>

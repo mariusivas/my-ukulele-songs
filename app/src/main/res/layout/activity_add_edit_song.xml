@@ -36,8 +36,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_marginTop="8dp"
-        android:layout_height="40dp" >
+        android:layout_height="40dp"
+        android:layout_marginTop="8dp">
 
         <TextView
             android:id="@+id/originalKeyLabel"
@@ -56,9 +56,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:textStyle="bold"
             android:textColor="@color/white"
             android:textSize="30sp"
+            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/originalKeyLabel"
             app:layout_constraintTop_toTopOf="parent" />
@@ -79,6 +79,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
+        android:id="@+id/selectTypeLayout"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_marginTop="8dp"
@@ -159,12 +160,11 @@
         android:id="@+id/tabField"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="8dp"
         android:background="@drawable/shape_field_generic"
         android:fontFamily="@font/roboto_mono_regular"
         android:gravity="top"
+        android:layout_marginTop="8dp"
         android:hint="@string/add_edit_song_activity_hint_tab"
-        android:inputType="textFilter|textMultiLine"
         android:padding="8dp"
         android:textColor="@color/black"
         android:textSize="18sp" />
