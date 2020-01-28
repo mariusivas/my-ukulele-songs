@@ -5,24 +5,47 @@ object TabHelper {
     private val allNotes = listOf("C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B")
     private val stringStartIndex = listOf(9, 4, 0, 7)
 
+    val headerChars = listOf('G', 'C', 'E', 'A', '|')
 
-    fun getFormattedTab(text: String, maxCharsPerLine: Int): String {
+    fun getAlignedTab(text: String, maxCharsPerLine: Int): String {
         var formatted = ""
-        var splittedText = text.split("\n").toMutableList()
-        while (splittedText.size >= 4) {
-            while (splittedText[0].isNotEmpty()) {
+        var lines = text.split("\n").toMutableList()
+        while (lines.isNotEmpty()) {
+            if (validTabLines(lines)) {
                 for (i in 0..3) {
-                    val charsRemoved = if (splittedText[i].length < maxCharsPerLine) splittedText[i].length else maxCharsPerLine
-                    val sub = splittedText[i].substring(0, charsRemoved)
+                    val charsRemoved = if (lines[i].length < maxCharsPerLine) lines[i].length else maxCharsPerLine
+                    val sub = lines[i].substring(0, charsRemoved)
                     formatted += getStringHeader(i) + sub + "\n"
-                    splittedText[i] = splittedText[i].drop(charsRemoved)
+                    lines[i] = lines[i].drop(charsRemoved)
                 }
-                formatted += "\n"
+                if (lines[0].isEmpty()) lines = lines.drop(4).toMutableList()
+                if (lines.isNotEmpty() && isTabLine(lines[0])) formatted += "\n"
+            } else {
+                formatted += lines[0] + "\n"
+                lines = lines.drop(1).toMutableList()
             }
-            splittedText = splittedText.drop(4).toMutableList()
         }
         return formatted
     }
+
+    fun isTabLine(line: String) = line.isNotEmpty()
+            && line.contains('-')
+            && line.all { it == '-' || it.toString().isNumber() || it == 'A' || it == 'E' || it == 'C' || it == 'G' || it == '|' || it == 'X' }
+            && line.none { it == ' ' }
+
+    fun getNotesInLine(line: String): List<String> {
+        val stringIndex = getStringIndexByHeader(line)
+        val notes = mutableListOf<String>()
+        val items = line.split("-")
+        items.forEach {
+            if (it.isNumber()) {
+                notes.add(getNoteFromString(it.toInt(), stringIndex))
+            }
+        }
+        return notes
+    }
+
+    private fun validTabLines(lines: List<String>) = lines.size >= 4 && isTabLine(lines[0]) && isTabLine(lines[1]) && isTabLine(lines[2]) && isTabLine(lines[3])
 
     private fun getStringHeader(index: Int) = when (index) {
         0 -> "A|"
@@ -30,25 +53,6 @@ object TabHelper {
         2 -> "C|"
         3 -> "G|"
         else -> "  "
-    }
-
-    fun isNumber(char: String) = try {
-        char.toInt()
-        true
-    } catch (e: NumberFormatException) {
-        false
-    }
-
-    fun getNotesInLine(line: String): List<String> {
-        val stringIndex = getStringIndexByHeader(line)
-        val notes = mutableListOf<String>()
-        val items = line.split("-")
-        items.forEach {
-            if (isNumber(it)) {
-                notes.add(getNoteFromString(it.toInt(), stringIndex))
-            }
-        }
-        return notes
     }
 
     private fun getNoteFromString(number: Int, string: Int): String {

@@ -17,15 +17,13 @@ object Constants {
     /* Preferences */
     const val PREFS = "templates_prefs"
     const val PREF_FIRST_RUN = "pref_first_run"
-    const val PREF_CHORDS_SONG_TEXT_SIZE = "pref_tab_text_size"
-    const val PREF_CHORDS_SONG_TEXT_COLOR = "pref_tab_text_color"
-    const val PREF_CHORDS_SONG_CHORD_COLOR = "pref_tab_chord_color"
-    const val PREF_CHORDS_SONG_BACKGROUND_COLOR = "pref_tab_background_color"
-    const val PREF_TAB_SONG_TEXT_SIZE = "pref_tab_song_text_size"
-    const val PREF_TAB_SONG_HEADER_COLOR = "pref_tab_song_header_color"
-    const val PREF_TAB_SONG_NUMBERS_COLOR = "pref_tab_song_numbers_color"
-    const val PREF_TAB_SONG_LINE_COLOR = "pref_tab_song_line_color"
-    const val PREF_TAB_SONG_BACKGROUND_COLOR = "pref_tab_song_background_color"
+    const val PREF_TAB_TEXT_SIZE = "pref_tab_text_size"
+    const val PREF_TAB_TEXT_COLOR = "pref_tab_text_color"
+    const val PREF_TAB_CHORD_COLOR = "pref_tab_chord_color"
+    const val PREF_TAB_BACKGROUND_COLOR = "pref_tab_background_color"
+    const val PREF_TAB_HEADER_COLOR = "pref_tab_header_color"
+    const val PREF_TAB_NUMBERS_COLOR = "pref_tab_numbers_color"
+    const val PREF_TAB_LINE_COLOR = "pref_tab_line_color"
     const val PREF_PREFER_SHARP = "pref_prefer_sharp"
     const val PREF_DRIVE_SYNC = "pref_drive_sync"
     const val PREF_DRIVE_CONFIG_FILE_ID = "pref_drive_config_file_id"
@@ -49,10 +47,8 @@ object Constants {
 
     /* Extra */
     const val EXTRA_ID = "com.mivas.myukulelesongs.EXTRA_ID"
-    const val EXTRA_IS_TAB = "com.mivas.myukulelesongs.EXTRA_IS_TAB"
     const val EXTRA_CHORD = "com.mivas.myukulelesongs.EXTRA_CHORD"
     const val EXTRA_AFTER_RESTORE = "com.mivas.myukulelesongs.EXTRA_AFTER_RESTORE"
-    const val EXTRA_LISTENER = "com.mivas.myukulelesongs.EXTRA_LISTENER"
 
     /* Broadcast */
     const val BROADCAST_CUSTOMIZATIONS_UPDATED = "broadcast_customizations_update"

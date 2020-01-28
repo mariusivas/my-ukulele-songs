@@ -1,6 +1,5 @@
 package com.mivas.myukulelesongs.drive
 
-import android.util.Log
 import com.mivas.myukulelesongs.drive.model.Config
 import com.mivas.myukulelesongs.drive.model.DriveSong
 import com.mivas.myukulelesongs.drive.model.MatchingSong

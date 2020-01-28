@@ -11,16 +11,13 @@
     <!--Loading Activity-->
     <string name="loading_activity_text_syncing">Synchronizing songs…</string>
 
-    <!--Main Activity-->
-    <string name="songs_activity_menu_search">Search</string>
-    <string name="songs_activity_menu_add">Add Song</string>
-    <string name="songs_activity_menu_randomize">Randomize</string>
-    <string name="songs_activity_menu_settings">Settings</string>
-    <string name="songs_activity_toast_no_songs">You have no songs</string>
-    <string name="songs_activity_hint_search">Search</string>
-
     <!--Songs Fragment-->
     <string name="songs_fragment_title">Library</string>
+    <string name="songs_fragment_menu_search">Search</string>
+    <string name="songs_fragment_menu_add">Add Song</string>
+    <string name="songs_fragment_menu_randomize">Randomize</string>
+    <string name="songs_fragment_toast_no_songs">You have no songs</string>
+    <string name="songs_fragment_hint_search">Search</string>
 
     <!--Chords Fragment-->
     <string name="chords_fragment_title">Chords</string>
@@ -28,7 +25,6 @@
 
     <!--Virtual Uke Fragment-->
     <string name="virtual_uke_fragment_title">Virtual Uke</string>
-    <string name="virtual_uke_fragment_text_hint">- With your left thumb press and hold a string\n- With your right thumb tap anywhere on the string to make a sound</string>
 
     <!--Add Edit Song Activity-->
     <string name="add_edit_song_activity_text_add_song">Add Song</string>
@@ -37,8 +33,7 @@
     <string name="add_edit_song_activity_hint_author">Author</string>
     <string name="add_edit_song_activity_hint_strumming_patterns">Strumming patterns</string>
     <string name="add_edit_song_activity_hint_picking_patterns">Picking patterns</string>
-    <string name="add_edit_song_activity_hint_chords">Chords</string>
-    <string name="add_edit_song_activity_hint_tab">Tab</string>
+    <string name="add_edit_song_activity_hint">Tab</string>
     <string name="add_edit_song_activity_text_original_key">Original key:</string>
     <string name="add_edit_song_activity_text_select_key">Select Key</string>
     <string name="add_edit_song_activity_text_strumming">Strumming</string>
@@ -66,19 +61,21 @@
     <string name="song_activity_text_picking_patterns">Picking\npatterns</string>
     <string name="song_activity_text_export_with">Export with…</string>
 
-    <!--Customize Song Activity-->
-    <string name="customize_song_activity_title_chords">Customize Chords Song</string>
-    <string name="customize_song_activity_title_tab">Customize Tab Song</string>
-    <string name="customize_song_activity_menu_reset">Reset</string>
-    <string name="customize_song_activity_text_text_size">Text size</string>
-    <string name="customize_song_activity_text_text_color">Text color</string>
-    <string name="customize_song_activity_text_chord_color">Chord color</string>
-    <string name="customize_song_activity_text_header_color">Header color</string>
-    <string name="customize_song_activity_text_line_color">Line color</string>
-    <string name="customize_song_activity_text_numbers_color">Numbers color</string>
-    <string name="customize_song_activity_text_background_color">Background color</string>
-    <string name="customize_song_activity_dialog_reset_title">Reset customizations</string>
-    <string name="customize_song_activity_dialog_reset_description">Are you sure you want to reset customizations to default settings?</string>
+    <!--Customize Tab Activity-->
+    <string name="customize_tab_activity_title_chords">Customize Tab</string>
+    <string name="customize_tab_activity_menu_reset">Reset</string>
+    <string name="customize_tab_activity_text_general">GENERAL</string>
+    <string name="customize_tab_activity_text_text_size">Text size</string>
+    <string name="customize_tab_activity_text_background_color">Background color</string>
+    <string name="customize_tab_activity_text_chords">CHORDS</string>
+    <string name="customize_tab_activity_text_text_color">Text color</string>
+    <string name="customize_tab_activity_text_chord_color">Chord color</string>
+    <string name="customize_tab_activity_text_tab">TAB</string>
+    <string name="customize_tab_activity_text_header_color">Header color</string>
+    <string name="customize_tab_activity_text_line_color">Line color</string>
+    <string name="customize_tab_activity_text_numbers_color">Numbers color</string>
+    <string name="customize_tab_activity_dialog_reset_title">Reset customizations</string>
+    <string name="customize_tab_activity_dialog_reset_description">Are you sure you want to reset customizations to default settings?</string>
 
     <!--Settings Activity-->
     <string name="settings_activity_title">Settings</string>
@@ -94,15 +91,16 @@
     <string name="settings_activity_text_drive_sync_title">Sync with Google Drive</string>
     <string name="settings_activity_text_drive_sync_description">Use Google Drive to create a cloud backup and synchronize your songs across multiple devices</string>
     <string name="settings_activity_text_customization">CUSTOMIZATION</string>
-    <string name="settings_activity_text_prefer_sharp_title">Sharp / Flat preference</string>
+    <string name="settings_activity_text_prefer_sharp_title">Accidental Preference</string>
     <string name="settings_activity_text_prefer_sharp_description">Will display sharp(A#) notes or flat(Bb) notes</string>
     <string name="settings_activity_toggle_sharp">Sharp</string>
     <string name="settings_activity_toggle_flat">Flat</string>
+    <string name="settings_activity_text_customize_tab">Customize Tab</string>
     <string name="settings_activity_text_general_settings">GENERAL SETTINGS</string>
-    <string name="settings_activity_text_rate_app">Rate the app</string>
+    <string name="settings_activity_text_rate_app">Rate the App</string>
     <string name="settings_activity_text_feedback">Feedback</string>
     <string name="settings_activity_text_about">ABOUT</string>
-    <string name="settings_activity_text_privacy_policy">Privacy policy</string>
+    <string name="settings_activity_text_privacy_policy">Privacy Policy</string>
     <string name="settings_activity_text_version">Version</string>
     <string name="settings_activity_dialog_restore_songs_title">Warning!</string>
     <string name="settings_activity_dialog_restore_songs_description">This will delete your songs and import songs from a backup file. Are you sure you want to restore?</string>
@@ -119,13 +117,8 @@
     <string name="settings_activity_feedback_subject">My Ukulele Songs Feedback</string>
     <string name="settings_activity_feedback_chooser">Send feedback using…</string>
 
-    <!--Chord Activity-->
-    <string name="chord_activity_text_diagram">Diagram</string>
-    <string name="chord_activity_text_alternative">Alternatives</string>
-
-    <!--Create Song Dialog-->
-    <string name="create_song_dialog_text_title">Select song type</string>
-    <string name="create_song_dialog_text_chords">Chords</string>
-    <string name="create_song_dialog_text_tab">Tab</string>
+    <!--Chord Data Activity-->
+    <string name="chord_data_activity_text_diagram">Diagram</string>
+    <string name="chord_data_activity_text_alternative">Alternatives</string>
 
 </resources>

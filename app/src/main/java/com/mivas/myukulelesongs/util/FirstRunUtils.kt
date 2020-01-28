@@ -11,7 +11,7 @@ class FirstRunUtils {
             strummingPatterns = "D D D D"
             originalKey = "C"
             version = 0
-            uniqueId = IdUtils.generateUniqueId()
+            uniqueId = UniqueIdGenerator.generate()
             tab =
                 """      C           G7
 Happy birthday to you
@@ -30,7 +30,7 @@ Happy birthday to you"""
             type = 3
             originalKey = "C"
             version = 0
-            uniqueId = IdUtils.generateUniqueId()
+            uniqueId = UniqueIdGenerator.generate()
             tab =
                 """-------------|-------------|-----3-0-------|-1-1-0-------|
 ---------1-0-|---------3-1-|---------1-0---|-------1-3-1-|

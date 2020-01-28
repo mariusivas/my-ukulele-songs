@@ -46,7 +46,7 @@ class ChordsFragment: Fragment() {
         val margin = DimensionUtils.dpToPx(2)
         val layoutParams = LinearLayout.LayoutParams(FlexboxLayout.LayoutParams.WRAP_CONTENT, FlexboxLayout.LayoutParams.WRAP_CONTENT)
         layoutParams.setMargins(margin, margin, margin, margin)
-        val allChords = ChordHelper.getAllChordsVariations()
+        val allChords = ChordHelper.getAllChordsWithTypes()
         allChords.forEach { chordGroup ->
             val verticalLayout = LinearLayout(activity).apply { orientation = LinearLayout.VERTICAL }
             chordGroup.forEach { chord ->

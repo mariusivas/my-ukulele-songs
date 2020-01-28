@@ -6,7 +6,7 @@ object ChordHelper {
 
     private val chords = listOf("Ab", "A", "A#", "Bb", "B", "C", "C#", "Db", "D", "D#", "Eb", "E", "F", "F#", "Gb", "G", "G#")
     private val uniqueChords = listOf("A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#")
-    private val variations =
+    private val chordTypes =
         listOf("m", "7", "m7", "maj7", "aug", "dim", "dim7", "sus2", "sus4", "7sus2", "7sus4", "m7b5", "9", "11", "13", "6", "m6", "add9", "m9", "5", "m13", "mMaj7", "m11", "maj9")
 
     fun isChordLine(line: String): Boolean {
@@ -21,8 +21,8 @@ object ChordHelper {
                         chordDetected = true
                         break
                     } else {
-                        for (variation in variations) {
-                            if (word == chord + variation) {
+                        for (chordType in chordTypes) {
+                            if (word == chord + chordType) {
                                 chordDetected = true
                                 break
                             }
@@ -56,9 +56,9 @@ object ChordHelper {
                     chords.add(word)
                     break
                 } else {
-                    for (variation in variations) {
-                        if (word == chord + variation) {
-                            chords.add(chord + variation)
+                    for (chordType in chordTypes) {
+                        if (word == chord + chordType) {
+                            chords.add(chord + chordType)
                             break
                         }
                     }
@@ -72,9 +72,9 @@ object ChordHelper {
             return UCChordData(chord.toFlats(), "major")
         } else {
             chords.forEach { preChord ->
-                variations.forEach { variation ->
-                    if (chord == preChord + variation) {
-                        return UCChordData(preChord.toFlats(), variation)
+                chordTypes.forEach { chordType ->
+                    if (chord == preChord + chordType) {
+                        return UCChordData(preChord.toFlats(), chordType)
                     }
                 }
             }
@@ -82,12 +82,12 @@ object ChordHelper {
         return UCChordData("", "")
     }
 
-    fun getAllChordsVariations(): List<List<String>> {
+    fun getAllChordsWithTypes(): List<List<String>> {
         val preferSharps = Prefs.getBoolean(Constants.PREF_PREFER_SHARP)
         val all = mutableListOf<List<String>>()
         all.add(uniqueChords.map { if (preferSharps) it.toSharps() else it.toFlats() })
-        variations.forEach { variation ->
-            all.add(uniqueChords.map { "${if (preferSharps) it.toSharps() else it.toFlats()}$variation" })
+        chordTypes.forEach { chordType ->
+            all.add(uniqueChords.map { "${if (preferSharps) it.toSharps() else it.toFlats()}$chordType" })
         }
         return all
     }

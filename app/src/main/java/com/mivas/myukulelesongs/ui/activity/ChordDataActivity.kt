@@ -10,14 +10,14 @@ import com.mivas.myukulelesongs.R
 import com.mivas.myukulelesongs.ukulelechords.model.ChordsXml
 import com.mivas.myukulelesongs.ui.adapter.AlternativeAdapter
 import com.mivas.myukulelesongs.util.Constants.EXTRA_CHORD
-import com.mivas.myukulelesongs.viewmodel.ChordViewModel
+import com.mivas.myukulelesongs.viewmodel.ChordInfoViewModel
 import com.mivas.myukulelesongs.viewmodel.factory.ChordViewModelFactory
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_chord_data.*
 
 class ChordDataActivity : AppCompatActivity() {
 
-    private lateinit var viewModel: ChordViewModel
+    private lateinit var viewModel: ChordInfoViewModel
     private lateinit var chord: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,7 +37,7 @@ class ChordDataActivity : AppCompatActivity() {
 
     private fun initViewModel() {
         val viewModelFactory = ChordViewModelFactory(chord)
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(ChordViewModel::class.java)
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(ChordInfoViewModel::class.java)
     }
 
     private fun initViews() {

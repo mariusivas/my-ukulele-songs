@@ -22,21 +22,62 @@ object TransposeHelper {
         listOf("G", "G#", "F#", "Ab", "Gb")
     )
 
-    fun transposeChordsSong(text:String, plus: Boolean, preferSharp: Boolean): String {
+    fun transposeSong(text: String, plus: Boolean, preferSharp: Boolean): String {
         val lines = text.split("\n")
         var transposed = ""
         lines.forEach { line ->
-            transposed += if (ChordHelper.isChordLine(line)) {
-                transposeChordLine(line, plus, preferSharp) + "\n"
+            if (TabHelper.isTabLine(line)) {
+                transposed += transposeTabLine(line, plus) + "\n"
+            } else if (ChordHelper.isChordLine(line)) {
+                transposed += transposeChordLine(line, plus, preferSharp) + "\n"
             } else {
-                line + "\n"
+                transposed += line + "\n"
             }
         }
-        if (transposed.length >=2) transposed = transposed.dropLast(2)
+        if (transposed.isNotEmpty()) transposed = transposed.dropLast(1)
         return transposed
     }
 
-    private fun transposeChordLine(line:String, plus: Boolean, preferSharp: Boolean): String {
+    private fun transposeTabLine(line: String, plus: Boolean): String {
+        var transposedLine = ""
+        var numberBuilder = ""
+        line.forEach {char ->
+            if (char.toString().isNumber()) {
+                numberBuilder += char.toString()
+            } else {
+                if (numberBuilder.isNotEmpty()) {
+                    transposedLine = transposeNote(numberBuilder, plus, transposedLine)
+                    numberBuilder = ""
+                }
+                transposedLine += char
+            }
+        }
+        if (numberBuilder.isNotEmpty()) transposedLine = transposeNote(numberBuilder, plus, transposedLine)
+        return transposedLine
+    }
+
+    private fun transposeNote(numberBuilder: String, plus: Boolean, transposedLine: String): String {
+        var newTransposedLine = transposedLine
+        var newNumber = numberBuilder.toInt().let { if (plus) it + 1 else it - 1 }
+        if (newNumber < 0) newNumber += 12
+        if (newNumber > 11) newNumber -= 12
+        val newString = newNumber.toString()
+        if (numberBuilder.length == newString.length) {
+            newTransposedLine += newString
+        } else if (numberBuilder.length < newString.length) {
+            if (transposedLine.length == 1 || (transposedLine.length >=2 && transposedLine[transposedLine.length - 2] == '-')) {
+                newTransposedLine = newTransposedLine.dropLast(1)
+                newTransposedLine += newString
+            } else {
+                newTransposedLine += "X"
+            }
+        } else if (numberBuilder.length > newString.length) {
+            newTransposedLine += "-$newString"
+        }
+        return newTransposedLine
+    }
+
+    private fun transposeChordLine(line: String, plus: Boolean, preferSharp: Boolean): String {
         var transposedLine = ""
         var index = 0
         var chord = ""
@@ -73,10 +114,10 @@ object TransposeHelper {
         return transposedLine
     }
 
-    private fun transposeChord(chord:String, plus: Boolean, preferSharp: Boolean): String {
+    private fun transposeChord(chord: String, plus: Boolean, preferSharp: Boolean): String {
         transpositions.forEach {
             if (chord.contains(it[0])) {
-                val pre =  when {
+                val pre = when {
                     plus && preferSharp -> it[1]
                     !plus && preferSharp -> it[2]
                     plus && !preferSharp -> it[3]

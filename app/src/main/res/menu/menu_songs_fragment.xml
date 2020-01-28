@@ -4,18 +4,18 @@
     <item
         android:id="@+id/action_search_song"
         android:icon="@drawable/icon_search"
-        android:title="@string/songs_activity_menu_search"
+        android:title="@string/songs_fragment_menu_search"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_add_song"
         android:icon="@drawable/icon_plus"
-        android:title="@string/songs_activity_menu_add"
+        android:title="@string/songs_fragment_menu_add"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_randomize"
         android:icon="@drawable/icon_dice"
-        android:title="@string/songs_activity_menu_randomize"
+        android:title="@string/songs_fragment_menu_randomize"
         app:showAsAction="ifRoom" />
 </menu>

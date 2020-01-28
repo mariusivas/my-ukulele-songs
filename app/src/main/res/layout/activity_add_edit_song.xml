@@ -164,7 +164,7 @@
         android:fontFamily="@font/roboto_mono_regular"
         android:gravity="top"
         android:layout_marginTop="8dp"
-        android:hint="@string/add_edit_song_activity_hint_tab"
+        android:hint="@string/add_edit_song_activity_hint"
         android:padding="8dp"
         android:textColor="@color/black"
         android:textSize="18sp" />

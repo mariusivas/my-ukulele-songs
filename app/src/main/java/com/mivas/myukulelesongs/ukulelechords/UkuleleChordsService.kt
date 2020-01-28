@@ -10,7 +10,7 @@ interface UkuleleChordsService {
     fun getChordData(
         @Query("ak") apiKey: String,
         @Query("r") chord: String,
-        @Query("typ") variation: String
+        @Query("typ") chordType: String
     ) : Call<ChordsXml>
 
 

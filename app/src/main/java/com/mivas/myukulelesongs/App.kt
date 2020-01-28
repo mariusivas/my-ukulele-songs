@@ -3,6 +3,9 @@ package com.mivas.myukulelesongs
 import android.app.Application
 import com.google.firebase.analytics.FirebaseAnalytics
 
+/**
+ * Base [Application] that provides access to its instance.
+ */
 class App : Application() {
 
     companion object {

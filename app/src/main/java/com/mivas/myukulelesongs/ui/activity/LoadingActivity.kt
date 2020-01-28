@@ -98,7 +98,7 @@ class LoadingActivity : AppCompatActivity() {
         val dao = Db.instance.getSongsDao()
         val songs = dao.getNoUniqueIds()
         if (songs.isNotEmpty()) {
-            songs.forEach { it.uniqueId = IdUtils.generateUniqueId() }
+            songs.forEach { it.uniqueId = UniqueIdGenerator.generate() }
             dao.updateAll(songs)
         }
     }

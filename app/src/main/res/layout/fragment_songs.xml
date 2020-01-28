@@ -33,7 +33,7 @@
             android:layout_marginStart="12dp"
             android:background="@null"
             android:backgroundTint="@color/white"
-            android:hint="@string/songs_activity_hint_search"
+            android:hint="@string/songs_fragment_hint_search"
             android:imeOptions="actionDone"
             android:inputType="textCapSentences"
             android:textColor="@color/white"

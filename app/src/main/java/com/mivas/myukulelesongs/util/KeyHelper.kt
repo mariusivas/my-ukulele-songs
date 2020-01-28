@@ -56,12 +56,12 @@ object KeyHelper {
                 bestMatches = matches
                 bestKeys.clear()
                 bestKeys.add(keySet)
-            } else if (matches == bestMatches) {
+            } else if (matches > 0 && matches == bestMatches) {
                 bestKeys.add(keySet)
             }
         }
         return when {
-            bestKeys.size == 1 -> bestKeys[0][0]
+            bestKeys.size == 1 -> bestKeys[0][0].run { if (Prefs.getBoolean(Constants.PREF_PREFER_SHARP)) toSharps() else toFlats() }
             bestKeys.size > 1 -> {
                 var bestRelativeMinorMatches = 0
                 var bestOverallKey = ""
@@ -72,7 +72,7 @@ object KeyHelper {
                         bestOverallKey = bestKey[0]
                     }
                 }
-                bestOverallKey
+                bestOverallKey.run { if (Prefs.getBoolean(Constants.PREF_PREFER_SHARP)) toSharps() else toFlats() }
             }
             else -> ""
         }
@@ -88,7 +88,7 @@ object KeyHelper {
                 bestKey = keySet[0]
             }
         }
-        return if (Prefs.getBoolean(Constants.PREF_PREFER_SHARP)) bestKey.toSharps() else bestKey.toFlats()
+        return bestKey.run { if (Prefs.getBoolean(Constants.PREF_PREFER_SHARP)) toSharps() else toFlats() }
     }
 
     fun getAllKeys() = allKeys

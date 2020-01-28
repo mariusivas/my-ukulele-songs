@@ -109,6 +109,9 @@ class SettingsActivity : AppCompatActivity(), SongsImportedListener {
         preferSharpToogle.setOnCheckedChangeListener { _, isChecked ->
             viewModel.setPreferSharp(isChecked)
         }
+        customizeTabLayout.setOnClickListener {
+            startActivity(Intent(this, CustomizeTabActivity::class.java))
+        }
         rateAppLayout.setOnClickListener {
             try {
                 startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$packageName")))
@@ -165,6 +168,7 @@ class SettingsActivity : AppCompatActivity(), SongsImportedListener {
         toast(String.format(string, count))
     }
 
+    @Suppress("UnstableApiUsage")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode in listOf(REQUEST_CODE_IMPORT_SONG, REQUEST_CODE_RESTORE_SONGS) && resultCode == RESULT_OK) {
