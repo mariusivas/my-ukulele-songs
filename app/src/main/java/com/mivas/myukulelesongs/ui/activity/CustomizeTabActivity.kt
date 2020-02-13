@@ -15,13 +15,15 @@ import com.mivas.myukulelesongs.viewmodel.CustomizeTabViewModel
 import kotlinx.android.synthetic.main.activity_customize_tab.*
 import org.jetbrains.anko.alert
 
-class CustomizeTabActivity : AppCompatActivity() {
+/**
+ * Activity for tab customization.
+ */
+class CustomizeTabActivity : AppCompatActivity(R.layout.activity_customize_tab) {
 
     private lateinit var viewModel: CustomizeTabViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_customize_tab)
 
         initViewModel()
         initViews()
@@ -45,10 +47,16 @@ class CustomizeTabActivity : AppCompatActivity() {
         else -> super.onOptionsItemSelected(item)
     }
 
+    /**
+     * ViewModel initializer.
+     */
     private fun initViewModel() {
         viewModel = ViewModelProviders.of(this).get(CustomizeTabViewModel::class.java)
     }
 
+    /**
+     * Views initializer.
+     */
     private fun initViews() {
         supportActionBar?.run {
             setDisplayHomeAsUpEnabled(true)
@@ -66,6 +74,9 @@ class CustomizeTabActivity : AppCompatActivity() {
         numbersColorView.background = viewModel.createBackground(viewModel.getNumbersColor())
     }
 
+    /**
+     * Listeners initializer.
+     */
     private fun initListeners() {
         textSizeSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
 
@@ -166,6 +177,9 @@ class CustomizeTabActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Shows a dialog confirming the reset of customizations.
+     */
     private fun showResetCustomizationsDialog() {
         alert(R.string.customize_tab_activity_dialog_reset_description, R.string.customize_tab_activity_dialog_reset_title) {
             negativeButton(R.string.generic_cancel) {}
@@ -177,6 +191,9 @@ class CustomizeTabActivity : AppCompatActivity() {
         }.show()
     }
 
+    /**
+     * Sends a broadcast intent to the tab activity so it should update.
+     */
     private fun sendUpdateBroadcast() = sendBroadcast(Intent(Constants.BROADCAST_CUSTOMIZATIONS_UPDATED))
 
 }

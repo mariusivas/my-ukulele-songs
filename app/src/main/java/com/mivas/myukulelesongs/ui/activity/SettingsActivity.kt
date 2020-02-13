@@ -30,7 +30,7 @@ import com.mivas.myukulelesongs.drive.DriveHelper
 import com.mivas.myukulelesongs.drive.DriveSync
 import com.mivas.myukulelesongs.model.ExportSongsJson
 import com.mivas.myukulelesongs.util.ExportHelper
-import com.mivas.myukulelesongs.util.GoogleUtils
+import com.mivas.myukulelesongs.util.GoogleHelper
 import com.mivas.myukulelesongs.util.Prefs
 import com.mivas.myukulelesongs.viewmodel.SettingsViewModel
 import kotlinx.android.synthetic.main.activity_settings.*
@@ -44,7 +44,10 @@ import java.io.InputStreamReader
 import java.lang.Exception
 import java.util.*
 
-class SettingsActivity : AppCompatActivity(), SongsImportedListener {
+/**
+ * Activity of app settings.
+ */
+class SettingsActivity : AppCompatActivity(R.layout.activity_settings), SongsImportedListener {
 
     private lateinit var viewModel: SettingsViewModel
 
@@ -56,17 +59,22 @@ class SettingsActivity : AppCompatActivity(), SongsImportedListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_settings)
 
         initViewModel()
         initViews()
         initListeners()
     }
 
+    /**
+     * ViewModel initializer.
+     */
     private fun initViewModel() {
         viewModel = ViewModelProviders.of(this).get(SettingsViewModel::class.java)
     }
 
+    /**
+     * Views initializer.
+     */
     private fun initViews() {
         supportActionBar?.run {
             setDisplayHomeAsUpEnabled(true)
@@ -78,6 +86,9 @@ class SettingsActivity : AppCompatActivity(), SongsImportedListener {
         versionDescriptionText.text = BuildConfig.VERSION_NAME
     }
 
+    /**
+     * Listeners initializer.
+     */
     private fun initListeners() {
         importLayout.setOnClickListener {
             checkPermissionAndImport(REQUEST_CODE_IMPORT_SONG)
@@ -100,9 +111,9 @@ class SettingsActivity : AppCompatActivity(), SongsImportedListener {
         driveSyncLayout.setOnClickListener { driveSyncCheckbox.toggle() }
         driveSyncCheckbox.setOnCheckedChangeListener { _, checked ->
             if (checked) {
-                startActivityForResult(GoogleUtils.getSignInClient(this).signInIntent, REQUEST_CODE_GOOGLE_SIGN_IN)
+                startActivityForResult(GoogleHelper.getSignInClient(this).signInIntent, REQUEST_CODE_GOOGLE_SIGN_IN)
             } else {
-                GoogleUtils.signOut(this)
+                GoogleHelper.signOut(this)
                 Prefs.putBoolean(Constants.PREF_DRIVE_SYNC, false)
             }
         }
@@ -143,6 +154,9 @@ class SettingsActivity : AppCompatActivity(), SongsImportedListener {
         else -> super.onOptionsItemSelected(item)
     }
 
+    /**
+     * Checks for storage permission and launches an activity to select a file.
+     */
     private fun checkPermissionAndImport(requestCode: Int) {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), requestCode)
@@ -151,6 +165,9 @@ class SettingsActivity : AppCompatActivity(), SongsImportedListener {
         }
     }
 
+    /**
+     * Launches an activity to select a file.
+     */
     private fun launchImportActivity(requestCode: Int) {
         try {
             val intent = Intent().apply {
@@ -217,6 +234,9 @@ class SettingsActivity : AppCompatActivity(), SongsImportedListener {
         }
     }
 
+    /**
+     * Handles data received from Google sign in.
+     */
     private fun handleSignInResult(data: Intent) {
         toast(R.string.settings_activity_toast_login_success)
         GoogleSignIn.getSignedInAccountFromIntent(data).addOnSuccessListener {

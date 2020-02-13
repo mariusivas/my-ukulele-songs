@@ -2,6 +2,9 @@ package com.mivas.myukulelesongs.util
 
 import org.jetbrains.anko.collections.forEachReversedByIndex
 
+/**
+ * Helper class that recognises the key of a song.
+ */
 object KeyHelper {
 
     private val keyChords = listOf(
@@ -47,6 +50,12 @@ object KeyHelper {
     
     private val allKeys = listOf("Ab", "A", "A#", "Bb", "B", "C", "C#", "Db", "D", "D#", "Eb", "E", "F", "F#", "Gb", "G", "G#", "Abm", "Am", "A#m", "Bbm", "Bm", "Cm", "C#m", "Dbm", "Dm", "D#m", "Ebm", "Em", "Fm", "F#m", "Gbm", "Gm", "G#m")
 
+    /**
+     * Find the key from a lost of chords.
+     *
+     * @param chords The list of chords to search
+     * @return The song key
+     */
     fun findKeyFromChords(chords: List<String>): String {
         var bestMatches = 0
         val bestKeys = mutableListOf<List<String>>()
@@ -78,6 +87,12 @@ object KeyHelper {
         }
     }
 
+    /**
+     * Finds the key from a list of notes.
+     *
+     * @param notes The list of notes to search
+     * @return The song key
+     */
     fun findKeyFromTab(notes: List<String>): String {
         var bestMatches = 0
         var bestKey = ""
@@ -91,6 +106,9 @@ object KeyHelper {
         return bestKey.run { if (Prefs.getBoolean(Constants.PREF_PREFER_SHARP)) toSharps() else toFlats() }
     }
 
+    /**
+     * Returns all possible keys.
+     */
     fun getAllKeys() = allKeys
 
 }

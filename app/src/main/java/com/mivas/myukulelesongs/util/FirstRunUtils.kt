@@ -6,7 +6,7 @@ class FirstRunUtils {
 
     fun getSampleChordsSong(): Song {
         return Song().apply {
-            title = "Happy Birthday Sample Chords"
+            title = "Chords Sample"
             type = 0
             strummingPatterns = "D D D D"
             originalKey = "C"
@@ -26,8 +26,8 @@ Happy birthday to you"""
 
     fun getSampleTabSong(): Song {
         return Song().apply {
-            title = "Happy Birthday Sample Tab"
-            type = 3
+            title = "Tab Sample"
+            type = 1
             originalKey = "C"
             version = 0
             uniqueId = UniqueIdGenerator.generate()

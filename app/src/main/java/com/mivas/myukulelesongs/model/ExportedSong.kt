@@ -8,7 +8,7 @@ import com.mivas.myukulelesongs.util.UniqueIdGenerator
  *
  * @param title Song title
  * @param author Song author
- * @param type Song type. Can be 0 - strumming, 1 - picking, 2 - strumming & picking, 3 - tab
+ * @param type Song type. Can be 0 - strumming, 1 - picking, 2 - strumming & picking
  * @param strummingPatterns Song strummingPatterns
  * @param pickingPatterns Song pickingPatterns
  * @param originalKey Song originalKey

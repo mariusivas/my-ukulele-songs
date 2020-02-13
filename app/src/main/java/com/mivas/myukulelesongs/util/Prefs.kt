@@ -3,6 +3,9 @@ package com.mivas.myukulelesongs.util
 import android.content.Context
 import com.mivas.myukulelesongs.App
 
+/**
+ * Class that handles shared preferences.
+ */
 object Prefs {
 
     private val prefs = App.instance.applicationContext.getSharedPreferences(Constants.PREFS, Context.MODE_PRIVATE)

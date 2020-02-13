@@ -16,8 +16,14 @@ import org.jetbrains.anko.toast
 import java.io.File
 import java.io.IOException
 
+/**
+ * Helper class that handles song exports to a file.
+ */
 object ExportHelper {
 
+    /**
+     * Launches an intent
+     */
     fun launchExportMusIntent(context: Context, songs: List<Song>, fileName: String) {
         val songFile = saveTempFile(context, fileName, exportedSongsToJsonString(songs))
         startChooser(context, songFile)

@@ -17,6 +17,9 @@ import org.jetbrains.anko.backgroundColor
 import org.jetbrains.anko.backgroundDrawable
 import org.jetbrains.anko.sdk25.coroutines.onTouch
 
+/**
+ * Adapter used to create the virtual uke in [com.mivas.myukulelesongs.ui.fragment.VirtualUkeFragment].
+ */
 class VirtualUkeAdapter(private val context: Context) : RecyclerView.Adapter<VirtualUkeAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(LayoutInflater.from(context).inflate(R.layout.list_item_virtual_uke, parent, false))
@@ -35,6 +38,9 @@ class VirtualUkeAdapter(private val context: Context) : RecyclerView.Adapter<Vir
         }
     }
 
+    /**
+     * Fret ViewHolder.
+     */
     class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
         val numberText = view.numberText!!
         val aString = view.aString!!

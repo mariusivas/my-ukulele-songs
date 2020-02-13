@@ -26,8 +26,10 @@ import kotlinx.coroutines.withContext
 import org.jetbrains.anko.toast
 import java.util.*
 
-
-class LoadingActivity : AppCompatActivity() {
+/**
+ * First activity of the app. Handles loading of data from Google Drive it this is enabled.
+ */
+class LoadingActivity : AppCompatActivity(R.layout.activity_loading) {
 
     companion object {
         private const val REQUEST_CODE_GOOGLE_SIGN_IN = 1
@@ -35,7 +37,6 @@ class LoadingActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_loading)
 
         initViews()
         populateUniqueIds()
@@ -43,6 +44,9 @@ class LoadingActivity : AppCompatActivity() {
         driveSignIn()
     }
 
+    /**
+     * Views initializer.
+     */
     private fun initViews() {
         val rotate = RotateAnimation(0f, 360f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f).apply {
             duration = 1000
@@ -52,9 +56,12 @@ class LoadingActivity : AppCompatActivity() {
         syncImage.startAnimation(rotate)
     }
 
+    /**
+     * Signs in to Google Drive.
+     */
     private fun driveSignIn() {
         if (Prefs.getBoolean(Constants.PREF_DRIVE_SYNC) && NetworkUtils.isInternetAvailable()) {
-            startActivityForResult(GoogleUtils.getSignInClient(this).signInIntent, REQUEST_CODE_GOOGLE_SIGN_IN)
+            startActivityForResult(GoogleHelper.getSignInClient(this).signInIntent, REQUEST_CODE_GOOGLE_SIGN_IN)
         } else {
             startActivity(Intent(this, MainActivity::class.java))
             finish()
@@ -68,6 +75,9 @@ class LoadingActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Handles data received from Google sign in.
+     */
     private fun handleSignIn(data: Intent) {
         GoogleSignIn.getSignedInAccountFromIntent(data).addOnSuccessListener {
             val credential = GoogleAccountCredential.usingOAuth2(this, Collections.singleton(DriveScopes.DRIVE_APPDATA)).apply { selectedAccount = it.account }
@@ -82,6 +92,9 @@ class LoadingActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Starts songs synchronization with Google Drive.
+     */
     private fun startDriveSync() {
         val afterRestore = intent.hasExtra(Constants.EXTRA_AFTER_RESTORE) && intent.getBooleanExtra(Constants.EXTRA_AFTER_RESTORE, false)
         lifecycleScope.launch(IO) {
@@ -93,6 +106,9 @@ class LoadingActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Generate unique ids for songs that don't have one.
+     */
     private fun populateUniqueIds() = lifecycleScope.launch(IO) {
         // TODO Legacy. Remove in 2021 or later
         val dao = Db.instance.getSongsDao()
@@ -103,6 +119,9 @@ class LoadingActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Checks if this is the first time running the app.
+     */
     private fun checkFirstRun() {
         if (Prefs.getBoolean(Constants.PREF_FIRST_RUN, true)) {
             Prefs.putBoolean(Constants.PREF_FIRST_RUN, false)

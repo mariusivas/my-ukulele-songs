@@ -3,6 +3,9 @@ package com.mivas.myukulelesongs.ukulelechords.model;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
 
+/**
+ * java class representing an item from the response from ukulele-chords.com
+ */
 @Root(name="chord", strict = false)
 public class ChordXml {
 

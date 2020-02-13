@@ -4,6 +4,9 @@ import androidx.lifecycle.*
 import com.mivas.myukulelesongs.util.Constants
 import com.mivas.myukulelesongs.util.Prefs
 
+/**
+ * ViewModel for [com.mivas.myukulelesongs.ui.activity.SettingsActivity].
+ */
 class SettingsViewModel : ViewModel() {
 
     fun setPreferSharp(sharp: Boolean) = Prefs.putBoolean(Constants.PREF_PREFER_SHARP, sharp)

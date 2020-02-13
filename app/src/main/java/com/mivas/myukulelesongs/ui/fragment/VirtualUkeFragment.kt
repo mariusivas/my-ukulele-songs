@@ -14,7 +14,10 @@ import com.mivas.myukulelesongs.util.Constants
 import com.mivas.myukulelesongs.util.Prefs
 import kotlinx.android.synthetic.main.fragment_virtual_uke.*
 
-class VirtualUkeFragment : Fragment() {
+/**
+ * Fragment displaying a virtual uke.
+ */
+class VirtualUkeFragment : Fragment(R.layout.fragment_virtual_uke) {
 
     private lateinit var linearLayoutManager: LinearLayoutManager
     private lateinit var smoothScroller: LinearSmoothScroller
@@ -32,10 +35,6 @@ class VirtualUkeFragment : Fragment() {
         setHasOptionsMenu(false)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_virtual_uke, container, false)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -43,6 +42,9 @@ class VirtualUkeFragment : Fragment() {
         initListeners()
     }
 
+    /**
+     * Views initializer.
+     */
     private fun initViews() {
         linearLayoutManager = object : LinearLayoutManager(activity!!, HORIZONTAL, false) {
             override fun canScrollHorizontally() = scrollable
@@ -58,6 +60,9 @@ class VirtualUkeFragment : Fragment() {
         }
     }
 
+    /**
+     * Listeners initializer.
+     */
     private fun initListeners() {
         scrollBackwardButton.setOnClickListener {
             scrollable = true

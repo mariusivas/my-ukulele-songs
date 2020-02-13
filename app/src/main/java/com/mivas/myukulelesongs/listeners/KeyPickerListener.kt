@@ -6,7 +6,7 @@ package com.mivas.myukulelesongs.listeners
 interface KeyPickerListener {
 
     /**
-     * Triggered when a key iss selected.
+     * Triggered when a key is selected.
      *
      * @param key The selected key
      */

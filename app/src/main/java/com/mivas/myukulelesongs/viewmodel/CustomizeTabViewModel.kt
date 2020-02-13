@@ -6,6 +6,9 @@ import com.mivas.myukulelesongs.util.Constants
 import com.mivas.myukulelesongs.util.DimensionUtils
 import com.mivas.myukulelesongs.util.Prefs
 
+/**
+ * ViewModel for [com.mivas.myukulelesongs.ui.activity.CustomizeTabActivity].
+ */
 class CustomizeTabViewModel : ViewModel() {
 
     fun getTextSize() = Prefs.getInt(Constants.PREF_TAB_TEXT_SIZE, Constants.DEFAULT_CHORDS_SONG_TEXT_SIZE)
@@ -24,12 +27,20 @@ class CustomizeTabViewModel : ViewModel() {
     fun setLineColor(chordColor: Int) = Prefs.putInt(Constants.PREF_TAB_LINE_COLOR, chordColor)
     fun setNumbersColor(chordColor: Int) = Prefs.putInt(Constants.PREF_TAB_NUMBERS_COLOR, chordColor)
 
+    /**
+     * Creates a rounded corners colored shape.
+     *
+     * @param backgroundColor The color of the shape
+     */
     fun createBackground(backgroundColor: Int) = GradientDrawable().apply {
         shape = GradientDrawable.RECTANGLE
         cornerRadius = DimensionUtils.dpToPx(6).toFloat()
         setColor(backgroundColor)
     }
 
+    /**
+     * Resets all customization to default settings.
+     */
     fun reset() {
         setTextSize(Constants.DEFAULT_CHORDS_SONG_TEXT_SIZE)
         setTextColor(Constants.DEFAULT_CHORDS_SONG_TEXT_COLOR)

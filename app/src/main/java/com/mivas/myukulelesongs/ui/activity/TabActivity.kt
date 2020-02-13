@@ -5,21 +5,20 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
-import android.os.Handler
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.SeekBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.flexbox.FlexboxLayout
 import com.mivas.myukulelesongs.R
 import com.mivas.myukulelesongs.database.model.Song
 import com.mivas.myukulelesongs.drive.DriveSync
+import com.mivas.myukulelesongs.listeners.TransposerListener
 import com.mivas.myukulelesongs.model.ChordTabData
 import com.mivas.myukulelesongs.ui.dialog.ChordInfoDialog
 import com.mivas.myukulelesongs.util.*
@@ -28,23 +27,16 @@ import com.mivas.myukulelesongs.viewmodel.TabViewModel
 import com.mivas.myukulelesongs.viewmodel.factory.SongViewModelFactory
 import kotlinx.android.synthetic.main.activity_tab.*
 import org.jetbrains.anko.backgroundColor
-import org.jetbrains.anko.imageResource
 import org.jetbrains.anko.textColor
 
-
-class TabActivity : AppCompatActivity() {
+/**
+ * Activity displaying a song tab.
+ */
+class TabActivity : AppCompatActivity(R.layout.activity_tab), TransposerListener {
 
     private lateinit var viewModel: TabViewModel
     private var maxCharsLine = 0
-    private val scrollHandler = Handler()
-    private val scrollRunnable = object : Runnable {
-        override fun run() {
-            if (scrollSeekBar.progress != 0) {
-                scrollView.smoothScrollTo(0, scrollView.scrollY + 1)
-            }
-            scrollHandler.postDelayed(this, 105 - scrollSeekBar.progress.toLong())
-        }
-    }
+
     private val customizationsReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             initStyles()
@@ -55,11 +47,10 @@ class TabActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_tab)
 
         initViewModel()
-        initViews()
-        initListeners()
+        initTabScroller()
+        initTransposer()
         initObservers()
 
         registerReceiver(customizationsReceiver, IntentFilter(Constants.BROADCAST_CUSTOMIZATIONS_UPDATED))
@@ -73,7 +64,7 @@ class TabActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_auto_scroll -> {
-                viewModel.scrollMode.value = !viewModel.scrollMode.value!!
+                tabScrollerPanel.setVisible(!tabScrollerPanel.getVisible())
                 true
             }
             R.id.action_edit_song -> {
@@ -83,8 +74,10 @@ class TabActivity : AppCompatActivity() {
                 true
             }
             R.id.action_transpose -> {
-                viewModel.scrollMode.value = false
-                viewModel.transposeMode.value = true
+                tabScrollerPanel.setVisible(false)
+                transposerPanel.initialText = viewModel.song.value!!.tab
+                transposerPanel.setVisible(true)
+                supportActionBar?.hide()
                 true
             }
             R.id.action_export_mus -> {
@@ -107,11 +100,31 @@ class TabActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * ViewModel initializer.
+     */
     private fun initViewModel() {
         val viewModelFactory = SongViewModelFactory(intent.getLongExtra(EXTRA_ID, -1))
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(TabViewModel::class.java)
     }
 
+    /**
+     * TabScrollerView initializer.
+     */
+    private fun initTabScroller() {
+        tabScrollerPanel.scrollView = scrollView
+    }
+
+    /**
+     * TransposerView initializer.
+     */
+    private fun initTransposer() {
+        transposerPanel.listener = this
+    }
+
+    /**
+     * Observers initializer.
+     */
     private fun initObservers() {
         viewModel.song.observe(this, Observer<Song> {
             it?.run {
@@ -120,7 +133,7 @@ class TabActivity : AppCompatActivity() {
                 tabText.text = Constants.TAB_FILLER
                 tabText.post {
                     maxCharsLine = viewModel.getMaxCharsPerLine(tabText)
-                    val text = if (viewModel.transposedText.isNotEmpty()) viewModel.transposedText else it.tab
+                    val text = it.tab
                     val chordsTabData = viewModel.getChordsTabData(text, maxCharsLine)
                     keyText.text = viewModel.getSongKey(chordsTabData)
                     initOriginalKey()
@@ -133,66 +146,20 @@ class TabActivity : AppCompatActivity() {
                 }
             } ?: finish()
         })
-        viewModel.scrollMode.observe(this, Observer<Boolean> {
-            scrollTabView.visibility = if (it) View.VISIBLE else View.GONE
-        })
-        viewModel.transposeMode.observe(this, Observer<Boolean> {
-            transposeView.visibility = if (it) View.VISIBLE else View.GONE
-            if (it) supportActionBar?.hide() else supportActionBar?.show()
-        })
     }
 
-    private fun initViews() {
-        scrollSeekBar.progress = Prefs.getInt(Constants.PREF_LAST_SCROLL_SPEED, Constants.DEFAULT_SCROLL_SPEED)
-        scrollSpeedText.text = scrollSeekBar.progress.toString()
-        scrollSpeedTextContainer.layoutParams = (scrollSpeedTextContainer.layoutParams as ConstraintLayout.LayoutParams).apply { horizontalBias = scrollSeekBar.progress.toFloat() / 100f }
-    }
-
-    private fun initListeners() {
-        scrollPlayButton.setOnClickListener { if (viewModel.scrollRunning) stopScroll() else startScroll() }
-        scrollCloseButton.setOnClickListener { viewModel.scrollMode.value = false }
-        scrollSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-            override fun onStartTrackingTouch(seekBar: SeekBar?) = Unit
-            override fun onStopTrackingTouch(seekBar: SeekBar) {
-                Prefs.putInt(Constants.PREF_LAST_SCROLL_SPEED, seekBar.progress)
-            }
-
-            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                scrollSpeedText.text = progress.toString()
-                scrollSpeedTextContainer.layoutParams = (scrollSpeedTextContainer.layoutParams as ConstraintLayout.LayoutParams).apply { horizontalBias = progress.toFloat() / 100f }
-            }
-        })
-        transposeCloseButton.setOnClickListener {
-            viewModel.transposeMode.value = false
-            viewModel.transposedText = ""
-            updateTransposed()
-        }
-        transposeSaveButton.setOnClickListener {
-            viewModel.transposeMode.value = false
-            val song = viewModel.song.value!!.apply {
-                tab = viewModel.transposedText
-                version = viewModel.song.value!!.version + 1
-            }
-            viewModel.updateSong(song)
-            viewModel.transposedText = ""
-            if (DriveSync.isActive()) DriveSync.syncUpdatedSong((song))
-        }
-        transposeMinusButton.setOnClickListener {
-            viewModel.transpose(false)
-            updateTransposed()
-        }
-        transposePlusButton.setOnClickListener {
-            viewModel.transpose(true)
-            updateTransposed()
-        }
-    }
-
+    /**
+     * Styles initializer.
+     */
     private fun initStyles() {
         tabText.textSize = viewModel.getTextSizeChords().toFloat()
         tabText.textColor = viewModel.getTextColorChords()
         tabParent.backgroundColor = viewModel.getBackgroundColorChords()
     }
 
+    /**
+     * Chords initializer.
+     */
     private fun initChords(chordData: ChordTabData) {
         chordsFlexLayout.removeAllViews()
         chordData.chords.toSet().forEach { chord ->
@@ -207,7 +174,7 @@ class TabActivity : AppCompatActivity() {
             }
             chordText.setOnLongClickListener {
                 if (NetworkUtils.isInternetAvailable()) {
-                    startActivity(Intent(this, ChordDataActivity::class.java).apply {
+                    startActivity(Intent(this, ChordInfoActivity::class.java).apply {
                         putExtra(Constants.EXTRA_CHORD, chord)
                     })
                 } else {
@@ -219,8 +186,12 @@ class TabActivity : AppCompatActivity() {
             }
             chordsFlexLayout.addView(chordText)
         }
+        chordsLayout.visibility = if (chordData.chords.isEmpty()) View.GONE else View.VISIBLE
     }
 
+    /**
+     * Original key initializer.
+     */
     private fun initOriginalKey() {
         val original = viewModel.song.value!!.originalKey
         originalKeyText.text = original
@@ -228,24 +199,33 @@ class TabActivity : AppCompatActivity() {
         originalKeyLabel.visibility = if (original.isEmpty()) View.GONE else View.VISIBLE
     }
 
-    private fun updateTransposed() {
-        val text = if (viewModel.transposedText.isNotEmpty()) viewModel.transposedText else viewModel.song.value!!.tab
-        val chordsTabData = viewModel.getChordsTabData(text, maxCharsLine)
+    /**
+     * Updates the transposed tab.
+     */
+    private fun updateTransposed(transposedText: String) {
+        val chordsTabData = viewModel.getChordsTabData(transposedText, maxCharsLine)
         keyText.text = viewModel.getSongKey(chordsTabData)
         initChords(chordsTabData)
         tabText.setText(chordsTabData.spannableBuilder, TextView.BufferType.SPANNABLE)
     }
 
-    private fun startScroll() {
-        viewModel.scrollRunning = true
-        scrollPlayIcon.imageResource = R.drawable.selector_button_pause
-        scrollHandler.postDelayed(scrollRunnable, 150 - scrollSeekBar.progress.toLong())
-    }
-
-    private fun stopScroll() {
-        viewModel.scrollRunning = false
-        scrollPlayIcon.imageResource = R.drawable.selector_button_play
-        scrollHandler.removeCallbacks(scrollRunnable)
+    override fun onTextTransposed(transposedText: String, final: Boolean) {
+        if (final) {
+            if (transposedText.isEmpty()) {
+                updateTransposed(viewModel.song.value!!.tab)
+                supportActionBar?.show()
+            } else {
+                val song = viewModel.song.value!!.apply {
+                    tab = transposedText
+                    version = viewModel.song.value!!.version + 1
+                }
+                viewModel.updateSong(song)
+                supportActionBar?.show()
+                if (DriveSync.isActive()) DriveSync.syncUpdatedSong((song))
+            }
+        } else {
+            updateTransposed(transposedText)
+        }
     }
 
     override fun onDestroy() {

@@ -10,12 +10,24 @@ import com.mivas.myukulelesongs.util.Prefs
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
 
+/**
+ * Helper class that handles synchronization of songs between local db and Google Drive.
+ */
 object DriveSync {
 
     private val songsDao = Db.instance.getSongsDao()
 
+    /**
+     * Returns true if Google Drive synchronization is enabled by the user, else false.
+     */
     fun isActive() = Prefs.getBoolean(Constants.PREF_DRIVE_SYNC)
 
+    /**
+     * Synchronizes all songs between local db and Google Drive
+     *
+     * @param scope The coroutine scope this method is launched from
+     * @param afterRestore True if the sync is launched after a songs restore, else false
+     */
     fun syncAll(scope: CoroutineScope, afterRestore: Boolean) {
         val localSongs = songsDao.getAll()
         val cloudSongs = if (afterRestore) mutableListOf() else readConfig()?.songs
@@ -39,6 +51,11 @@ object DriveSync {
         }
     }
 
+    /**
+     * Reads the config file from Google Drive. If it doesn't exist, it creates one.
+     *
+     * @return The config file
+     */
     private fun readConfig(): Config? {
         try {
             val configId = Prefs.getString(Constants.PREF_DRIVE_CONFIG_FILE_ID) // get the config id from prefs
@@ -60,6 +77,13 @@ object DriveSync {
         }
     }
 
+    /**
+     * Imports songs that exist on cloud but not on local
+     *
+     * @param localSongs The local songs
+     * @param cloudSongs The cloud songs
+     * @return List of [DriveSong] that will be uploaded on Google Drive
+     */
     private fun importFromCloud(localSongs: List<Song>, cloudSongs: List<DriveSong>): List<DriveSong> {
         val newConfigSongs = mutableListOf<DriveSong>() // prepare a list of config songs
         val newCloudSongs = cloudSongs.filter { cloud -> localSongs.none { local -> local.uniqueId == cloud.uniqueId } } // filter the songs that are on the cloud but not on local
@@ -71,6 +95,13 @@ object DriveSync {
         return newConfigSongs // return the config
     }
 
+    /**
+     * Exports songs that exist on local but not on cloud
+     *
+     * @param localSongs The local songs
+     * @param cloudSongs The cloud songs
+     * @return List of [DriveSong] that will be uploaded on Google Drive
+     */
     private fun exportFromLocal(localSongs: List<Song>, cloudSongs: List<DriveSong>): List<DriveSong> {
         val newConfigSongs = mutableListOf<DriveSong>() // prepare a list of config songs
         val newLocalSongs = localSongs.filter { local -> cloudSongs.none { cloud -> cloud.uniqueId == local.uniqueId } } // filter the songs that are on local but not on the cloud
@@ -85,6 +116,13 @@ object DriveSync {
         return newConfigSongs // return the config
     }
 
+    /**
+     * Resolves conflicts between songs that exist on both local and cloud.
+     *
+     * @param localSongs The local songs
+     * @param cloudSongs The cloud songs
+     * @return List of [DriveSong] that will be uploaded on Google Drive
+     */
     private fun resolveConflicts(localSongs: List<Song>, cloudSongs: List<DriveSong>): List<DriveSong> {
         val newConfigSongs = mutableListOf<DriveSong>() // prepare a list of config songs
         val matchingSongs = getMatchingSongs(localSongs, cloudSongs) // get the list of matching songs
@@ -110,6 +148,13 @@ object DriveSync {
         return newConfigSongs // return the config songs
     }
 
+    /**
+     * Returns that songs that exist on both loal and cloud and have the same unique id.
+     *
+     * @param localSongs The local songs
+     * @param cloudSongs The cloud songs
+     * @return The songs that match
+     */
     private fun getMatchingSongs(localSongs: List<Song>, cloudSongs: List<DriveSong>): List<MatchingSong> {
         val matchingSongs = mutableListOf<MatchingSong>() // prepare a list of matching songs
         localSongs.forEach { local ->
@@ -121,6 +166,11 @@ object DriveSync {
         return matchingSongs // return the list
     }
 
+    /**
+     * Uploads a song that has been created locally.
+     *
+     * @param song The created song
+     */
     fun syncCreatedSong(song: Song) = CoroutineScope(IO).launch {
         val config = readConfig() // read the config file
         if (config != null) {
@@ -134,6 +184,11 @@ object DriveSync {
         }
     }
 
+    /**
+     * Uploads a song that has been updated locally.
+     *
+     * @param song The updated song
+     */
     fun syncUpdatedSong(song: Song) = CoroutineScope(IO).launch {
         val config = readConfig() // read the config file
         if (config != null) {
@@ -167,6 +222,11 @@ object DriveSync {
         }
     }
 
+    /**
+     * Deletes a song from Google Drive that has been deleted locally.
+     *
+     * @param song The deleted song
+     */
     fun syncDeletedSong(song: Song) = CoroutineScope(IO).launch {
         val config = readConfig() // read the config file
         if (config != null) {
@@ -183,6 +243,13 @@ object DriveSync {
         }
     }
 
+    /**
+     * Checks if 2 songs have the same version but their content is different. This is a rare case.
+     *
+     * @param local The local song
+     * @param cloud The cloud song
+     * @return True if the songs are different, else false
+     */
     private fun sameVersionsButDifferentContent(local: Song, cloud: DriveSong): Boolean {
         return local.version == cloud.version &&
                 (local.title != cloud.title ||
@@ -194,6 +261,12 @@ object DriveSync {
                         local.tab != cloud.tab)
     }
 
+    /**
+     * Updates the local song with data from the cloud song.
+     *
+     * @param local The local song
+     * @param cloud The cloud song
+     */
     private fun updateLocalSongWithCouldData(local: Song, cloud: DriveSong) {
         local.apply {
             title = cloud.title

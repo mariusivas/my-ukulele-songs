@@ -9,6 +9,9 @@ import com.mivas.myukulelesongs.R
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.list_item_alternative.view.*
 
+/**
+ * Adapter for showing alternative chord datas in [com.mivas.myukulelesongs.ui.activity.ChordInfoActivity].
+ */
 class AlternativeAdapter(private val context: Context, private val urls: List<String>) : RecyclerView.Adapter<AlternativeAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(LayoutInflater.from(context).inflate(R.layout.list_item_alternative, parent, false))
@@ -20,6 +23,9 @@ class AlternativeAdapter(private val context: Context, private val urls: List<St
         }
     }
 
+    /**
+     * Alternative ViewHolder.
+     */
     class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
         val alternativeImage = view.alternativeImage!!
     }

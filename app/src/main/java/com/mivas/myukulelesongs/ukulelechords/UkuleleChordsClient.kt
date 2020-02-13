@@ -6,6 +6,9 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.simplexml.SimpleXmlConverterFactory
 
+/**
+ * Client that handles the connection to ukulele-chords.com
+ */
 object UkuleleChordsClient {
 
     val service: UkuleleChordsService

@@ -5,6 +5,9 @@ import org.simpleframework.xml.Root;
 
 import java.util.List;
 
+/**
+ * Java class representing a response from ukulele-chords.com
+ */
 @Root(name = "uc", strict = false)
 public class ChordsXml {
 

@@ -19,10 +19,6 @@ class TabViewModel(songId: Long) : ViewModel() {
 
     private val tabRepository = TabRepository()
     val song = tabRepository.getSongById(songId)
-    var transposedText = ""
-    var scrollRunning = false
-    var scrollMode = MutableLiveData<Boolean>(false)
-    var transposeMode = MutableLiveData<Boolean>(false)
 
     fun updateSong(song: Song) = viewModelScope.launch(IO) { tabRepository.update(song) }
 
@@ -91,12 +87,6 @@ class TabViewModel(songId: Long) : ViewModel() {
             if (line.length > maxChars) maxChars = line.length
         }
         return maxChars - 2
-    }
-
-    fun transpose(plus: Boolean) {
-        val preferSharp = Prefs.getBoolean(Constants.PREF_PREFER_SHARP)
-        val text = if (transposedText.isNotEmpty()) transposedText else song.value!!.tab
-        transposedText = TransposeHelper.transposeSong(text, plus, preferSharp)
     }
 
 }

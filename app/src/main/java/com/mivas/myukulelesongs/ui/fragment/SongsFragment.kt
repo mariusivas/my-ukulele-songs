@@ -23,8 +23,10 @@ import kotlinx.android.synthetic.main.fragment_songs.*
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.toast
 
-
-class SongsFragment : Fragment(), SongsFragmentListener {
+/**
+ * Fragment displaying all the songs.
+ */
+class SongsFragment : Fragment(R.layout.fragment_songs), SongsFragmentListener {
 
     private lateinit var viewModel: SongsViewModel
     private lateinit var songsAdapter: SongsAdapter
@@ -61,10 +63,6 @@ class SongsFragment : Fragment(), SongsFragmentListener {
         setHasOptionsMenu(true)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_songs, container, false)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -74,12 +72,18 @@ class SongsFragment : Fragment(), SongsFragmentListener {
         initObservers()
     }
 
+    /**
+     * ViewModel initializer.
+     */
     private fun initViewModel() {
         viewModel = ViewModelProviders.of(this).get(SongsViewModel::class.java)
         requireActivity().onBackPressedDispatcher.addCallback(this, viewModel.backPressedCallback)
         viewModel.backPressedCallback.isEnabled = false
     }
 
+    /**
+     * Views initializer.
+     */
     private fun initViews() {
         songsAdapter = SongsAdapter(activity!!, this)
         with(songsRecycler) {
@@ -88,6 +92,9 @@ class SongsFragment : Fragment(), SongsFragmentListener {
         }
     }
 
+    /**
+     * Listeners initializer.
+     */
     private fun initListeners() {
         searchField.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) = Unit
@@ -98,6 +105,9 @@ class SongsFragment : Fragment(), SongsFragmentListener {
         })
     }
 
+    /**
+     * Observers initializer.
+     */
     private fun initObservers() {
         viewModel.songs.observe(this, Observer {
             songsAdapter.submitList(it)

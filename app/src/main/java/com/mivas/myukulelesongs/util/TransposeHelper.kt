@@ -1,5 +1,8 @@
 package com.mivas.myukulelesongs.util
 
+/**
+ * Helper class that handles transpositions.
+ */
 object TransposeHelper {
 
     private val transpositions = listOf(
@@ -22,6 +25,14 @@ object TransposeHelper {
         listOf("G", "G#", "F#", "Ab", "Gb")
     )
 
+    /**
+     * Transposes a song.
+     *
+     * @param text The song text
+     * @param plus True if the transposition is up, else false
+     * @param preferSharp True if sharps are preferred, else false
+     * @return The transposed song
+     */
     fun transposeSong(text: String, plus: Boolean, preferSharp: Boolean): String {
         val lines = text.split("\n")
         var transposed = ""
@@ -38,6 +49,12 @@ object TransposeHelper {
         return transposed
     }
 
+    /**
+     * Transposes a line of a tab.
+     *
+     * @param line The tab line
+     * @param plus True if the transposition is up, else false
+     */
     private fun transposeTabLine(line: String, plus: Boolean): String {
         var transposedLine = ""
         var numberBuilder = ""
@@ -56,6 +73,14 @@ object TransposeHelper {
         return transposedLine
     }
 
+    /**
+     * Transposes a note.
+     *
+     * @param numberBuilder The builder that builds a note in a line
+     * @param plus True if the transposition is up, else false
+     * @param transposedLine The current transposed line
+     * @return The new transposed line
+     */
     private fun transposeNote(numberBuilder: String, plus: Boolean, transposedLine: String): String {
         var newTransposedLine = transposedLine
         var newNumber = numberBuilder.toInt().let { if (plus) it + 1 else it - 1 }
@@ -77,6 +102,14 @@ object TransposeHelper {
         return newTransposedLine
     }
 
+    /**
+     * Transposes a chord line.
+     *
+     * @param line The line
+     * @param plus True if the transposition is up, else false
+     * @param preferSharp True if sharps are preferred, else false
+     * @return The transposed line
+     */
     private fun transposeChordLine(line: String, plus: Boolean, preferSharp: Boolean): String {
         var transposedLine = ""
         var index = 0
@@ -114,6 +147,14 @@ object TransposeHelper {
         return transposedLine
     }
 
+    /**
+     * Transposes a chord.
+     *
+     * @param chord The chord
+     * @param plus True if the transposition is up, else false
+     * @param preferSharp True if sharps are preferred, else false
+     * @return The transposed chord
+     */
     private fun transposeChord(chord: String, plus: Boolean, preferSharp: Boolean): String {
         transpositions.forEach {
             if (chord.contains(it[0])) {

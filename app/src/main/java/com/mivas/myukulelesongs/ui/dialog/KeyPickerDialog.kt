@@ -13,6 +13,9 @@ import com.mivas.myukulelesongs.listeners.KeyPickerListener
 import com.mivas.myukulelesongs.util.DimensionUtils
 import com.mivas.myukulelesongs.util.KeyHelper
 
+/**
+ * Dialog that asks the user to select a key.
+ */
 class KeyPickerDialog(private val listener: KeyPickerListener) : DialogFragment() {
 
     private lateinit var keysFlexbox: FlexboxLayout
@@ -29,6 +32,9 @@ class KeyPickerDialog(private val listener: KeyPickerListener) : DialogFragment(
         return view
     }
 
+    /**
+     * FlexBox initializer.
+     */
     private fun initFlexbox() {
         val inflater = LayoutInflater.from(activity)
         KeyHelper.getAllKeys().forEach { key ->

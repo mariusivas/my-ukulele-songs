@@ -7,6 +7,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.launch
 
+/**
+ * Class that handles playing of notes.
+ */
 object SoundPlayer {
     private var mediaPlayer1: MediaPlayer? = null
     private var mediaPlayer2: MediaPlayer? = null
@@ -391,17 +394,14 @@ object SoundPlayer {
 
     )
 
-    private fun getChordsList(ints: List<Int>): List<String> {
-        return listOf(
-            if (ints[0] >= 0) scale[7 + ints[0]] else "",
-            if (ints[1] >= 0) scale[0 + ints[1]] else "",
-            if (ints[2] >= 0) scale[4 + ints[2]] else "",
-            if (ints[3] >= 0) scale[9 + ints[3]] else ""
-        )
-    }
-
+    /**
+     * Plays 4 or less sounds matching a chord.
+     *
+     * @param context The context
+     * @param chord The chord to be played
+     */
     fun playChord(context: Context, chord: String) = CoroutineScope(Default).launch {
-        val sounds = getChordsList(chordsMap.getValue(chord))
+        val sounds = getSoundsList(chordsMap.getValue(chord))
         for (i in 0..3) {
             if (sounds[i].isNotEmpty()) {
                 mediaPlayers[i]?.release()
@@ -416,6 +416,28 @@ object SoundPlayer {
         }
     }
 
+    /**
+     * Returns a list of 4 numbers representing a sounds to be played.
+     *
+     * @param ints The list of the tab representation in reverse of a chord
+     * @return The list of sounds to be played
+     */
+    private fun getSoundsList(ints: List<Int>): List<String> {
+        return listOf(
+            if (ints[0] >= 0) scale[7 + ints[0]] else "",
+            if (ints[1] >= 0) scale[0 + ints[1]] else "",
+            if (ints[2] >= 0) scale[4 + ints[2]] else "",
+            if (ints[3] >= 0) scale[9 + ints[3]] else ""
+        )
+    }
+
+    /**
+     * Plays a sound.
+     *
+     * @param context The context
+     * @param string The uke string the sound is played from
+     * @param note The note the sound ois played from
+     */
     fun playSound(context: Context, string: Int, note: String) {
         mediaPlayers[string]?.release()
         mediaPlayers[string] = null
@@ -427,6 +449,12 @@ object SoundPlayer {
         mediaPlayers[string]?.start()
     }
 
+    /**
+     * Returns a note based on the string and the position there the finger is pressed.
+     *
+     * @param string The uke string the note is played from
+     * @param add The position of the finger on the string
+     */
     fun getNoteFromStrings(string: Int, add: Int) = when (string) {
         0 -> scale[9 + add]
         1 -> scale[4 + add]
